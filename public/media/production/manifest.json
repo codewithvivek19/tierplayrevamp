@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "assets": [
+    { "id": "TP-001", "label": "Altitude cabinet", "kind": "model", "bundle": "cabinet-altitude", "url": null, "approved": false, "required": true },
+    { "id": "TP-004", "label": "Architectural environment", "kind": "model", "bundle": "gaming-floor", "url": null, "approved": false, "required": true },
+    { "id": "TP-005", "label": "Approved screen artwork", "kind": "image", "bundle": "critical", "url": null, "approved": false, "required": true }
+  ]
+}

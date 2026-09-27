@@ -1,0 +1,3 @@
+# SEO inventory
+
+See [EXISTING-SEO-INVENTORY.md](EXISTING-SEO-INVENTORY.md).

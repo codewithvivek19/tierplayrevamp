@@ -1,0 +1,249 @@
+/* BrainNFT color/background treatment. Layout and motion remain in battlez.css. */
+:root {
+  --ink: #101012;
+  --panel: #18181b;
+  --panel-2: #27272a;
+  --paper: #fff;
+  --muted: #d4d4d8;
+  --cyan: #fff;
+  --amber: #f7ba1e;
+  --red: #f62eb1;
+  --line: #ffffff24;
+  --accent: #f62eb1;
+  --accent-gradient: linear-gradient(128deg, #960ed1 0%, #f62eb1 100%);
+  --ambient-gradient: linear-gradient(98deg, #b06ab3 0%, #4568dc 100%);
+}
+::selection { background: #960ed1; color: #fff; }
+.site-header { background: #101012f5; border-color: var(--line); }
+.desktop-navigation a:hover, .text-action:hover { color: #f62eb1; }
+.battle-button, .arrow-button, .arrow-button.light {
+  background: #fff; color: #101012; border-color: #fff; box-shadow: none;
+}
+.battle-button:hover, .arrow-button:hover, .arrow-button.light:hover {
+  color: #101012; background: #f4e6f3; border-color: #f62eb1;
+}
+.header-action, .header-action:hover {
+  background: var(--accent-gradient); color: #fff; border-color: transparent;
+  box-shadow: none;
+}
+.menu-button, .mobile-navigation { background: var(--ink); color: var(--paper); }
+.kicker { background: #ffffff14; border-color: #ffffff14; box-shadow: none; }
+.battle-hero { background: var(--ink); }
+.battle-hero-image { background: var(--ink); }
+.battle-hero-image img { filter: none; object-position: center; }
+.battle-hero-image::before {
+  content: ''; position: absolute; inset: 0; z-index: 1;
+  background: url('/media/brainnft-noise.png') center / cover;
+  opacity: .2; mix-blend-mode: soft-light; pointer-events: none;
+}
+.battle-hero-image::after {
+  content: ''; position: absolute; inset: 0 0 auto; z-index: 2; height: 110px;
+  background: var(--ambient-gradient); filter: blur(72px); mix-blend-mode: color-dodge;
+  pointer-events: none;
+}
+.battle-hero-shade {
+  background:
+    linear-gradient(90deg, #101012f5 0%, #101012c7 30%, #10101242 57%, #1010120d 100%),
+    linear-gradient(0deg, #101012 0%, #10101212 54%, #10101224 100%);
+}
+.hero-product-strip a { color: var(--paper); }
+.hero-product-strip a:hover, .system-symbol { color: var(--accent); }
+.hero-scroll-cue { background: #ffffff08; }
+.experience-overview::before {
+  background: var(--ambient-gradient); filter: blur(69px); opacity: .27;
+  mix-blend-mode: color-dodge;
+}
+.tile-shade { background: linear-gradient(transparent 30%, #101012ed); }
+.experience-tile img, .cabinet-film > img, .world-banner > img {
+  filter: saturate(1.08) contrast(1.03);
+}
+.experience-tile:nth-child(1) img { object-position: 52% center; }
+.experience-tile:nth-child(2) img { object-position: 58% center; }
+.experience-tile:nth-child(3) img { object-position: 50% center; }
+.textured-panel {
+  background: var(--ink); border-color: var(--line); box-shadow: none;
+}
+.textured-panel::before {
+  background: url('/media/brainnft-noise.png') center / cover; opacity: .5;
+}
+.battle-game-card:hover {
+  background: linear-gradient(180deg, #f62eb126, #101012 65%); border-color: #f62eb17a;
+}
+.card-tags span, .battle-game-image { border-color: var(--line); }
+.game-card-copy>p { color: var(--muted); }
+.timeline-dot { background: var(--panel-2); border-color: var(--line); }
+.timeline-dot::after { background: var(--accent); }
+.card-ribbon { background: var(--accent-gradient); color: #fff; }
+.card-ribbon span { background: #101012; color: #fff; }
+.cabinet-orbits {
+  background: url('/media/brainnft-grid.svg') center / cover,
+    radial-gradient(ellipse, #960ed12e, #4568dc12 50%, transparent 72%);
+}
+.cabinet-artifact {
+  --cab-rx: 0deg; --cab-ry: 0deg; --cab-x: 0px; --cab-y: 0px;
+  --cab-px: 50%; --cab-py: 42%;
+  position: absolute; inset: 0; overflow: hidden; perspective: 1100px;
+  background: #08070c; contain: layout paint;
+}
+.cabinet-artifact-scene {
+  position: absolute; inset: -3%; transform-style: preserve-3d;
+  transform: rotateX(var(--cab-rx)) rotateY(var(--cab-ry)) scale(1.035);
+  transition: transform .35s cubic-bezier(.2,.8,.2,1);
+}
+.cabinet-reference-art .cabinet-artifact-stage,
+.detail-image .cabinet-artifact-stage {
+  object-fit: cover; padding: 0 !important;
+  transform: translate3d(calc(var(--cab-x) * -.35), calc(var(--cab-y) * -.35), -45px) scale(1.12);
+  filter: saturate(.9) brightness(.68) contrast(1.08);
+  transition: transform .35s cubic-bezier(.2,.8,.2,1);
+}
+.cabinet-artifact-depth {
+  position: absolute; inset: 6%; z-index: 1; transform: translateZ(15px);
+  background:
+    radial-gradient(circle at 50% 49%, transparent 0 23%, #f62eb11f 24%, transparent 25% 36%, #4568dc1c 37%, transparent 38%),
+    linear-gradient(90deg, transparent 49.8%, #ffffff1b 50%, transparent 50.2%);
+  mask-image: linear-gradient(transparent 2%, #000 25% 78%, transparent);
+  opacity: .75; pointer-events: none;
+}
+.cabinet-reference-art .cabinet-artifact-product,
+.detail-image .cabinet-artifact-product {
+  z-index: 2; object-fit: contain; padding: 12px 25% 10px !important;
+  transform: translate3d(var(--cab-x), var(--cab-y), 75px) scale(1.02);
+  filter: drop-shadow(0 28px 26px #000c) drop-shadow(0 0 24px #f62eb149);
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), filter .35s;
+}
+.cabinet-artifact-glint {
+  position: absolute; inset: 0; z-index: 3; transform: translateZ(105px);
+  background: radial-gradient(circle at var(--cab-px) var(--cab-py), #ffffff36 0, #f62eb117 8%, transparent 25%);
+  mix-blend-mode: screen; opacity: .7; pointer-events: none;
+  transition: background-position .2s linear;
+}
+.cabinet-artifact:hover .cabinet-artifact-product {
+  filter: drop-shadow(0 34px 30px #000e) drop-shadow(0 0 34px #f62eb16b);
+}
+.cabinet-depth-label {
+  position: absolute; z-index: 5; left: 20px; right: 20px; bottom: 20px;
+  min-height: 58px; display: grid; grid-template-columns: 30px auto 1fr;
+  gap: 10px; align-items: center; padding: 10px 14px;
+  background: #101012d9; border: 1px solid #ffffff30; border-radius: 8px;
+  backdrop-filter: blur(14px); pointer-events: none;
+}
+.cabinet-depth-label > span { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid #fff; }
+.cabinet-depth-label b { font-size: 12px; text-transform: uppercase; }
+.cabinet-depth-label small { color: var(--muted); font-size: 11px; }
+.system-visual { isolation: isolate; }
+.system-visual img {
+  object-fit: cover; z-index: 1; border-radius: 50%; clip-path: circle(43%);
+  filter: saturate(1.12) contrast(1.04); transform: scale(.88);
+  transition: transform .7s cubic-bezier(.2,.8,.2,1), filter .7s;
+}
+.battle-system-card:hover .system-visual img { transform: scale(.96) rotate(2deg); filter: saturate(1.28) contrast(1.08); }
+.system-visual i { z-index: 2; border-color: #f62eb142; background: #f62eb105; box-shadow: 0 0 30px #960ed10c; }
+.system-visual i:nth-of-type(2) { border-color: #b06ab354; }
+.system-visual i:nth-of-type(3) { border-color: #f62eb170; box-shadow: 0 0 28px #f62eb12b; }
+.media-slot { background: #101012e6; }
+.detail-image {
+  background:
+    url('/media/brainnft-grid.svg') center / cover,
+    radial-gradient(circle at 50% 45%, #960ed132 0%, #4568dc18 42%, #101012 76%);
+}
+.detail-image > img {
+  object-fit: contain; padding: clamp(34px, 5vw, 76px) clamp(46px, 7vw, 110px);
+  filter: drop-shadow(0 24px 38px #000b);
+}
+.detail-row:nth-child(even) { grid-template-columns: .58fr 1.5fr; }
+.interior-hero > img, .game-detail-hero > img { object-position: center; }
+.collection-art { grid-column: 1 / -1; position: relative; width: 100%; aspect-ratio: 1; overflow: hidden; }
+.collection-art img {
+  width: 100% !important; height: 100% !important; object-fit: cover;
+  transition: transform .5s cubic-bezier(.2,.8,.2,1);
+}
+.collection-strip a:hover .collection-art img { transform: scale(1.04); }
+.product-row-art {
+  position: relative; width: 150px; aspect-ratio: 1; justify-self: end;
+  border-radius: 50%; overflow: hidden; border: 1px solid #f62eb14a;
+  box-shadow: 0 0 45px #960ed11f;
+}
+.product-row-art > img { object-fit: cover; }
+.product-row-art .product-signal { position: absolute; inset: 0; height: auto; z-index: 2; }
+.product-row-art .product-signal::before { left: 12%; right: 12%; }
+.journey-number { color: var(--accent); }
+.world-banner-shade { background: #101012aa; }
+.footer-callout {
+  background: url('/media/brainnft-noise.png') center / cover, #960ed1;
+  background-blend-mode: screen; border-color: #ffffff24;
+}
+.footer-callout::before {
+  background: var(--ambient-gradient); filter: blur(100px); opacity: .56;
+  mix-blend-mode: color-dodge;
+}
+.footer-orbit { background: repeating-radial-gradient(circle,#ffffff03 0 55px,#ffffff24 56px,#ffffff03 58px 110px); }
+.footer-orbit img { border-color: #101012; box-shadow: 0 0 0 1px #ffffff38; }
+.interior-shade { background: linear-gradient(90deg,#101012ee,#10101255),linear-gradient(0deg,#101012,transparent); }
+.game-detail-shade { background: linear-gradient(90deg,#101012e6,#10101230),linear-gradient(0deg,#101012,transparent); }
+.product-row, .journey-row {
+  background: url('/media/brainnft-noise.png') center / cover, var(--ink);
+}
+.contact-band { background: var(--accent-gradient); }
+.collection-strip a { background: var(--panel); }
+.utility-mark { color: #960ed1; }
+.experience-tile::after,
+.cabinet-film::after,
+.cabinet-reference-art::after,
+.world-banner::after,
+.battle-game-image::after,
+.detail-image::after,
+.interior-hero::after,
+.game-detail-hero::after {
+  content: '';
+  position: absolute;
+  width: 92px;
+  height: 24px;
+  right: 18px;
+  top: 18px;
+  z-index: 4;
+  opacity: .78;
+  background: url('/media/generated/production-stills/tierplay-logo-official.svg') center / contain no-repeat;
+  filter: drop-shadow(0 3px 10px #000b);
+  pointer-events: none;
+}
+.battle-game-image::after { width: 64px; height: 17px; right: 10px; top: 10px; }
+.cabinet-reference-art::after { width: 72px; height: 19px; right: 12px; top: 12px; }
+.detail-image::after, .interior-hero::after, .game-detail-hero::after { width: 118px; height: 30px; }
+.interior-hero::after, .game-detail-hero::after { top: 124px; right: var(--gutter); }
+@media (max-width:650px) {
+  .battle-hero-shade {
+    background:
+      linear-gradient(0deg, #101012 0%, #1010128a 58%, #10101224 100%),
+      linear-gradient(90deg, #1010128a 0%, transparent 80%);
+  }
+  .battle-hero-image img { object-position: 67% center; }
+  .experience-tile { height: auto; aspect-ratio: 4 / 5; }
+  .experience-tile:nth-child(1) img { object-position: 55% center; }
+  .experience-tile:nth-child(2) img { object-position: 62% center; }
+  .experience-tile:nth-child(3) img { object-position: 50% center; }
+  .cabinet-film { height: auto; min-height: 440px; }
+  .cabinet-film > img { object-position: 62% center; }
+  .cabinet-reference-art img { padding: 20px 48px; }
+  .cabinet-reference-art .cabinet-artifact-stage,
+  .detail-image .cabinet-artifact-stage { padding: 0 !important; }
+  .cabinet-reference-art .cabinet-artifact-product,
+  .detail-image .cabinet-artifact-product { padding: 18px 24% 16px !important; }
+  .world-banner > img { object-position: 56% center; }
+  .interior-hero > img { object-position: 58% center; }
+  .detail-image > img { padding: 42px 52px 78px; }
+  .cabinet-depth-label { left: 14px; right: 14px; bottom: 14px; grid-template-columns: 30px 1fr; }
+  .cabinet-depth-label small { grid-column: 2; }
+  .detail-row:nth-child(even) { grid-template-columns: 1fr; }
+  .product-row-art { grid-column: 2 / -1; justify-self: start; width: 150px; margin-top: 12px; }
+  .experience-tile::after, .world-banner::after { width: 76px; height: 20px; }
+  .interior-hero::after, .game-detail-hero::after { top: 98px; right: 20px; width: 92px; height: 24px; }
+}
+@media (prefers-reduced-motion: reduce), (hover: none) {
+  .cabinet-artifact-scene { transform: scale(1.035); }
+  .cabinet-reference-art .cabinet-artifact-stage,
+  .detail-image .cabinet-artifact-stage { transform: scale(1.12); }
+  .cabinet-reference-art .cabinet-artifact-product,
+  .detail-image .cabinet-artifact-product { transform: scale(1.02); }
+  .cabinet-artifact-glint { background: radial-gradient(circle at 50% 42%, #ffffff2b 0, #f62eb112 9%, transparent 26%); }
+}

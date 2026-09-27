@@ -1,0 +1,4 @@
+# Missing asset briefs
+Cabinet: request actual Altitude/Pinnacle CAD/STEP/GLB or front/side/three-quarter high-resolution photographs, exact dimensions and panel/control geometry. Optimize through retopology, UVs, baked PBR, Meshopt, KTX2. Only visible geometry required. Never mislabel invented geometry as actual product.
+Game world: preserve recovered game logo, characters and composition. Need layered foreground, subject, midground, environment, sky and effects. Extend only after original inventory and client identity confirmation. First world uses recovered artwork without synthetic character replacement.
+Supporting media: no generation authorized as a substitute for available source. Keep generated files in assets/generated with manifest labels. Templates in ORIGINAL-BRIEF.md provide art direction when a demonstrable source gap remains.

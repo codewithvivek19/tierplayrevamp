@@ -1,0 +1,31 @@
+.section { display:grid; grid-template-columns:1fr 3fr; gap:32px; padding:52px 0 64px; border-top:1px solid #b8bcb3; }
+.index { font-size:11px; letter-spacing:.14em; padding-top:10px; }
+.section h2 { font-size:clamp(28px,3vw,48px); font-weight:500; letter-spacing:-.055em; margin:0 0 32px; }
+.typeDisplay { font-family:Display,Arial,sans-serif; font-size:clamp(64px,8vw,120px); line-height:.95; letter-spacing:-.025em; margin-bottom:32px; }
+.bodySample { font-size:16px; line-height:1.7; max-width:620px; margin-bottom:24px; color:#454c44; }
+.caption { font-size:10px; letter-spacing:.09em; line-height:1.8; color:#555b55; margin-top:24px; }
+.palette { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:32px; }
+.palette>div>span { display:block; height:100px; border:1px solid #b8bcb3; margin-bottom:16px; }
+.palette strong { font-size:13px; font-weight:500; }
+.palette p { font-size:11px; margin-top:6px; color:#555b55; }
+.tabs { display:flex; border-bottom:1px solid #b8bcb3; gap:28px; }
+.tabs button { border:0; border-bottom:2px solid transparent; background:none; color:#555b55; min-height:52px; font-size:14px; padding:12px 0; }
+.tabs button[aria-selected=true] { color:#9b2716; border-bottom-color:#bb331e; }
+.panel { padding:24px 0; min-height:150px; max-width:680px; }
+.panel h3 { font-size:22px; font-weight:500; margin:0 0 12px; }
+.panel p { font-size:16px; line-height:1.65; color:#555b55; }
+.buttonRow { display:flex; flex-wrap:wrap; gap:12px; }
+.form { display:grid; grid-template-columns:1fr 1fr; gap:24px; max-width:840px; }
+.form label { display:flex; flex-direction:column; gap:12px; font-size:13px; }
+.form label>span { display:contents; color:#555b55; }
+.form :is(input:not([type=radio]),select,textarea) { font:inherit; border:1px solid #9a9f94; border-radius:0; min-height:50px; padding:12px; background:#f4f3ef; color:#171a18; width:100%; }
+.form textarea { resize:vertical; }
+.form fieldset { grid-column:1/-1; border:0; padding:0; margin:0; min-width:0; }
+.form legend { font-size:13px; margin-bottom:18px; }
+.form legend span { color:#555b55; }
+.roles { display:flex; flex-wrap:wrap; gap:12px 24px; }
+.roles label { display:flex; flex-direction:row; align-items:center; gap:8px; min-height:44px; }
+.roles input { width:18px; height:18px; accent-color:#171a18; }
+.full { grid-column:1/-1; }
+.formStatus { font-size:13px; line-height:1.6; }
+@media(max-width:767px) { .section { grid-template-columns:1fr; padding:32px 0 40px; gap:20px; } .section h2 { margin-bottom:24px; } .palette { gap:12px; grid-template-columns:1fr 1fr; } .palette>div>span { height:80px; } .form { grid-template-columns:1fr; gap:20px; } .tabs { gap:20px; } .tabs button { font-size:13px; } .buttonRow { flex-direction:column; } .caption { font-size:10px; } }

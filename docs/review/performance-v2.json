@@ -1,0 +1,95 @@
+{
+  "vitals": {
+    "cls": 0.0019409481095679013,
+    "lcp": 124
+  },
+  "frameMedianMs": 16.699999999999818,
+  "frameP95Ms": 16.799999999999727,
+  "resources": [
+    {
+      "name": "tierplay.svg",
+      "bytes": 6633,
+      "decoded": 87654
+    },
+    {
+      "name": "hero-dragon-cabinet-v2.webp",
+      "bytes": 295176,
+      "decoded": 294876
+    },
+    {
+      "name": "3vru13zwjq99b.css",
+      "bytes": 3612,
+      "decoded": 11073
+    },
+    {
+      "name": "09lgyggnhjlha.js",
+      "bytes": 7508,
+      "decoded": 21753
+    },
+    {
+      "name": "0h-zrba5gx5gv.js",
+      "bytes": 1234,
+      "decoded": 934
+    },
+    {
+      "name": "0h2qsuyze9ds1.js",
+      "bytes": 3965,
+      "decoded": 14377
+    },
+    {
+      "name": "2l_y_qqi24r7y.js",
+      "bytes": 47435,
+      "decoded": 178147
+    },
+    {
+      "name": "turbopack-0qffc4oy-focd.js",
+      "bytes": 4140,
+      "decoded": 9688
+    },
+    {
+      "name": "0bma92pht_c97.js",
+      "bytes": 71941,
+      "decoded": 229156
+    },
+    {
+      "name": "2173mzgir_c7v.js",
+      "bytes": 89811,
+      "decoded": 252537
+    },
+    {
+      "name": "body.woff2",
+      "bytes": 25136,
+      "decoded": 24836
+    },
+    {
+      "name": "display.woff2",
+      "bytes": 22744,
+      "decoded": 22444
+    },
+    {
+      "name": "dragon-world-v2.webp",
+      "bytes": 308742,
+      "decoded": 308442
+    },
+    {
+      "name": "43-1nqtjb_u4q.js",
+      "bytes": 241625,
+      "decoded": 916295
+    },
+    {
+      "name": "hero-dragon-cabinet-v2.webp",
+      "bytes": 300,
+      "decoded": 294876
+    },
+    {
+      "name": "dragon-world-v2.webp",
+      "bytes": 300,
+      "decoded": 308442
+    }
+  ],
+  "viewport": [
+    1440,
+    900
+  ],
+  "dpr": 1
+}

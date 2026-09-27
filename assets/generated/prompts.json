@@ -1,0 +1,24 @@
+[
+  {
+    "key": "hero",
+    "referenced_image_paths": [
+      "/Users/vivekdutta/TierPlay Website /assets/source-recovery/cabinets/single-cabinet.webp",
+      "/Users/vivekdutta/TierPlay Website /assets/source-recovery/games/Thumbnails_Raise_of_Dragons-updated.webp"
+    ],
+    "prompt": "Create a spectacular cinematic 3D-rendered website hero asset, landscape 16:9, maximum detail. Reference 1 is the real Tierplay gaming cabinet: reconstruct its recognizable upright screen proportions, wide control deck, tapered black pedestal and plinth, not a generic arcade cabinet. Reference 2 establishes Tierplay Rise of the Dragon character identity: serpentine gold scales, jade-green mane and horns, purple segmented underside. Reimagine these dated source images with 2027 AAA game trailer / Unreal cinematography quality, physically rendered materials and immense depth. Composition: cabinet occupies the right-middle of frame from 24% down to 85% down, turned slightly three-quarter toward camera. A magnificent gold/jade dragon rises from the luminous display and coils up behind and over the cabinet, its head in upper right, razor-sharp scales and striking silhouette, clearly emerging from the game. Cinematic dark volcanic architectural space with black stone floor, red-orange fissure reflections, enormous shadowy pillars far behind, subtle atmospheric haze and suspended embers. Rich warm amber light radiates from display, thin crimson cabinet edges, soft cool white key highlights revealing black metal construction. Foreground obsidian fragments on lower right create depth. LEFT 45% stays very dark with restrained architectural detail, enough negative space for huge white HTML typography. Bold spectacular composition, not flat stock-photo layout. NO typography, NO website UI, NO captions, NO headline, NO logos except tiny Tierplay mark on cabinet base if legible. Avoid coins, casino floors, purple neon, glowing portal rings, cartoon appearance. This is an art-directed conceptual product visualization, not a technical product specification."
+  },
+  {
+    "key": "dragon-world",
+    "referenced_image_paths": [
+      "/Users/vivekdutta/TierPlay Website /assets/source-recovery/games/Thumbnails_Raise_of_Dragons-updated.webp"
+    ],
+    "prompt": "Transform the reference Tierplay Rise of the Dragon game artwork into a premium photorealistic AAA 3D cinematic environment asset for an immersive website. Wide 16:9 high-detail landscape. Preserve dragon identity: golden scales, emerald jade-green flowing mane and horns, magenta-purple segmented underside, powerful serpentine anatomy. A colossal dragon sweeps diagonally across the RIGHT TWO THIRDS of the scene, head looking down toward viewer near upper-right-middle, coiling body trailing into vast volcanic temple landscape with red-black stone architecture, distant spires, molten amber cracks and floating embers. Dramatic depth, foreground framing, distant fog, specular scale microdetail, cinematic light scattering, dark blacks, spectacular luminous amber and restrained crimson, not flat cartoon art. LEFT THIRD is lower-detail dark atmospheric space for HTML heading. No cabinet, no lettering or logos, no UI, no coins, no generic casino symbols. Production environment matte-painting quality with convincing 3D volume, not a poster or screenshot."
+  },
+  {
+    "key": "mobile-hero",
+    "referenced_image_paths": [
+      "/Users/vivekdutta/TierPlay Website /assets/generated/hero-dragon-cabinet-v2.png"
+    ],
+    "prompt": "Recompose this exact cinematic Tierplay cabinet-and-dragon scene as a PORTRAIT 9:16 mobile website background. Preserve the premium realistic 3D style, gold scaled dragon with emerald mane and purple underside, black Tierplay cabinet with amber display, volcanic temple environment. Art direction: the entire dragon head and its flowing coil should be visible in the UPPER HALF, cabinet recognizable and entirely visible from top to pedestal in UPPER 65%, centered slightly right. Camera pulls back enough to retain the whole subject. Lower 40% is very dark black obsidian foreground and subtle smoke, visually quiet for white HTML headline and controls. No lettering, no headline, no UI. Make a dramatically composed portrait with subject not cropped at sides. Keep vivid amber/jade highlights, detailed material rendering, foreground depth and scale. This is a mobile recomposition of the supplied scene, not a new character design."
+  }
+]

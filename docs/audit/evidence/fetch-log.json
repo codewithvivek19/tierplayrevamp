@@ -1,0 +1,139 @@
+[
+  {
+    "route": "/",
+    "file": "docs/research/live-home.html",
+    "status": "200|https://electronhubs.com/|text/html; charset=UTF-8",
+    "error": "",
+    "bytes": 105394,
+    "sha256": "bcdd8d786af1b056f4d7c6d7ce3745dd3492ba14232b30758f4fd20447fddebb",
+    "transport": "TLS certificate mismatch; public unauthenticated read using certificate verification bypass. Not verified secure transport."
+  },
+  {
+    "route": "/cabinets/",
+    "file": "docs/research/live-cabinets.html",
+    "status": "200|https://electronhubs.com/cabinets/|text/html; charset=UTF-8",
+    "error": "",
+    "bytes": 139863,
+    "sha256": "898f51e7361bd975588490c13394c21b9a00917237fced64c3d266253853f1aa",
+    "transport": "TLS certificate mismatch; public unauthenticated read using certificate verification bypass. Not verified secure transport.",
+    "initialError": "curl: (28) Operation timed out after 25005 milliseconds with 19954 bytes received\n",
+    "note": "Successful sequential retry recovered full closing HTML."
+  },
+  {
+    "route": "/games/",
+    "file": "docs/research/live-games.html",
+    "status": "200|https://electronhubs.com/games/|text/html; charset=UTF-8",
+    "error": "",
+    "bytes": 211956,
+    "sha256": "01e2fb5d842aba18042be7e4342f0a7e0561bb495eee7c36cda2be3cace4b84f",
+    "transport": "TLS certificate mismatch; public unauthenticated read using certificate verification bypass. Not verified secure transport."
+  },
+  {
+    "route": "/products/",
+    "file": "docs/research/live-products.html",
+    "status": "200|https://electronhubs.com/products/|text/html; charset=UTF-8",
+    "error": "",
+    "bytes": 97345,
+    "sha256": "cde19230e720fb9d0979112e252291928b31202c16e94f4ca86c680d13e24c9d",
+    "transport": "TLS certificate mismatch; public unauthenticated read using certificate verification bypass. Not verified secure transport."
+  },
+  {
+    "route": "/player-journey/",
+    "file": "docs/research/live-player-journey.html",
+    "status": "200|https://electronhubs.com/player-journey/|text/html; charset=UTF-8",
+    "error": "",
+    "bytes": 86675,
+    "sha256": "f970a1125409f6408f795ef200cfba1942f2e256573f5f0b1cb19df8dc92d2ba",
+    "transport": "TLS certificate mismatch; public unauthenticated read using certificate verification bypass. Not verified secure transport."
+  },
+  {
+    "route": "/up-to-date/",
+    "file": "docs/research/live-up-to-date.html",
+    "status": "200|https://electronhubs.com/up-to-date/|text/html; charset=UTF-8",
+    "error": "",
+    "bytes": 76795,
+    "sha256": "771f4461fb3cdedf56d2f977d27b8fd56bab573a82d1a9bb984c1e910a0046f0",
+    "transport": "TLS certificate mismatch; public unauthenticated read using certificate verification bypass. Not verified secure transport."
+  },
+  {
+    "route": "/our_games/sunscapes/",
+    "file": "docs/research/live-our_games_sunscapes.html",
+    "status": "200|https://electronhubs.com/our_games/sunscapes/|text/html; charset=UTF-8",
+    "error": "",
+    "bytes": 99456,
+    "sha256": "e4cefd628de81a45e92675bcbbddecbb9921dbc48dc80b6457e310fb5a3b9238",
+    "transport": "TLS certificate mismatch; public unauthenticated read using certificate verification bypass. Not verified secure transport."
+  },
+  {
+    "route": "/our_games/sunscape-2/",
+    "file": "docs/research/live-our_games_sunscape-2.html",
+    "status": "200|https://electronhubs.com/our_games/sunscape-2/|text/html; charset=UTF-8",
+    "error": "",
+    "bytes": 100271,
+    "sha256": "bf81c89ebf4b9c2d071734e171078a55ace4ef6c1cd3a2425dae073c93265f22",
+    "transport": "TLS certificate mismatch; public unauthenticated read using certificate verification bypass. Not verified secure transport."
+  },
+  {
+    "route": "/our_games/sunscape-3/",
+    "file": "docs/research/live-our_games_sunscape-3.html",
+    "status": "200|https://electronhubs.com/our_games/sunscape-3/|text/html; charset=UTF-8",
+    "error": "",
+    "bytes": 99968,
+    "sha256": "9506c3123a5681cd92c0b19e00da87697712bbcc474fd20a0f9a49b82cac6b75",
+    "transport": "TLS certificate mismatch; public unauthenticated read using certificate verification bypass. Not verified secure transport."
+  },
+  {
+    "route": "/our_games/sunscape-4/",
+    "file": "docs/research/live-our_games_sunscape-4.html",
+    "status": "200|https://electronhubs.com/our_games/sunscape-4/|text/html; charset=UTF-8",
+    "error": "",
+    "bytes": 100244,
+    "sha256": "b2a277f21733a6b3df52549560237bffbe1c7f886a04c35d89f6b9ca387915ed",
+    "transport": "TLS certificate mismatch; public unauthenticated read using certificate verification bypass. Not verified secure transport."
+  },
+  {
+    "route": "/our_games/sunscape-5/",
+    "file": "docs/research/live-our_games_sunscape-5.html",
+    "status": "200|https://electronhubs.com/our_games/sunscape-5/|text/html; charset=UTF-8",
+    "error": "",
+    "bytes": 97780,
+    "sha256": "145945616904362526cd556db4de3b002484580d5dbf8ddb1ff15f00bf62bb22",
+    "transport": "TLS certificate mismatch; public unauthenticated read using certificate verification bypass. Not verified secure transport."
+  },
+  {
+    "route": "/our_games/sunscape-6/",
+    "file": "docs/research/live-our_games_sunscape-6.html",
+    "status": "200|https://electronhubs.com/our_games/sunscape-6/|text/html; charset=UTF-8",
+    "error": "",
+    "bytes": 93401,
+    "sha256": "e96d13c24ef2efbe2dbed1d0650e70cc70396a2c22e440405f6d124d791ca22f",
+    "transport": "TLS certificate mismatch; public unauthenticated read using certificate verification bypass. Not verified secure transport."
+  },
+  {
+    "route": "/contact-sales/",
+    "file": "docs/research/live-contact-sales.html",
+    "status": "200|https://electronhubs.com/contact-sales/|text/html; charset=UTF-8",
+    "error": "",
+    "bytes": 82432,
+    "sha256": "8a3bade4cf8e1b02e234c79444aa47411abb6db394849cee9dc726c991c9d110",
+    "transport": "Public unauthenticated recovery with TLS validation bypass (mismatched certificate)."
+  },
+  {
+    "route": "/24-7-support/",
+    "file": "docs/research/live-24-7-support.html",
+    "status": "200|https://electronhubs.com/24-7-support/|text/html; charset=UTF-8",
+    "error": "",
+    "bytes": 76812,
+    "sha256": "eda40ee0ef83e46e29e31ef27888092d80480828d49a7e1fd8918259a71ecae6",
+    "transport": "Public unauthenticated recovery with TLS validation bypass (mismatched certificate)."
+  },
+  {
+    "route": "/games-collection/",
+    "file": "docs/research/live-games-collection.html",
+    "status": "200|https://electronhubs.com/games-collection/|text/html; charset=UTF-8",
+    "error": "",
+    "bytes": 87890,
+    "sha256": "667be007ecf3c443d36a1bb5945b272f92d716a7bca4e2b8cad4b213d2989082",
+    "transport": "Public unauthenticated recovery with TLS validation bypass (mismatched certificate)."
+  }
+]

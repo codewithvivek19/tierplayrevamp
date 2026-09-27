@@ -1,0 +1,7 @@
+# Image generation requirements — briefs, not generation
+
+TP-007 input roles: model-specific original cabinet photos are identity/geometry references; approved Blender render is the preferred composition target; original logo is branding reference. Do not use the current generated dragon cabinet as dimensional evidence.
+
+Prompt contract: “Render the Altitude Tierplay cabinet strictly matching the supplied approved reference. 50mm equivalent front three-quarter lens, camera height1.35m, entire cabinet/base in frame. Large soft key camera-left, narrow controlled rim camera-right, subtle overhead reflection. Preserve reference-confirmed powder-coated shell/metal finish, smoked glass and gloss display. Minimal graphite studio, soft grounded contact shadow. Produce separate dark studio and true transparent-alpha variants, landscape3840×2160 and recomposed portrait2160×3840. Do not change geometry, display count, button/validator layout, base proportions, branding position or visible features. Do not add decorations, extra panels or generated gameplay.”
+
+Use material terms only after reference confirmation. Compare result to original before approving; generative stills cannot replace GLBs. TP-008 uses individual verified game art as identity reference and preserves actual title/characters/symbols. Keep prompts and original outputs separate from optimized derivatives; record provenance and approval. No images were generated in the audit assignment.
