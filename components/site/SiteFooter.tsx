@@ -1,15 +1,22 @@
 import Link from "next/link";
-import { navigation, games, company } from "@/content/site";
+import { navigation, cabinets, company } from "@/content/site";
+import Lamp from "@/components/ui/Lamp";
+import DepthText from "@/components/ui/DepthText";
 
 export default function SiteFooter() {
   return (
     <footer className="site-footer">
-      <div className="footer-callout">
-        <p className="kicker">Start a conversation</p>
-        <h2>Bring the next tier<br />to your floor.</h2>
-        <Link className="arrow-button light" href="/contact-sales">Contact sales <span aria-hidden="true">↗</span></Link>
-        <div className="footer-orbit" aria-hidden="true">{games.map(game => <img key={game.slug} src={game.image} alt="" width="100" height="100" loading="lazy"/>)}</div>
-      </div>
+      <section className="floor-invitation" aria-labelledby="floor-invitation-title">
+        <Lamp><div className="floor-invitation-copy"><p className="kicker">Your next installation</p>
+          <h2 id="floor-invitation-title">Make room for <DepthText text="Tierplay."/></h2>
+          <p>Explore Sunscape games, Altitude and Pinnacle cabinets, and the systems that connect them. Tell us what your floor needs.</p>
+          <Link className="arrow-button light" href="/contact-sales">Discuss your floor <span aria-hidden="true">↗</span></Link>
+          <Link className="floor-secondary" href="/cabinets">Compare Altitude & Pinnacle <span aria-hidden="true">→</span></Link>
+        </div></Lamp>
+        <div className="floor-product-stage">
+          {cabinets.map(cabinet => <Link href="/cabinets" key={cabinet.name} className="floor-product"><img src={cabinet.sourceImage} alt={`${cabinet.name} cabinet`} loading="lazy"/><span>{cabinet.name}<b aria-hidden="true">↗</b></span></Link>)}
+        </div>
+      </section>
       <div className="footer-grid">
         <Link className="footer-brand" href="/" aria-label="Tierplay home">
           <img src="/media/generated/production-stills/tierplay-logo-official.svg" alt="Tierplay" width="205" height="62" />

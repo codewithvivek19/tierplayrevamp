@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { PortalState } from "@/components/hero/portalState";
+import PortalAudio from "@/components/hero/PortalAudio";
 import "@/components/hero/portal.css";
 const PortalCanvas = dynamic(() => import("@/components/hero/PortalCanvas"), { ssr: false });
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -21,7 +22,6 @@ export default function BattleHero() {
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
   const [active, setActive] = useState(true);
-  const [sceneVisible, setSceneVisible] = useState(true);
   const [paused, setPaused] = useState(false);
   const [chapter, setChapter] = useState(0);
   const live = enabled && !failed;
@@ -31,22 +31,21 @@ export default function BattleHero() {
     if (sequence.current.paused) return;
     const p = travel.current.progress;
     sequence.current.progress = p; sequence.current.invalidate?.();
-    setSceneVisible(value => value === (p < .9) ? value : p < .9);
-    const next = p < .3 ? 0 : p < .78 ? 1 : 2;
+    const next = p < .36 ? 0 : p < .8 ? 1 : 2;
     setChapter(value => value === next ? value : next);
     const style = stage.current?.style;
     if (!style) return;
-    const leave = smooth(p, .1, .3), arrival = smooth(p, .66, .86), title = smooth(p, .8, .96);
+    const leave = smooth(p, .23, .36), arrival = smooth(p, .66, .86), title = smooth(p, .82, .94);
     style.setProperty("--portal-progress", String(p));
     style.setProperty("--intro-opacity", String(1 - leave));
     style.setProperty("--intro-y", `${-leave * 65}px`);
-    style.setProperty("--passage-opacity", String(smooth(p, .28, .43) * (1 - smooth(p, .58, .7))));
+    style.setProperty("--passage-opacity", String(smooth(p, .66, .7) * (1 - smooth(p, .76, .8))));
     style.setProperty("--arrival-opacity", String(arrival));
     style.setProperty("--arrival-radius", `${arrival * 145}%`);
     style.setProperty("--arrival-scale", String(1.22 - arrival * .22));
     style.setProperty("--arrival-title", String(title));
     style.setProperty("--arrival-y", `${(1 - title) * 45}px`);
-    style.setProperty("--scene-opacity", String(1 - smooth(p, .73, .89)));
+    style.setProperty("--scene-opacity", "1");
   }, []);
 
   useEffect(() => {
@@ -89,32 +88,32 @@ export default function BattleHero() {
       sequence.current.pointerActive = true;
     }} onPointerLeave={() => { sequence.current.pointerX = 0; sequence.current.pointerY = 0; sequence.current.pointerActive = false; }}>
       <div className="battle-hero-image" aria-hidden="true"><Image src="/media/generated/theme-v3/hero-multiverse-v4.webp" alt="" fill priority sizes="100vw"/></div>
-      {live && <div className="portal-canvas" aria-hidden="true"><PortalCanvas sequence={sequence.current} active={active && sceneVisible} onReady={onReady} onFailure={onFailure}/></div>}
-      {live && <div className="portal-arrival" aria-hidden="true"><Image src="/media/generated/theme-v3/entrance-editorial-v5.webp" alt="" fill sizes="100vw"/><div className="portal-arrival-shade"/></div>}
+      {live && <div className="portal-canvas" aria-hidden="true"><PortalCanvas sequence={sequence.current} active={active} onReady={onReady} onFailure={onFailure}/></div>}
       <div className="battle-hero-shade"/>
       <div className="portal-caption" aria-hidden="true"><span className="portal-signal"/> THE TIERPLAY UNIVERSE <span>0{(live ? chapter : 0) + 1} — 03</span></div>
       <div className="battle-container battle-hero-content" inert={live && chapter !== 0}>
         <div className="battle-hero-copy">
-          <p className="portal-eyebrow">Games. Hardware. Possibility.</p>
+          <p className="portal-eyebrow">Tierplay / The collection</p>
           <h1 id="hero-title"><span>Play beyond</span><span>the <em>screen.</em></span></h1>
-          <p className="portal-description">Extraordinary game worlds. Distinctive cabinets.<br className="portal-desktop-break"/> One connected Tierplay experience.</p>
-          <div className="portal-actions"><Link className="battle-button" href="/games">Explore our games <span aria-hidden="true">↗</span></Link><button className="portal-enter" onClick={enter}>Enter the experience <span aria-hidden="true">↓</span></button></div>
+          <p className="portal-description">Sunscape games. Altitude and Pinnacle cabinets.<br className="portal-desktop-break"/> Connected systems for the gaming floor.</p>
+          <div className="portal-actions"><Link className="battle-button" href="/games">Explore the games <span aria-hidden="true">↗</span></Link><button className="portal-enter" onClick={enter}>See the experience <span aria-hidden="true">↓</span></button></div>
         </div>
         <nav className="hero-product-strip" aria-label="Explore Tierplay products">
           {[{name:"Altitude",href:"/cabinets"},{name:"Pinnacle",href:"/cabinets"},{name:"TCM",href:"/products"},{name:"TLJ",href:"/products"}].map((item,index) => <Link key={item.name} href={item.href}><span>0{index+1}</span>{item.name}<b aria-hidden="true">↗</b></Link>)}
         </nav>
       </div>
       {live && <>
-        <div className="portal-object-caption" aria-hidden="true"><span>INFINITE POSSIBILITIES</span><i/><small>A world within a world</small></div>
-        <div className="portal-passage" aria-hidden="true"><span>Leave the ordinary behind.</span><p>There’s another world ahead.</p></div>
-        <div className="portal-arrival-copy" inert={chapter !== 2}><p className="portal-eyebrow">01 / The entrance</p><h2>Every world<br/>starts <em>here.</em></h2><a href="#experience">Discover the Tierplay experience <span aria-hidden="true">↘</span></a></div>
+        <div className="portal-passage" aria-hidden="true"><span>02 / Reassembly</span><p>Entering the system.</p></div>
+        <div className="portal-arrival-copy" inert={chapter !== 2}><p className="portal-eyebrow">03 / The gateway</p><h2>Every world<br/>starts <em>here.</em></h2><a href="#experience">Discover the Tierplay experience <span aria-hidden="true">↘</span></a></div>
       </>}
       <div className="portal-controls">
+        {live && ready && <PortalAudio sequence={sequence.current} active={active} paused={paused}/>}
         {live && ready && <button aria-pressed={paused} onClick={() => { const next = !paused; sequence.current.paused = next; setPaused(next); if (!next) sync(); sequence.current.invalidate?.(); }}>{paused ? "Resume motion" : "Pause motion"}<span aria-hidden="true">{paused ? "▷" : "Ⅱ"}</span></button>}
         <a href="#experience">{live ? "Skip to explore" : "Explore Tierplay"}<span aria-hidden="true">↘</span></a>
       </div>
-      {live && <div className="portal-scroll-label" aria-hidden="true"><span className="portal-scroll-glyph">↓</span><span>{["SCROLL TO DISCOVER", "THROUGH THE PORTAL", "WELCOME TO TIERPLAY"][chapter]}</span></div>}
+      {live && <div className="portal-scroll-label" aria-hidden="true"><span className="portal-scroll-glyph">↓</span><span>{["SCROLL TO EXPLORE", "THE STRUCTURE UNFOLDS", "EXPLORE THE COLLECTION"][chapter]}</span></div>}
       <div className="portal-progress" aria-hidden="true"/>
     </div>
+    {!live && <div className="portal-static-gateway"><Image src="/media/generated/theme-v3/entrance-editorial-v5.webp" alt="An obsidian gateway illuminated by violet light, opening into the Tierplay world." fill sizes="100vw"/><div><p className="portal-eyebrow">The gateway</p><h2>Every world starts here.</h2><a className="battle-button" href="#experience">Discover Tierplay <span aria-hidden="true">↘</span></a></div></div>}
   </section>;
 }

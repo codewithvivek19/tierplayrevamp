@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import InteriorHero from "@/components/site/InteriorHero";
-import ContactBand from "@/components/site/ContactBand";
 import Reveal from "@/components/site/Reveal";
 import { KineticHeading, SignalLoop, SpotlightPanel } from "@/components/site/InteractivePrimitives";
 import { legacyNotice, productPillars, products } from "@/content/site";
@@ -23,6 +22,5 @@ export default function ProductsPage() {
       </Reveal>)}
       <p className="archive-note">{legacyNotice}</p>
     </section>
-    <ContactBand />
   </main>;
 }

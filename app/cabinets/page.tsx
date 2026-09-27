@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import InteriorHero from "@/components/site/InteriorHero";
-import ContactBand from "@/components/site/ContactBand";
 import CabinetArtifact from "@/components/site/CabinetArtifact";
 import Reveal from "@/components/site/Reveal";
 import { KineticHeading, SignalLoop, SpotlightPanel } from "@/components/site/InteractivePrimitives";
@@ -25,6 +24,5 @@ export default function CabinetsPage() {
       <div className="capability-grid">{cabinetCapabilities.map((item, index) => <Reveal key={item}><SpotlightPanel className="capability-card"><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></SpotlightPanel></Reveal>)}</div>
       <p className="archive-note">{legacyNotice}</p>
     </section>
-    <ContactBand />
   </main>;
 }

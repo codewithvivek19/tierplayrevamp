@@ -15,19 +15,20 @@ void main(){
  vec3 velocity=mat3(modelViewMatrix)*aVelocity;
  vAngle=atan(velocity.y,velocity.x);vStretch=clamp(length(velocity)*.09,0.,.75);
  vHeat=aHeat;vAlpha=smoothstep(.3,2.,-mv.z)*(1.-smoothstep(28.,55.,-mv.z));
- gl_PointSize=clamp(aSize*uDpr*210./max(1.,-mv.z)*(1.+vStretch),1.,28.);
+ gl_PointSize=clamp(aSize*uDpr*120./max(1.,-mv.z)*(1.+vStretch),1.,7.);
  gl_Position=projectionMatrix*mv;
 }`;
 const particleFragment = /* glsl */ `
 varying float vHeat; varying float vStretch; varying float vAngle; varying float vAlpha;
+uniform float uProgress;
 void main(){
  vec2 p=gl_PointCoord-.5;
  float c=cos(vAngle),s=sin(vAngle);p=mat2(c,-s,s,c)*p;
  p.y*=1.+vStretch*4.;float d=length(p)*2.;
- float core=exp(-d*d*30.);float halo=exp(-d*d*6.)*.13;
- vec3 color=mix(vec3(.35,.44,1.),vec3(.87,.52,.92),vHeat);
+ float core=exp(-d*d*12.);float halo=exp(-d*d*5.)*.025;
+ vec3 color=mix(vec3(.48,.55,.78),vec3(.75,.62,.8),vHeat);
  color=mix(color,vec3(.95,.86,.69),step(.94,vHeat));
- gl_FragColor=vec4(color*(1.+vHeat*.6),(core+halo)*vAlpha*.65);
+ gl_FragColor=vec4(color*(1.+vHeat*.6),(core+halo)*vAlpha*.65*(1.-smoothstep(.65,.88,uProgress)*.65));
 }`;
 
 // Semi-implicit integration with capped substeps, drag, spring attraction and
@@ -43,7 +44,7 @@ export default function PortalParticles({ sequence, balanced = false }: { sequen
       const angle = random(i) * Math.PI * 2, radius = 2.7 + Math.pow(random(i + 100), 2) * 5.5;
       seeds.set([angle, radius, (random(i + 700) - .35) * 11, .04 + random(i + 1400) * .11], i * 4);
       position.set([Math.cos(angle) * radius, Math.sin(angle) * radius * .78, seeds[i * 4 + 2]], i * 3);
-      sizes[i] = .14 + Math.pow(random(i + 2000), 4) * 1.15;
+      sizes[i] = .07 + Math.pow(random(i + 2000), 6) * .35;
       heat[i] = random(i + 3000);
     }
     return { position, velocity, seeds, sizes, heat };
@@ -60,7 +61,9 @@ export default function PortalParticles({ sequence, balanced = false }: { sequen
         const j = i * 3, k = i * 4;
         const a = field.seeds[k] + sequence.time * field.seeds[k + 3] + pull * (1.8 + field.seeds[k + 3] * 3);
         const r = field.seeds[k + 1] * (1 - pull * .2 + release * .72);
-        const tx = Math.cos(a) * r, ty = Math.sin(a) * r * .83;
+        const settle = MathUtils.smoothstep(sequence.progress, .62, .84);
+        const tx = MathUtils.lerp(Math.cos(a) * r, Math.cos(field.seeds[k]) * field.seeds[k + 1] * 1.2, settle);
+        const ty = MathUtils.lerp(Math.sin(a) * r * .83, 7 - ((sequence.time * .23 + i * .37) % 11), settle);
         const tz = field.seeds[k + 2] + Math.sin(a * 2 + sequence.time * .12) * .5 + release * (i % 2 ? 7 : -5);
         const dx = field.position[j] - pointerX, dy = field.position[j + 1] - pointerY;
         const distance = dx * dx + dy * dy + .6;

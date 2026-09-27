@@ -14,23 +14,26 @@ varying vec2 vUv; uniform float uTime; uniform float uProgress;
 ${noise}
 void main(){
   vec2 p=(vUv-.5)*2.; float r=length(p); float a=atan(p.y,p.x);
-  float t=uTime*.12+uProgress*2.;
-  float cloud=fbm(vec3(p*5.,t*.3));
-  vec2 curl=vec2(cos(a+r*4.-t),sin(a+r*4.-t))*r;
-  float turbulence=fbm(vec3(curl*16.,t*.4));
-  float fine=fbm(vec3(curl*52.,t*.25));
-  float spiral=sin(r*69.-a*5.-t*3.+cloud*18.+turbulence*7.);
-  float filaments=pow(max(0.,spiral),28.)*pow(turbulence+.25,2.);
-  float inner=exp(-r*24.); float rim=exp(-pow((r-.86+(cloud-.5)*.12)*38.,2.));
-  float web=pow(max(0.,1.-abs(fine-.48)*12.),10.)*turbulence;
-  vec3 violet=mix(vec3(.014,.006,.065),vec3(.12,.025,.38),cloud);
-  vec3 color=violet*(.3+turbulence*1.1)+vec3(.14,.21,.68)*web*.8;
-  color+=vec3(.23,.3,1.)*filaments*2.2;
-  color+=vec3(.48,.07,.7)*rim*(.12+turbulence*.8)+vec3(1.,.52,.88)*inner*5.;
-  float flare=pow(max(0.,1.-abs(p.y+.20*p.x)),230.)*exp(-abs(p.x)*2.8);
-  color+=vec3(.85,.18,.55)*flare*1.6;
+  float t=uTime*.24+uProgress*2.;
+  vec2 curl=vec2(cos(a-r*3.4+t),sin(a-r*3.4+t))*r;
+  float cloud=fbm(vec3(curl*5.,t*.22));
+  float turbulence=fbm(vec3(curl*13.+cloud*2.5,t*.31));
+  float fine=fbm(vec3(curl*32.+turbulence,t*.15));
+  float envelope=smoothstep(.12,.40,r)*(1.-smoothstep(.75,1.,r));
+  float veins=pow(max(0.,1.-abs(turbulence-.48)*6.),4.);
+  float dust=pow(fine,3.)*envelope;
+  float inner=exp(-r*19.);
+  float rim=exp(-pow((r-.79+(cloud-.5)*.24)*14.,2.));
+  vec3 color=vec3(.009,.008,.023);
+  color+=mix(vec3(.08,.035,.19),vec3(.28,.13,.48),cloud)*envelope*(.4+turbulence);
+  color+=mix(vec3(.19,.26,.55),vec3(.62,.32,.59),fine)*veins*envelope*.9;
+  color+=vec3(.38,.42,.66)*dust*1.4;
+  color+=vec3(.30,.18,.47)*rim*(.25+turbulence*.65);
+  color+=vec3(1.,.76,.64)*inner*2.8;
+  float flare=exp(-abs(p.y+.16*p.x)*170.)*exp(-abs(p.x)*4.);
+  color+=vec3(.6,.35,.5)*flare*.7;
   float alpha=(1.-smoothstep(.9,1.,r));
-  gl_FragColor=vec4(color,alpha);
+  gl_FragColor=vec4(color*.62,alpha);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }`;
@@ -39,8 +42,8 @@ varying vec2 vUv; uniform float uTime;
 ${noise}
 void main(){
  vec2 p=vUv;float n=fbm(vec3(p*6.,uTime*.012));
- float mist=pow(n,3.)*exp(-abs(p.y-.5)*3.);
- vec3 col=mix(vec3(.003,.004,.009),vec3(.11,.085,.15),mist*2.);
+ float mist=pow(n,2.)*exp(-abs(p.y-.55)*4.);
+ vec3 col=mix(vec3(.003,.004,.009),vec3(.12,.085,.17),mist*2.);
  float haze=exp(-length((p-vec2(.68,.6))*vec2(3.,2.))*3.);
  col+=vec3(.04,.032,.057)*haze;
  col=mix(vec3(.0034,.0027,.0075),col,smoothstep(.39,.7,p.y));

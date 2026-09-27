@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import InteriorHero from "@/components/site/InteriorHero";
-import ContactBand from "@/components/site/ContactBand";
 import Reveal from "@/components/site/Reveal";
 import { KineticHeading, SignalLoop, SpotlightPanel } from "@/components/site/InteractivePrimitives";
 import { journey, legacyNotice } from "@/content/site";
@@ -18,6 +17,5 @@ export default function JourneyPage() {
       <aside className="legacy-metrics"><p className="kicker">Legacy performance claims</p><h2>Approval required before publication.</h2><p>The old site also claimed “up to 3× more jackpots,” “25% faster” jackpot growth and “40%” higher engagement. The audit preserves those figures, but this redesign does not present them as verified results.</p></aside>
       <p className="archive-note">{legacyNotice}</p>
     </section>
-    <ContactBand />
   </main>;
 }

@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 test("game cards and hero links lead to Tierplay destinations", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("link", { name: "Explore our games" }).click();
+  await page.getByRole("link", { name: "Explore the games" }).click();
   await expect(page).toHaveURL(/\/games$/);
   await expect(page.locator(".board-card")).toHaveCount(6);
   await page.getByRole("link", { name: "Enter board", exact: true }).nth(1).click();

@@ -1,5 +1,7 @@
 # Project state
 
+2026-09-27 latest: ADR-014 replaces the hero's flat entrance handoff with a procedural 3D gateway. Instanced orbital stones assemble into monoliths; energy, overhead rings, illuminated floor, mist and water stay in the same scene. Optional sound is muted by default. Static fallback includes both environments. The existing overview is the exit; no new cabinet model is claimed.
+
 Latest full-site expansion (2026-09-27): all recoverable public Electron Hub/Tierplay copy and 104 MIME-validated public image/logo assets now feed the complete route set. Games preserve all six board routes and fifteen named titles; Cabinet, Product, Player Journey, Contact, Support and Update routes now carry their recovered content rather than placeholders. React Bits-style open interaction patterns are implemented locally with Motion/CSS and include reduced-motion fallbacks. Typecheck, production build and all 33 Chromium tests pass. The preview remains http://localhost:3004. Legacy claims are visibly held for current approval; no gated source or protected asset access was used.
 
 Latest refinement: `PortalParticles.tsx`, the updated PortalCanvas, and BattleHero now form a reversible three-phase opening-to-entrance sequence. Semantic hero copy/navigation and typography were revised. See ADR-013 for particle simulation, adaptive quality, animation ownership and reference limitations.

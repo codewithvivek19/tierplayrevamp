@@ -3,6 +3,7 @@ import "./globals.css";
 import "./battlez.css";
 import "./brain-theme.css";
 import "./content-experience.css";
+import "./editorial-refinement.css";
 import SiteChrome from "@/components/site/SiteChrome";
 export const metadata: Metadata = {
   title: { default: "Tierplay — The next tier of play", template: "%s — Tierplay" },

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import InteriorHero from "@/components/site/InteriorHero";
-import ContactBand from "@/components/site/ContactBand";
 import Reveal from "@/components/site/Reveal";
 import { KineticHeading, SignalLoop, SpotlightPanel, TiltSurface } from "@/components/site/InteractivePrimitives";
 import { boards, gameMechanics, legacyNotice } from "@/content/site";
@@ -27,6 +26,5 @@ export default function GamesPage() {
       <Reveal className="section-lede split"><div><p className="kicker">Incredible features</p><KineticHeading>Built around the moment.</KineticHeading></div><p>Free spins, nudge, bonuses and jackpots are the recurring mechanics named throughout the recovered Sunscape material.</p></Reveal>
       <div className="mechanic-grid">{gameMechanics.map((item) => <Reveal key={item.title}><SpotlightPanel className="mechanic-card"><div className="mechanic-art"><Image src={item.image} alt="" fill sizes="(max-width: 650px) 90vw, 24vw" /></div><div><h3>{item.title}</h3><p>{item.copy}</p></div></SpotlightPanel></Reveal>)}</div>
     </section>
-    <ContactBand />
   </main>;
 }

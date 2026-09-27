@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import ContactBand from "@/components/site/ContactBand";
 import Reveal from "@/components/site/Reveal";
 import { KineticHeading, SpotlightPanel } from "@/components/site/InteractivePrimitives";
 import { boards, legacyNotice, supportCopy } from "@/content/site";
@@ -30,6 +29,5 @@ export default async function GameBoardPage({ params }: { params: Promise<{ slug
     <section className="support-panel section-pad"><div><p className="kicker">Tech support</p><KineticHeading>Here around the clock.</KineticHeading></div><p>{supportCopy}</p><Link className="battle-button" href="/24-7-support">Visit support <span aria-hidden="true">↗</span></Link></section>
     <section className="supporting-assets section-pad"><div className="supporting-poster"><Image src={board.poster} alt={`${board.shortTitle} supporting artwork`} fill sizes="(max-width: 760px) 90vw, 38vw" /></div><div><p className="kicker">Supporting assets</p><KineticHeading>Sunscapes flyer.</KineticHeading><p>The public page referenced a downloadable Sunscapes flyer. No approved downloadable document was recovered, so the link remains withheld.</p><p className="archive-note">{legacyNotice}</p></div></section>
     <nav className="game-pagination" aria-label="Other game boards"><Link href={`/our_games/${previous.slug}`}><span>Previous</span><b>{previous.shortTitle}</b></Link><Link href={`/our_games/${next.slug}`}><span>Next</span><b>{next.shortTitle}</b></Link></nav>
-    <ContactBand />
   </main>;
 }

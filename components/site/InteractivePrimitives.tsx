@@ -17,9 +17,9 @@ export function KineticHeading({ children, className = "", as = "h2" }: { childr
           aria-hidden="true"
           className="kinetic-word"
           key={`${word}-${index}`}
-          initial={reduced ? false : { opacity: 0, y: ".7em", filter: "blur(10px)" }}
-          animate={visible ? { opacity: 1, y: 0, filter: "blur(0px)" } : undefined}
-          transition={{ duration: reduced ? 0 : 0.72, delay: reduced ? 0 : index * 0.045, ease: [0.22, 1, 0.36, 1] }}
+          initial={reduced ? false : { opacity: 0, y: ".2em" }}
+          animate={visible ? { opacity: 1, y: 0 } : undefined}
+          transition={{ duration: reduced ? 0 : 0.35, delay: reduced ? 0 : index * 0.02, ease: [0.22, 1, 0.36, 1] }}
         >
           {word}&nbsp;
         </motion.span>
@@ -56,11 +56,10 @@ export function TiltSurface({ children, className = "" }: { children: React.Reac
 }
 
 export function SignalLoop({ items, label }: { items: readonly string[]; label: string }) {
-  const doubled = [...items, ...items];
   return (
-    <div className="signal-loop" aria-label={label}>
+    <div className="signal-loop" role="group" aria-label={label}>
       <div className="signal-loop-track">
-        {doubled.map((item, index) => <span key={`${item}-${index}`} aria-hidden={index >= items.length}>{item}<i aria-hidden="true">✦</i></span>)}
+        {[0, 1].map(copy => <div className="signal-loop-set" aria-hidden={copy === 1} key={copy}>{items.map(item => <span key={item}>{item}</span>)}</div>)}
       </div>
     </div>
   );

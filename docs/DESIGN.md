@@ -1,5 +1,8 @@
 # Enter the Tier
 
+## 2026-09-27 — Rift becomes gateway
+ADR-014 replaces the flat arrival with a persistent 3D environment. Orbiting mineral blocks assemble into black gateway piers; rings, energy, mist, water and the illuminated approach remain live. Preserve the hero's left-hand text and right-hand rift; let text leave before crossing, then show the entrance copy after assembly. Desktop arrival frames the architecture centrally with copy at lower left. Mobile centers the rift independently and widens the arrival framing. The supplied stills are reference/fallback assets; procedural geometry is an interpretation rather than an exact reconstruction.
+
 ## 2026-09-27 — Refined portal passage
 ADR-013 supersedes the first portal treatment: a concise two-line “Play beyond the screen.” headline, quieter indexed product links, orbital particle currents, a tighter broken stone silhouette and restrained bloom. Let typography leave before the camera passes through the portal. Reveal the approved entrance image through an expanding aperture and settle into the next section. The image remains the authentic destination artwork; it is not a newly modeled interior. Active Theory supplies a reference for atmospheric depth; full site transition inspection was blocked by its browser-support gate.
 
@@ -29,3 +32,9 @@ Buttons: rectangular, 2px radius, precise 48px+ hit area, arrow; single filled r
 
 ## V2 correction — supersedes A selection above
 User rejected isolated industrial cutout direction. Adopt immersive cabinet-within-world composition: full-bleed golden/jade dragon and reconstructed cabinet, black volcanic architecture, crimson signals, large clean white typography, editorial negative space. Original identity drives new artwork; no low-resolution source enlarged as hero. Reference observed live: Blue Tower uses one immersive environment with interface fading away as scroll/camera transition develops. Reinterpret principle, not composition or branded assets.
+# Fracture passage and closing invitation — 2026-09-27
+
+The latest user-directed refinement replaces the circular hero disc with dark suspended stone banks around a narrow vertical light fracture. A foreground stone provides scroll-controlled occlusion into the destination architecture. Preserve restrained, readable DOM text over this expressive environment. The closing invitation uses recovered cabinet photography, a quiet charcoal surface, large clear typography and direct comparison/sales links; remove redundant decorative orbit imagery and repeated contact banners. See ADR-015-FRACTURE-TRANSITION.md.
+# Restored vortex — 2026-09-27
+
+The user rejected the fracture/wipe replacement. Restore the prior vortex, orbit trails and floating-island composition; repair animation and clarity rather than replacing the scene identity. Use the supplied Lamp light spread and DepthText in the existing shared footer, and ChromaGrid's pointer spotlight in the existing game grid. ADR-017 supersedes the earlier fracture and CSS-only adaptation decisions.

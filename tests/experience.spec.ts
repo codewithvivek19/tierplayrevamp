@@ -9,7 +9,7 @@ for (const [width, height] of [[1440, 900], [1024, 768], [768, 1024], [390, 844]
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto("/");
     await expect(page).toHaveTitle(/Tierplay/);
-    await expect(page.getByRole("heading", { level: 1 })).toContainText(/play/i);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(/Play beyond/i);
     await expect(page.locator(".battle-hero")).toBeVisible();
     await expect(page.getByRole("heading", { name: /Six worlds/i })).toBeAttached();
     await expect(page.getByRole("link", { name: "Contact sales", exact: true }).last()).toBeAttached();

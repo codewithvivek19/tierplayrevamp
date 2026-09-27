@@ -1,5 +1,7 @@
 # Current milestone
 
+2026-09-27 latest: user-authorized rift-to-gateway opening implemented in the persistent Three.js canvas. See ADR-014 and docs/review/RIFT-GATEWAY-REVIEW.md. Current preview remains http://localhost:3004. The physical cabinet journey remains dependent on the approved Altitude GLB.
+
 Latest content milestone (2026-09-27): the full preserved route set is populated from the public Electron Hub recovery, with 104 MIME-validated local source assets and reusable spotlight, tilt, text-reveal and marquee interactions. The sixth board remains explicitly incomplete, old testimonial placeholders stay excluded, and legacy claims remain approval-gated. Build, typecheck and 33 Chromium checks pass. Preview: http://localhost:3004.
 
 Latest refinement (2026-09-27): ADR-013 adds particle dynamics, spring-settled stones, editorial hero copy and a complete scroll passage into the approved entrance image and overview. Same localhost:3004 preview. Software/mobile rendering omits expensive postprocessing; full original-image fallback remains.
