@@ -1,5 +1,11 @@
 # Current milestone
 
+Latest content milestone (2026-09-27): the full preserved route set is populated from the public Electron Hub recovery, with 104 MIME-validated local source assets and reusable spotlight, tilt, text-reveal and marquee interactions. The sixth board remains explicitly incomplete, old testimonial placeholders stay excluded, and legacy claims remain approval-gated. Build, typecheck and 33 Chromium checks pass. Preview: http://localhost:3004.
+
+Latest refinement (2026-09-27): ADR-013 adds particle dynamics, spring-settled stones, editorial hero copy and a complete scroll passage into the approved entrance image and overview. Same localhost:3004 preview. Software/mobile rendering omits expensive postprocessing; full original-image fallback remains.
+
+Latest (2026-09-27): User-authorized Three.js reconstruction of the approved V4 hero is implemented for visual review. Portal, fractured stone, floating island cities, orbit trails, planet, star field and floor now animate in one scene. GSAP scroll dolly, pause, mobile composition and original-image fallback are included. See ADR-012 and docs/review/PORTAL-HERO-REVIEW.md. Preview remains http://localhost:3004.
+
 Latest: Theme V3 responsive media family applied. Generated environment, cabinet and game assets are wired to existing sections; Tierplay logo overlays remain exact SVG. Build, typecheck and 10 focused tests pass. Preview: http://localhost:3004. See docs/assets/THEME-V3-ASSET-MANIFEST.md.
 
 Latest appearance revision: BrainNFT colors, gradients, original noise and decorative background assets applied without changing Tierplay structure/content. Build, typecheck and 10 focused tests pass. Desktop/mobile reviewed. Preview remains http://localhost:3004.

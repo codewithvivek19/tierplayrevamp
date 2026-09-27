@@ -1,4 +1,6 @@
 # WebGL
+Current homepage: ADR-012's procedural PortalCanvas, one deferred R3F canvas. Real geometry for portal stones, debris, cities, stars, planet, trails and foreground; shader discs for energy and atmosphere. Original still stays beneath the canvas until readiness and returns on renderer failure. No product cabinet is modeled. Environment lighting is local/procedural; planar floor reflections are desktop only. CameraDirector remains the sole camera writer.
+
 One persistent ExperienceCanvas mounted inside the homepage stage. One CameraDirector; typed BOOT, CABINET_MACRO, CABINET_REVEAL, CABINET_HERO, PORTAL_APPROACH, PORTAL_TRANSITION, SUNSCAPE_WORLD states.
 No CAD or verified GLB currently supplied. Use authentic product image for silhouette, not invented box geometry presented as product. M1 uses an image-based 2.5D cabinet composition; true material macro and orbit await original CAD/orthographic views.
 Demand renderer; camera frame mutations are refs, not React state. Scenes preload/mount/activate/progress/deactivate/dispose. Use loader cache deliberately; do not dispose shared textures from a child. Error boundary and context-loss handling return to DOM image, never blank screen.

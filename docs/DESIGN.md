@@ -1,5 +1,11 @@
 # Enter the Tier
 
+## 2026-09-27 — Refined portal passage
+ADR-013 supersedes the first portal treatment: a concise two-line “Play beyond the screen.” headline, quieter indexed product links, orbital particle currents, a tighter broken stone silhouette and restrained bloom. Let typography leave before the camera passes through the portal. Reveal the approved entrance image through an expanding aperture and settle into the next section. The image remains the authentic destination artwork; it is not a newly modeled interior. Active Theory supplies a reference for atmospheric depth; full site transition inspection was blocked by its browser-support gate.
+
+## 2026-09-27 — Spatial multiverse hero
+The user approved the V4 multiverse still and requested it as a Three.js environment. Its composition now governs the opening: fractured obsidian portal at right, violet/blue/pink energy, four floating island cities, distant planet/stars and wet stone foreground. Preserve the clear left-hand typography and original Tierplay identity. Procedural geometry interprets the image rather than claiming pixel-exact asset reconstruction. Mobile centers a smaller portal above the copy. Original V4 still remains the loading/static/failure presentation. See ADR-012.
+
 ## 2026-09-27 — Theme V3 responsive media
 The generated media family in `public/media/generated/theme-v3/` is the current source for homepage environments, interior heroes, cabinet presentation and game cards. Masters are wide 3:2/16:9 scenes with central crop-safe focal areas; game cards are square masters. The exact Tierplay SVG is overlaid in CSS on graphic frames rather than baked into generated pixels. See `docs/assets/THEME-V3-ASSET-MANIFEST.md`.
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { navigation, games } from "@/content/site";
+import { navigation, games, company } from "@/content/site";
 
 export default function SiteFooter() {
   return (
@@ -24,8 +24,9 @@ export default function SiteFooter() {
           <Link href="/contact-sales">Contact sales</Link>
         </nav>
         <div className="footer-note">
-          <span>Gaming technology</span>
-          <span>Cabinets · Games · Systems</span>
+          <a href={company.phoneHref}>{company.phone}</a>
+          <a href={company.emailHref}>{company.email}</a>
+          <span>{company.address}</span>
           <span>© 2026 Tierplay</span>
         </div>
       </div>

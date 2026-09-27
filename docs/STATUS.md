@@ -1,4 +1,27 @@
-# Current status — BrainNFT palette and backgrounds
+# Current status — full public-content build
+
+## Electron Hub content expansion — 2026-09-27
+- Expanded every preserved public route with the complete recoverable Electron Hub/Tierplay content structure: homepage, games, cabinets, products, player journey, support, updates, collection, contact and six Sunscape board pages.
+- Staged 104 MIME-validated recovered public images and logo files in `public/media/legacy/`. Authentication, anti-bot controls and private endpoints were not bypassed; the existing public recovery manifest remains the provenance record. One `.webp`-named HTML response was excluded from runtime media.
+- Preserved all fifteen game names from boards 1–5 and retained the incomplete sixth route without inventing its games. Removed the old unattributed testimonial copy from the presentation. Legacy product claims and conflicting metrics are labelled as requiring current approval.
+- Added original implementations of public React Bits-style patterns: blur/split heading reveals, spotlight cards, pointer tilt, continuous signal loops and reduced-motion fallbacks. These complement the existing GSAP/Three hero without importing gated Pro source.
+- Production build and typecheck pass. All 33 Chromium tests pass, including every content route, 320–1440 responsive layouts, media availability, horizontal overflow, keyboard behavior, reduced motion, axe accessibility, WebGL fallback and context-loss recovery. Physical devices, Safari and Firefox remain unverified.
+- Preview: http://localhost:3004.
+
+## Portal refinement — 2026-09-27
+- Added a spring/drag particle simulation, pointer repulsion, depth-sized glints, velocity trails and damped stone motion. Refined the broken ring silhouette and orbital highlights.
+- Reworked hero typography, copy, product index and primary/secondary controls. Outgoing links become inert during the passage.
+- Extended scroll choreography through the portal into the approved entrance artwork, then into the overview section; reversible native scrolling is retained.
+- Added modest desktop bloom and adaptive reduced-cost rendering. Mobile/software/slow-frame modes omit bloom and real-time reflection. Canvas rendering stops once the entrance artwork covers it.
+- ADR-013 records scope and reference limitations. Updated verification is recorded in docs/review/PORTAL-REFINEMENT-REVIEW.md.
+- Final production build/typecheck and all 14 focused Chromium tests pass. Desktop, transition, arrival, overview and mobile screenshots reviewed. SwiftShader software-renderer frame time improved from 116.6ms to 66.6ms median with persistent adaptive resolution; this remains below a smoothness target and is not physical-GPU validation. Preview refreshed on localhost:3004.
+
+## Spatial multiverse hero — 2026-09-27
+- Implemented the user's request to reconstruct the approved hero environment in Three.js: fractured obsidian portal, four floating island cities, orbit trails, star field, planet and foreground geometry, plus procedural energy/atmosphere shaders.
+- Added reversible GSAP camera travel and fragment separation, independent float, pointer response, pause/resume and skip navigation. Only CameraDirector writes to the global camera.
+- Original image retained as loading, reduced-motion, save-data, disabled-WebGL and context-loss fallback. Mobile composes the portal above the text and omits the desktop reflection pass.
+- Production build and typecheck pass. Four new portal checks and ten existing focused Chromium checks pass. Visual evidence and limitations: docs/review/PORTAL-HERO-REVIEW.md.
+- This is a procedural interpretation of the approved image. Bespoke modeled art would be needed for pixel-exact realism. Physical-device GPU performance, Safari, Firefox and screen-reader testing remain unverified.
 
 ## Theme V3 media revision — 2026-09-27
 - Regenerated the main entrance, gaming floor, cabinet lineup, dragon world, two transparent cabinet renders and three game worlds for the existing responsive media slots.

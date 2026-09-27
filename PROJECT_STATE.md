@@ -1,5 +1,11 @@
 # Project state
 
+Latest full-site expansion (2026-09-27): all recoverable public Electron Hub/Tierplay copy and 104 MIME-validated public image/logo assets now feed the complete route set. Games preserve all six board routes and fifteen named titles; Cabinet, Product, Player Journey, Contact, Support and Update routes now carry their recovered content rather than placeholders. React Bits-style open interaction patterns are implemented locally with Motion/CSS and include reduced-motion fallbacks. Typecheck, production build and all 33 Chromium tests pass. The preview remains http://localhost:3004. Legacy claims are visibly held for current approval; no gated source or protected asset access was used.
+
+Latest refinement: `PortalParticles.tsx`, the updated PortalCanvas, and BattleHero now form a reversible three-phase opening-to-entrance sequence. Semantic hero copy/navigation and typography were revised. See ADR-013 for particle simulation, adaptive quality, animation ownership and reference limitations.
+
+Latest (2026-09-27): BattleHero now progressively enhances the approved V4 multiverse still with `components/hero/PortalCanvas.tsx`, a procedural spatial reconstruction. The scene is an artistic approximation, not an exact recovered model. All later sections/routes stay intact. Original still retained for loading, reduced motion, save-data, disabled WebGL and context loss. One canvas; desktop floor reflections; smaller independent mobile framing. See ADR-012 and the portal review report.
+
 Latest media revision: `public/media/generated/theme-v3/` supplies the current responsive art family for the homepage and interior routes. The asset manifest records generated vs color-graded derivatives and the image-service limit encountered during the final three generations. Layout/content remain unchanged; the production preview is http://localhost:3004.
 
 Latest appearance layer: app/brain-theme.css applies the user-requested BrainNFT palette and backgrounds. Original grain/grid/stars are locally hosted; hero background updated. Existing Tierplay layout, content and behavior retained. Production build/typecheck and 10 focused Chromium tests pass. Preview: http://localhost:3004.

@@ -1,4 +1,6 @@
 # Motion contract
+Latest hero revision (ADR-012): GSAP drives one normalized native-scroll sequence. CameraDirector dollies toward the portal; instanced fragments separate, islands drift, orbital trails turn, shader energy evolves and stars move slowly. User-requested floating permits continuous demand invalidation while visible and unpaused. Pause, offscreen and hidden-tab states stop rendering. Reduced motion uses the original still without a long scroll stage.
+
 GSAP/useGSAP owns hero boot, reveal, scroll timeline and portal DOM transforms. Motion owns mobile navigation only. CameraDirector reads the same progress object and alone changes the camera. R3F demand rendering invalidated on timeline change. No continuous decorative RAF.
 Boot is a short activation cue, never a fake progress bar. DOM headline exists immediately. Reveal begins only after critical cabinet image decodes. Macro is an intentional crop of actual media; no invented hardware model.
 Sequence: macro → cabinet reveal → hold hero → screen approach → screen expands beyond frame → original Sunscape artwork. Native scrolling, no Lenis. Total cinematic scroll approximately 240vh desktop, shorter mobile. Exit remains possible with native anchors.

@@ -5,6 +5,8 @@ import MediaSlot from "@/components/site/MediaSlot";
 import BattleHero from "@/components/site/BattleHero";
 import CabinetArtifact from "@/components/site/CabinetArtifact";
 import GameCard from "@/components/site/GameCard";
+import ContactBand from "@/components/site/ContactBand";
+import { KineticHeading, SignalLoop, SpotlightPanel } from "@/components/site/InteractivePrimitives";
 import { cabinets, games, products } from "@/content/site";
 
 const Arrow = () => <span aria-hidden="true">↗</span>;
@@ -12,6 +14,11 @@ const Arrow = () => <span aria-hidden="true">↗</span>;
 export default function Home() {
   return <main id="main" className="battle-home">
     <BattleHero />
+    <SignalLoop label="Tierplay ecosystem" items={["Games", "Cabinets", "Collection management", "Link Jackpot", "Player journey", "24/7 support"]} />
+    <section className="battle-section battle-container home-about">
+      <Reveal className="home-about-copy"><p className="kicker">About us</p><KineticHeading>Twenty years in the game.</KineticHeading><p>At Tierplay, we revolutionize the gaming industry with over 20 years of expertise and innovation. The legacy public site highlights Link Jackpots, remote machine control and loyalty systems as the foundation of its connected gaming experience.</p><Link className="battle-button" href="/products">Explore the technology <Arrow /></Link></Reveal>
+      <Reveal className="home-about-art"><SpotlightPanel><div className="home-about-image large"><Image src="/media/legacy/Home-about-big-image.webp" alt="Tierplay legacy gaming artwork" fill sizes="(max-width: 760px) 90vw, 44vw" /></div><div className="home-about-image small"><Image src="/media/legacy/Home-About-Small-Image.webp" alt="" fill sizes="180px" /></div><span>Public archive / 2024</span></SpotlightPanel></Reveal>
+    </section>
     <section className="battle-section battle-container experience-overview" id="experience">
       <Reveal className="battle-heading split">
         <div><p className="kicker">The Tierplay experience</p><h2>A floor built to<br />be entered.</h2></div>
@@ -54,5 +61,6 @@ export default function Home() {
       <Reveal className="battle-heading split"><div><p className="kicker">Player journey</p><h2>From first play<br/>to the next return.</h2></div><Link className="battle-button" href="/player-journey">Explore the journey <Arrow /></Link></Reveal>
       <div className="battle-journey-grid">{[{title:"Link jackpots",copy:"Explore the linked-jackpot side of the Tierplay player journey."},{title:"Progressive jackpots",copy:"Discover standard progressive jackpots within the Tierplay experience."},{title:"Loyalty system",copy:"Complete the journey with Tierplay’s loyalty system."}].map((item,index)=><Reveal key={item.title} className="battle-journey-card textured-panel"><span className="journey-number">0{index+1}</span><h3>{item.title}</h3><p>{item.copy}</p></Reveal>)}</div>
     </section>
+    <ContactBand />
   </main>;
 }

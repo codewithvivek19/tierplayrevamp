@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./battlez.css";
 import "./brain-theme.css";
-import SiteHeader from "@/components/site/SiteHeader";
-import SiteFooter from "@/components/site/SiteFooter";
+import "./content-experience.css";
+import SiteChrome from "@/components/site/SiteChrome";
 export const metadata: Metadata = {
   title: { default: "Tierplay — The next tier of play", template: "%s — Tierplay" },
   description:
@@ -25,9 +25,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <SiteHeader />
-        {children}
-        <SiteFooter />
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );

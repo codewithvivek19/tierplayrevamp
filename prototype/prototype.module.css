@@ -1,4 +1,5 @@
 .shell { --background:#eae9e3; --foreground:#171a18; --secondary:#555b55; --rule:#b8bcb3; --signal:#bb331e; --space:clamp(24px,4.8vw,80px); background:var(--background); color:var(--foreground); min-height:100svh; font-family:Manrope,Arial,sans-serif; }
+.shell :is(h1,h2,h3) { color:var(--foreground)!important; }
 .shell * { box-sizing:border-box; }
 .shell button { border-radius:0; }
 .shell button:disabled { cursor:not-allowed; opacity:1; background:#d7d9d1; color:#535b51; border-color:#b2b7ac; }

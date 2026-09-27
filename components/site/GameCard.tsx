@@ -5,7 +5,7 @@ import { games } from "@/content/site";
 export default function GameCard({ game }: { game: (typeof games)[number] }) {
   return <article className="battle-game-card textured-panel">
     <div className="game-card-copy">
-      <div className="card-tags"><span>Sunscape</span><span>Game {game.index}</span></div>
+      <div className="card-tags"><span>{game.board}</span><span>Release {game.index}</span></div>
       <h3>{game.title}</h3><p>Tierplay games collection</p>
       <Link className="battle-button" href={`/our_games/${game.slug}`} aria-label={`Explore ${game.title}`}>Explore game <span aria-hidden="true">↗</span></Link>
     </div>
