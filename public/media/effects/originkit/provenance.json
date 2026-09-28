@@ -1,0 +1,20 @@
+[
+  {
+    "file": "public/media/effects/originkit/perlin.jpg",
+    "bytes": 8457,
+    "sha256": "ac6d318123622f2ac5b43078f247db85e76c2c9d5d775a3f3754f3d752a0a5e2",
+    "source": "User-supplied Toon fireball 2 \u2014 Originkit attachment, embedded texture extracted without modification"
+  },
+  {
+    "file": "public/media/effects/originkit/spark.jpg",
+    "bytes": 16099,
+    "sha256": "c42c79e46b935da517048eb4dc049a9dd55a9f1803854e4d467a05cd675fb2de",
+    "source": "User-supplied Toon fireball 2 \u2014 Originkit attachment, embedded texture extracted without modification"
+  },
+  {
+    "file": "public/media/effects/originkit/water.jpg",
+    "bytes": 17912,
+    "sha256": "bdea2cdf7c63c6ab8320af03ccb54e2d57fc428eb8984db1c9e15fdcbd78e0e3",
+    "source": "User-supplied Toon fireball 2 \u2014 Originkit attachment, embedded texture extracted without modification"
+  }
+]

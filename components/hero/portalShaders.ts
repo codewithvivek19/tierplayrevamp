@@ -27,13 +27,15 @@ void main(){
   vec3 color=vec3(.009,.008,.023);
   color+=mix(vec3(.08,.035,.19),vec3(.28,.13,.48),cloud)*envelope*(.4+turbulence);
   color+=mix(vec3(.19,.26,.55),vec3(.62,.32,.59),fine)*veins*envelope*.9;
-  color+=vec3(.38,.42,.66)*dust*1.4;
-  color+=vec3(.30,.18,.47)*rim*(.25+turbulence*.65);
+  color+=vec3(.27,.38,.64)*dust*1.1;
+  float thread=1.-smoothstep(.012,.035+fwidth(fine),abs(fine-.47));
+  color+=vec3(.33,.24,.52)*thread*envelope*pow(turbulence,2.)*.8;
+  color+=vec3(.24,.14,.42)*rim*(.12+turbulence*.48);
   color+=vec3(1.,.76,.64)*inner*2.8;
   float flare=exp(-abs(p.y+.16*p.x)*170.)*exp(-abs(p.x)*4.);
   color+=vec3(.6,.35,.5)*flare*.7;
   float alpha=(1.-smoothstep(.9,1.,r));
-  gl_FragColor=vec4(color*.62,alpha);
+  gl_FragColor=vec4(color*.92,alpha);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }`;
@@ -56,8 +58,9 @@ export const mistFragment = /* glsl */ `
 varying vec2 vUv; uniform float uTime; ${noise}
 void main(){
  float n=fbm(vec3(vUv*vec2(9.,3.),uTime*.02));
- float falloff=pow(max(0.,1.-abs(vUv.y-.5)*2.),3.)*pow(sin(vUv.x*3.14159),.5);
- gl_FragColor=vec4(vec3(.24,.18,.34),n*falloff*.33);
+ // Guard interpolated edge UVs: NaN alpha can poison the entire HDR bloom chain.
+ float falloff=pow(max(0.,1.-abs(vUv.y-.5)*2.),3.)*sqrt(max(0.,sin(clamp(vUv.x,0.,1.)*3.14159265)));
+ gl_FragColor=vec4(vec3(.24,.18,.34),n*falloff*.2);
 }`;
 export const beamFragment = /* glsl */ `
 varying vec2 vUv; uniform float uTime; ${noise}

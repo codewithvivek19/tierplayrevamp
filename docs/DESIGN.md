@@ -1,5 +1,11 @@
 # Enter the Tier
 
+## 2026-09-28 — Supplied cosmic background and fireball
+ADR-022 replaces the folded plasma with the user's Toon fireball 2 reference, adapted as a textured sphere with flowing flame and vapour in the existing scene. A restrained Cosmic BG nebula spans both the opening and gateway. Preserve the current world, layout and assembly; the same fireball turns upright and contracts into the pillar light. Palette: mineral violet, smoke and silver, with concentrated pearl highlights. No additional canvas or page section.
+
+## 2026-09-28 — Continuous plasma reference
+ADR-021 supersedes the rejected spark aperture. The supplied motion reference shows a translucent pink/blue plasma sphere with luminous folded sheets and a thin silhouette. One emissive volume travels into the gateway and elongates into its light column; preserve the surrounding islands, stone assembly, layout and typography. Pointer light is soft, cloudy and temporary. No new section or independent effect canvas.
+
 ## 2026-09-27 — Rift becomes gateway
 ADR-014 replaces the flat arrival with a persistent 3D environment. Orbiting mineral blocks assemble into black gateway piers; rings, energy, mist, water and the illuminated approach remain live. Preserve the hero's left-hand text and right-hand rift; let text leave before crossing, then show the entrance copy after assembly. Desktop arrival frames the architecture centrally with copy at lower left. Mobile centers the rift independently and widens the arrival framing. The supplied stills are reference/fallback assets; procedural geometry is an interpretation rather than an exact reconstruction.
 

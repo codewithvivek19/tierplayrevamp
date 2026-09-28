@@ -1,6 +1,10 @@
 import { test, expect } from "@playwright/test";
 
 test.use({ viewport: { width: 1440, height: 900 }, reducedMotion: "no-preference" });
+// These checks isolate the scene; the startup overlay owns a separate 2D canvas.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => sessionStorage.setItem("tierplay-preloader-seen-v1", "1"));
+});
 
 test("portal renders, travels in both scroll directions, pauses and exits", async ({ page }) => {
   const errors: string[] = [];

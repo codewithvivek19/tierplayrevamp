@@ -1,0 +1,18 @@
+
+Running 12 tests using 1 worker
+
+
+
+[1/12] tests/environment-polish.spec.ts:6:7 › environment framing and reversible scroll at 320x568
+[2/12] tests/environment-polish.spec.ts:6:7 › environment framing and reversible scroll at 390x844
+[3/12] tests/environment-polish.spec.ts:6:7 › environment framing and reversible scroll at 844x390
+[4/12] tests/environment-polish.spec.ts:6:7 › environment framing and reversible scroll at 768x1024
+[5/12] tests/environment-polish.spec.ts:6:7 › environment framing and reversible scroll at 1024x768
+[6/12] tests/environment-polish.spec.ts:6:7 › environment framing and reversible scroll at 1920x1080
+[7/12] tests/plasma-handoff.spec.ts:5:5 › fireball remains luminous through both directions of the pillar handoff
+[8/12] tests/plasma-rendering.spec.ts:6:5 › fireball keeps rendered detail across successive animated frames
+[9/12] tests/portal.spec.ts:5:5 › portal renders, travels in both scroll directions, pauses and exits
+[10/12] tests/portal.spec.ts:36:5 › context loss returns to the original hero image and usable navigation
+[11/12] tests/portal.spec.ts:50:5 › explicit WebGL fallback and live reduced-motion changes remove the long stage
+[12/12] tests/portal.spec.ts:63:5 › mobile scene fits the page and remounts once after route navigation
+  12 passed (1.5m)

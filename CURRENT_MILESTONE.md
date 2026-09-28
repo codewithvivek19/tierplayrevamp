@@ -1,5 +1,14 @@
 # Current milestone
 
+2026-09-28 latest: user-supplied Cosmic BG and Toon fireball 2 are adapted into the existing persistent scene. The fireball now animates through live material uniforms and becomes the gateway light; the cosmic background is visible throughout the camera path. Original embedded textures are preserved with provenance. Build/typecheck and 12 focused Chromium checks passed; final visual/profile evidence is in docs/review/cosmic-fireball/REVIEW.md. ADR-022 supersedes ADR-021. Preview: http://localhost:3004.
+
+
+2026-09-28 latest: user-directed plasma reference revision replaces the rejected spark hoop. One luminous volume stretches continuously into the gateway; cloudy pointer light and proportional architecture reveal are implemented. Production build/typecheck pass; 39/41 browser checks passed initially and both timed-out cases passed unchanged on targeted rerun. See ADR-021 and `docs/review/plasma-handoff/REVIEW.md` for evidence and performance limits. Preview: http://localhost:3004.
+
+2026-09-28 latest: user-authorized vortex-only replacement complete. Fast ballistic spark ribbons, fine filament rim and scroll-responsive lightning preserve the approved environment and assembly. Production build/typecheck and all 40 Chromium/ANGLE Metal tests pass. See ADR-020 and `docs/review/spark-portal/REVIEW.md`. Preview: http://localhost:3004.
+
+2026-09-28 latest: user-authorized environment clarity refinement complete. Existing sequence preserved; mineral surfaces, reflections, shadows, camera interpolation and responsive framing refined. A hardware-only bloom failure was fixed and covered with rendered-pixel validation. Production build/typecheck and all 39 Chromium/ANGLE Metal checks pass. See ADR-019 and `docs/review/environment-polish/REVIEW.md`. Preview: http://localhost:3004.
+
 2026-09-27 latest: user-authorized rift-to-gateway opening implemented in the persistent Three.js canvas. See ADR-014 and docs/review/RIFT-GATEWAY-REVIEW.md. Current preview remains http://localhost:3004. The physical cabinet journey remains dependent on the approved Altitude GLB.
 
 Latest content milestone (2026-09-27): the full preserved route set is populated from the public Electron Hub recovery, with 104 MIME-validated local source assets and reusable spotlight, tilt, text-reveal and marquee interactions. The sixth board remains explicitly incomplete, old testimonial placeholders stay excluded, and legacy claims remain approval-gated. Build, typecheck and 33 Chromium checks pass. Preview: http://localhost:3004.

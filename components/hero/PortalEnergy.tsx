@@ -1,43 +1,62 @@
 "use client";
-import { useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
-import { AdditiveBlending, Color, Group, MathUtils, ShaderMaterial } from "three";
-import { beamFragment, glowFragment, portalFragment, vertex } from "./portalShaders";
+import { Suspense, useMemo, useRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { AdditiveBlending, Group, MathUtils, ShaderMaterial, type PointLight } from "three";
+import { vertex } from "./portalShaders";
+import { landingFragment } from "./plasmaShaders";
+import { portalFraming } from "./portalFraming";
+import Fireball from "./Fireball";
+import PointerRadiance from "./PointerRadiance";
 import type { PortalState } from "./portalState";
 
-// Restore the original energy composition; mutate the mounted materials, not a props snapshot.
-export default function PortalEnergy({ sequence }: { sequence: PortalState }) {
-  const root = useRef<Group>(null);
-  const disc = useRef<ShaderMaterial>(null);
-  const beam = useRef<ShaderMaterial>(null);
+export default function PortalEnergy({ sequence, software }: { sequence: PortalState; software: boolean }) {
+  const size = useThree(s => s.size);
+  const framing = portalFraming(size.width, size.height);
+  const volume = useRef<Group>(null);
+  const landing = useRef<ShaderMaterial>(null);
+  const light = useRef<PointLight>(null);
   const orbit = useRef<Group>(null);
   const orbitMaterials = useRef<(ShaderMaterial | null)[]>([]);
-  const uniforms = useMemo(() => ({ uTime: { value: 0 }, uProgress: { value: 0 } }), []);
-  const halo = useMemo(() => ({ uColor: { value: new Color("#7d36ea") } }), []);
-  useFrame(() => {
-    const p = sequence.progress;
-    if (root.current) {
-      root.current.visible = p < .78;
-      root.current.scale.setScalar(1 - MathUtils.smoothstep(p, .48, .78) * .98);
+  const impulse = useRef(0);
+  const previous = useRef(sequence.progress);
+  const landingUniforms = useMemo(() => ({ uTime: {value:0}, uOpacity: {value:0} }), []);
+  const orbitUniforms = useMemo(() => ({ uTime: {value:0}, uOpacity:{value:1} }), []);
+  useFrame((_, delta) => {
+    const p=sequence.progress;
+    const travel=MathUtils.smootherstep(p,.32,.80);
+    const stretch=MathUtils.smootherstep(p,.38,.84);
+    if (!sequence.paused) {
+      const speed=Math.min(1,Math.abs(p-previous.current)/Math.max(delta,.008)*3.5);
+      impulse.current=MathUtils.damp(impulse.current,speed,5,Math.min(delta,.1));
     }
-    for (const material of [disc.current, beam.current, ...orbitMaterials.current]) {
-      if (!material) continue;
-      material.uniforms.uTime.value = sequence.time;
-      if (material.uniforms.uProgress) material.uniforms.uProgress.value = p;
+    previous.current=p;
+    if (volume.current) {
+      // The supplied fireball's tail progressively straightens into the pillar light.
+      volume.current.position.set(framing.x*(1-travel),MathUtils.lerp(framing.y,-2.4,travel),MathUtils.lerp(-1.5,-16,travel));
+      volume.current.scale.setScalar(MathUtils.lerp(framing.scale,1,stretch));
+      volume.current.rotation.set(0,0,MathUtils.lerp(-.62,0,stretch));
+      if (light.current) {
+        light.current.position.copy(volume.current.position); light.current.position.y+=stretch*4; light.current.position.z+=1;
+        light.current.intensity=25+stretch*23+impulse.current*8;
+      }
     }
     if (orbit.current) {
-      orbit.current.rotation.y = p * .7 + Math.sin(sequence.time * .12) * .08;
-      orbit.current.rotation.z = -.24 + p * .16;
+      const opacity=1-MathUtils.smootherstep(p,.30,.63);
+      orbit.current.visible=opacity>.001;
+      orbit.current.position.set(framing.x*(1-travel),MathUtils.lerp(framing.y,3.8,travel),MathUtils.lerp(-1.5,-16,travel));
+      orbit.current.scale.setScalar(framing.scale*(1+stretch*.25));
+      orbit.current.rotation.set(0,p*.7+Math.sin(sequence.time*.12)*.08,-.24+p*.16);
+      for (const m of orbitMaterials.current) if(m){m.uniforms.uTime.value=sequence.time;m.uniforms.uOpacity.value=opacity;}
     }
-  });
-  return <group ref={root}>
-    <mesh position={[0, 0, -.7]} scale={[12, 13, 1]}><planeGeometry/><shaderMaterial vertexShader={vertex} fragmentShader={glowFragment} uniforms={halo} transparent blending={AdditiveBlending} depthWrite={false}/></mesh>
-    <mesh scale={[6.8, 7.8, 1]} rotation={[0, 0, -.18]} position={[0, 0, -.12]}><planeGeometry/><shaderMaterial ref={disc} vertexShader={vertex} fragmentShader={portalFragment} uniforms={uniforms} transparent depthWrite={false}/></mesh>
-    <mesh scale={[7, 23, 1]} position={[0, 5, -.4]}><planeGeometry/><shaderMaterial ref={beam} vertexShader={vertex} fragmentShader={beamFragment} uniforms={uniforms} transparent blending={AdditiveBlending} depthWrite={false}/></mesh>
-    <group ref={orbit}>{[0, 1, 2].map(i => <group key={i} rotation={[1.08 + i * .29, .12 - i * .1, i * .32]}>
-      <mesh><torusGeometry args={[4.7 + i * .7, .009, 4, 180]}/><shaderMaterial ref={m => { orbitMaterials.current[i] = m; }} vertexShader={vertex} fragmentShader={`varying vec2 vUv; uniform float uTime; void main(){float head=pow(fract(vUv.x-uTime*.045),18.);gl_FragColor=vec4(mix(vec3(.32,.2,.6),vec3(1.8,.9,1.6),head),.22+head*.7);}`} uniforms={uniforms} transparent depthWrite={false} blending={AdditiveBlending}/></mesh>
+    if(landing.current){landing.current.uniforms.uTime.value=sequence.time;landing.current.uniforms.uOpacity.value=MathUtils.smootherstep(p,.60,.85)*.6;}
+  }, -.5);
+  return <>
+    <group ref={volume}><Suspense fallback={null}><Fireball sequence={sequence} impulse={impulse} compact={software || size.width/size.height<1.05}/></Suspense></group>
+    <group ref={orbit}>{[0,1,2].map(i=><group key={i} rotation={[1.08+i*.29,.12-i*.1,i*.32]}>
+      <mesh><torusGeometry args={[4.7+i*.7,.009,4,180]}/><shaderMaterial ref={m=>{orbitMaterials.current[i]=m;}} vertexShader={vertex} fragmentShader={`varying vec2 vUv;uniform float uTime;uniform float uOpacity;void main(){float head=pow(fract(vUv.x-uTime*.045),18.);gl_FragColor=vec4(mix(vec3(.23,.2,.32),vec3(.9,.8,1.1),head),(.22+head*.7)*uOpacity);}`} uniforms={orbitUniforms} transparent depthWrite={false} blending={AdditiveBlending}/></mesh>
     </group>)}</group>
-    <pointLight color="#aa70ed" intensity={38} distance={14} position={[0, 0, 1.5]}/>
-    <pointLight color="#bbc4ff" intensity={25} distance={11} position={[0, 2, -1]}/>
-  </group>;
+    <mesh position={[0,-3.65,-16]} rotation={[-Math.PI/2,0,0]}><planeGeometry args={[7,7]}/><shaderMaterial ref={landing} vertexShader={vertex} fragmentShader={landingFragment} uniforms={landingUniforms} transparent depthWrite={false} blending={AdditiveBlending}/></mesh>
+    <pointLight ref={light} color="#c3b7ff" intensity={30} distance={22}/>
+    <PointerRadiance sequence={sequence}/>
+  </>;
 }

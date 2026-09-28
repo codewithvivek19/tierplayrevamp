@@ -1,5 +1,43 @@
 # Current status — full public-content build
 
+## Supplied fireball appearance restored — 2026-09-29
+- Restored the newly attached Toon fireball 2's blue/white palette, hard masks, original texture advection speeds, flame profile and steam blending. Verified all three source textures by hash and rendered the original component for comparison.
+- Added bounded selective fireball bloom in the existing canvas; shared-scene materials and render state restore transactionally. Existing no-tail opening, scroll departure and pillar morph remain. See `docs/review/fireball-source-match/REVIEW.md` for captures, source differences and GPU-cost limits.
+- Production build/typecheck, all four portal regressions and the rendered 4K/no-tail/reverse-scroll check pass on local Chromium/Metal. Desktop and mobile screenshots inspected; physical phones and other browsers remain unverified.
+
+## Material and lighting refinement — 2026-09-29
+- Used the newly installed Three.js skills to separate fractured rock and coated obsidian, correct scale-dependent material detail, filter fine normals, and refine key/rim lighting, sky intensity and floor reflections. Existing scroll path, assembly and fireball departure are retained.
+- Recovered localhost:3004 from stale build assets that were preventing scene hydration. Production build/typecheck pass; focused rendered and behavior checks are recorded in `docs/review/material-lighting-2026-09-29/REVIEW.md` with explicit realism and device-testing limits.
+
+## Tierplay preloader — 2026-09-28
+- Added a Tierplay-adapted cinematic startup overlay to the shared site shell: official Tierplay logo, navy/violet atmospheric blooms, orbit lines, deterministic particles, luminous core, progress arc and quiet edge ornamentation.
+- Progress is bounded and exits automatically after the initial load; `?preloader=1` forces a replay and the visible skip control keeps navigation immediate. Reduced-motion and Save-Data users bypass the animation.
+- Animation ownership is scoped to the overlay: GSAP handles entrance/exit opacity, CSS handles looping decorative motion, and the loader uses no additional WebGL context.
+
+## Fireball opening and departure — 2026-09-28
+- Opening now shows only the continuously animated sphere. Flame and vapour grow in over the existing departure window (.32–.48), retract on reverse scroll and become the pillar column later in the sequence.
+- Added counter-flowing fine surface detail, derivative-filtered filaments and a smoother sphere silhouette. No claim that supplied source textures are native 4K.
+- Typecheck/production build and all 13 focused Chromium/Metal checks pass, including rendered no-tail opening, reverse scroll, core animation, arrival column, mobile layouts and a 3840×2160 viewport. Screenshot evidence: `docs/review/cosmic-fireball/`. Existing scene performance limitations remain; this pass does not claim to resolve the adaptive-quality hitch.
+
+## Cosmic background and supplied fireball — 2026-09-28
+- Integrated the supplied Originkit cosmic domain-warping and fireball sphere/flame/vapour techniques in the existing canvas. Extracted the three embedded noise textures without modification and recorded their provenance.
+- Matched the mineral violet/silver palette, preserved the existing assembly and camera path, and continuously straightened the fireball trail into the pillar column. No other site sections changed.
+- Corrected a far-plane clipping issue affecting opening clouds and a Fiber 9.8 uniform-descriptor ownership issue affecting live shader animation. Rendered regressions cover both, plus the upper column during arrival.
+- Production build/typecheck and 12 focused Chromium checks pass. Six viewport sizes, forward/reverse motion, pause, route remount, context loss and reduced-motion/fallback paths covered. Final size adjustment has a targeted rendered rerun; see `docs/review/cosmic-fireball/REVIEW.md` for its result and measured performance limits.
+- Physical phones, Safari and Firefox remain unverified. ADR-022 governs this supplied-component integration; the broader environment-geometry redesign remains separate.
+
+## Continuous plasma handoff — 2026-09-28
+- Replaced the rejected spark aperture with a folded pink/blue emissive volume based on the user's inspected video reference. The same object travels into the gateway and elongates into its column. Removed the separate flat central beam/cylinders and the architecture's vertical squash.
+- Added inertial cloudy pointer light within the existing canvas, using the supplied component sources as references. Existing scene elements, typography, page content and monolith paths are retained.
+- Build/typecheck pass. Final browser run: 39 passed and two timeouts; both timed-out cases passed unchanged in a focused rerun. Rendered intermediate samples, mobile-sized framing, fallback and pause behavior checked.
+- Local M4 capture shows ~30fps hero/unfold and ~60fps balanced arrival, with a recorded quality-switch peak; do not claim universal or sustained 60fps. Physical mobile, Safari and Firefox remain unverified. Full evidence: `docs/review/plasma-handoff/REVIEW.md`; decision: ADR-021.
+
+## Spark aperture — 2026-09-28
+- Replaced only the cloudy vortex energy with a fast gold/white spark ring, tapered ballistic streaks, cooling embers, small focal light and scroll-responsive branching lightning. Preserved all surrounding elements, layout and gateway choreography.
+- Uses one instanced draw call with 1,800 desktop / 850 portrait ribbons. Existing pause, reduced-motion and static fallback behavior is retained.
+- Production build/typecheck and all 40 Chromium/ANGLE Metal checks pass. Apple M4 settled frame samples report 16.7ms median/p95 at 1440×900, DSF 2; this is local frame pacing, not universal device performance.
+- Final screenshots and scope/verification limits are in `docs/review/spark-portal/REVIEW.md`; architecture decision in ADR-020. Preview refreshed on localhost:3004.
+
 ## Electron Hub content expansion — 2026-09-27
 - Expanded every preserved public route with the complete recoverable Electron Hub/Tierplay content structure: homepage, games, cabinets, products, player journey, support, updates, collection, contact and six Sunscape board pages.
 - Staged 104 MIME-validated recovered public images and logo files in `public/media/legacy/`. Authentication, anti-bot controls and private endpoints were not bypassed; the existing public recovery manifest remains the provenance record. One `.webp`-named HTML response was excluded from runtime media.
@@ -148,6 +186,12 @@ Current correction: restored the earlier vortex/orbit/island composition and rem
 
 Editorial card follow-up: the hero remains unchanged. Homepage journey cards now form an asymmetric image-led sequence; connected-product panels use campaign media; product pillars, cabinet capabilities and journey stages share a quieter interactive material system. The footer lamp is now a broad architectural wash around the real cabinet imagery, and six duplicate pre-footer contact bands were removed. Desktop and mobile renders are recorded as `docs/review/card-revamp-*.png`. Production build and typecheck pass. The full serial Chromium suite passed 32/33 on its first run; the unchanged GPU-heavy portal traversal exceeded its original 30-second test budget, then passed alone in 36.8 seconds with a 60-second budget. See ADR-018.
 
+Blender reference update: generated separate Altitude and Pinnacle five-view turnaround boards from the approved front-view cabinet sources. Native masters and aspect-preserving 4096 px modeling copies are stored in `assets/generated/blender-reference/` with matching runtime copies. V2 editions embed the exact official Tierplay SVG on the front and front-three-quarter model badges. Front geometry follows the recovered photography; concealed side/rear construction remains a concept pending CAD or manufacturer elevations.
+
+Headless Blender deliverables: created packed Altitude and Pinnacle `.blend` visualization files in `assets/generated/blender-models/`. Each contains named geometry, 12 PBR/emissive materials, official Tierplay badge and screen textures, studio lighting and four cameras. Separate Blender 4.5.11 headless reopen checks confirmed 53 Altitude objects, 52 Pinnacle objects, four cameras each and packed external images. Front, hero-three-quarter and rear renders were visually reviewed. Geometry outside the recovered front references remains conceptual and is not manufacturing CAD.
+
+Pinnacle reference correction: superseded the early Pinnacle visualization with `tierplay-pinnacle-cabinet-v2-reference.blend`. The upper enclosure now follows the supplied exact-side elevation: its display advances toward the player at the top, retains a near-vertical rear spine, uses a chamfered rear top edge and keeps the luminous perimeter against the display face. Five headless camera renders cover front, front three-quarter, exact side, rear three-quarter and rear. Blender 4.5.11 reopened the packed file successfully and reported 358 objects, 13 materials, five cameras and all three file-backed images packed. This remains a visualization derived from the supplied turnaround, not manufacturing CAD.
+
 Attached-component follow-up: audited the hero and integrated a Tierplay violet lamp into the shared footer, a reduced-motion-safe marquee into the existing ecosystem strip, and a restrained ChromaGrid-style color response into existing game cards. Removed floating miniature structures and circular floor rings from the hero scene, reduced debris, and made its headline specific to six games and two cabinets. See ADR-016-ATTACHED-UI-PRIMITIVES.md. Production build, typecheck and all 33 Chromium tests pass after updating the headline assertion. Desktop and mobile renders were reviewed at `docs/review/attached-primitives-*.png`; no horizontal overflow at 1440px or 390px. Preview refreshed at http://localhost:3004. Physical-device GPU and Safari/Firefox checks remain unverified.
 
 Latest follow-up: removed the circular hero disc/orbits in favor of a vertical light fracture, irregular stone banks and a foreground occlusion transition. Rebuilt the final invitation with recovered cabinet photos, comparison and sales links; removed the duplicate homepage contact band and simplified decorative UI/copy. See ADR-015-FRACTURE-TRANSITION.md. Initial production build and all 33 Chromium checks passed; after the final stone-normal/product-photo correction, build, typecheck and 14 focused Chromium checks passed. Desktop/mobile hero, transition and footer screenshots were rendered and reviewed (fracture-* and floor-invitation-* in docs/review). Preview refreshed on port 3004. Physical devices and other browser engines remain unverified.
@@ -158,3 +202,9 @@ Latest rendering refinement: replaced repetitive portal bands with layered curl-
 - Added procedural mineral surfaces, suspended rings, central energy, path lighting, mist, distant cliffs, water and falling particle targets. Optional ambient sound starts muted. Static mode retains both reference environments and semantic navigation.
 - Final production build, typecheck and all 33 Chromium tests pass after mobile, water and camera polish. Rendered evidence is recorded in docs/review/RIFT-GATEWAY-REVIEW.md. Preview refreshed at http://localhost:3004.
 - Scope ends at the existing product overview. Approved Altitude GLB remains unavailable; the physical cabinet focus/screen-entry sequence is not implemented. The environment is a procedural interpretation, not photo-exact reference reconstruction. Physical-device performance and Safari/Firefox remain unverified.
+
+# Environment clarity and responsive scroll — 2026-09-28
+
+Refined the existing vortex → assembly → gateway sequence with smooth stone normals, mineral surface relief, floor normal/roughness maps, improved planar reflections, bounded shadows, antialiased desktop postprocessing and restrained lighting. Camera/assembly interpolation, critically damped debris and particle substeps improve motion consistency. A shared aspect/height composition and real stage-height scroll extent keep all chapters and controls usable across phones, tablets, desktop and landscape.
+
+Hardware review exposed and fixed an invalid mist-shader edge calculation that contaminated bloom and blanked the gateway. Added rendered-pixel assertions alongside navigation and canvas checks. Production build and typecheck pass; all 39 serial Chromium tests passed on ANGLE Metal in 41.4s after the fix. Earlier software validation also passed 39/39. Apple M4 local rAF median was 16.7ms with p95 33.3–33.4ms in the high-quality path, so no locked-60fps claim. Physical phones and Safari/Firefox remain unverified. Evidence: `docs/review/environment-polish/REVIEW.md`; decision: ADR-019. Production preview refreshed at http://localhost:3004.

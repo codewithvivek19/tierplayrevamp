@@ -9,13 +9,13 @@ const random = (n: number) => MathUtils.euclideanModulo(Math.sin(n * 127.1 + 311
 const particleVertex = /* glsl */ `
 attribute float aSize; attribute float aHeat; attribute vec3 aVelocity;
 varying float vHeat; varying float vStretch; varying float vAngle; varying float vAlpha;
-uniform float uDpr; uniform float uProgress;
+uniform float uDpr; uniform float uProgress; uniform float uViewport;
 void main(){
  vec4 mv=modelViewMatrix*vec4(position,1.);
  vec3 velocity=mat3(modelViewMatrix)*aVelocity;
  vAngle=atan(velocity.y,velocity.x);vStretch=clamp(length(velocity)*.09,0.,.75);
  vHeat=aHeat;vAlpha=smoothstep(.3,2.,-mv.z)*(1.-smoothstep(28.,55.,-mv.z));
- gl_PointSize=clamp(aSize*uDpr*120./max(1.,-mv.z)*(1.+vStretch),1.,7.);
+ gl_PointSize=clamp(aSize*uDpr*uViewport/max(1.,-mv.z)*(1.+vStretch),.8,5.5*uDpr);
  gl_Position=projectionMatrix*mv;
 }`;
 const particleFragment = /* glsl */ `
@@ -28,7 +28,9 @@ void main(){
  float core=exp(-d*d*12.);float halo=exp(-d*d*5.)*.025;
  vec3 color=mix(vec3(.48,.55,.78),vec3(.75,.62,.8),vHeat);
  color=mix(color,vec3(.95,.86,.69),step(.94,vHeat));
- gl_FragColor=vec4(color*(1.+vHeat*.6),(core+halo)*vAlpha*.65*(1.-smoothstep(.65,.88,uProgress)*.65));
+ gl_FragColor=vec4(color*(1.+vHeat*.6),(core+halo)*vAlpha*.58*(1.-smoothstep(.65,.88,uProgress)*.65));
+ #include <tonemapping_fragment>
+ #include <colorspace_fragment>
 }`;
 
 // Semi-implicit integration with capped substeps, drag, spring attraction and
@@ -49,10 +51,14 @@ export default function PortalParticles({ sequence, balanced = false }: { sequen
     }
     return { position, velocity, seeds, sizes, heat };
   }, [count]);
-  const uniforms = useMemo(() => ({ uDpr: { value: 1 }, uProgress: { value: 0 } }), []);
+  const uniforms = useMemo(() => ({ uDpr: { value: 1 }, uViewport: { value: 120 }, uProgress: { value: 0 } }), []);
   useFrame((_, delta) => {
     if (!ref.current || sequence.paused) return;
-    const dt = Math.min(delta, .04), steps = Math.max(1, Math.ceil(dt / .016)), h = dt / steps;
+    const shader = ref.current.material as import("three").ShaderMaterial;
+    shader.uniforms.uDpr.value = gl.getPixelRatio();
+    shader.uniforms.uViewport.value = size.height * .14;
+    shader.uniforms.uProgress.value = sequence.progress;
+    const dt = Math.min(delta, .1), steps = Math.max(1, Math.ceil(dt / .016)), h = dt / steps;
     const pull = MathUtils.smoothstep(sequence.progress, .22, .68);
     const release = MathUtils.smoothstep(sequence.progress, .62, .92);
     const pointerX = sequence.pointerX * 8 - (size.width < 750 ? 0 : 3.7), pointerY = -sequence.pointerY * 5;
@@ -77,7 +83,7 @@ export default function PortalParticles({ sequence, balanced = false }: { sequen
     }
     (ref.current.geometry.attributes.position as BufferAttribute).needsUpdate = true;
     (ref.current.geometry.attributes.aVelocity as BufferAttribute).needsUpdate = true;
-    uniforms.uDpr.value = gl.getPixelRatio(); uniforms.uProgress.value = sequence.progress;
+    uniforms.uDpr.value = gl.getPixelRatio(); uniforms.uViewport.value = size.height * .14; uniforms.uProgress.value = sequence.progress;
   });
   return <points ref={ref} frustumCulled={false}>
     <bufferGeometry>

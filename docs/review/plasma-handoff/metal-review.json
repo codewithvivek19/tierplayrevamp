@@ -1,0 +1,82 @@
+{
+  "backend": {
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+    "buffer": [
+      2520,
+      1575
+    ],
+    "quality": "high"
+  },
+  "phases": [
+    {
+      "phase": "hero",
+      "frameTimes": {
+        "median": 33.30000000000018,
+        "p95": 33.400000000000546,
+        "max": 33.400000000000546
+      },
+      "quality": "high"
+    },
+    {
+      "phase": "unfold",
+      "frameTimes": {
+        "median": 33.29999999999927,
+        "p95": 33.400000000001455,
+        "max": 33.5
+      },
+      "quality": "high"
+    },
+    {
+      "phase": "passage",
+      "frameTimes": {
+        "median": 16.700000000000728,
+        "p95": 33.400000000001455,
+        "max": 216.70000000000073
+      },
+      "quality": "balanced"
+    },
+    {
+      "phase": "arrival",
+      "frameTimes": {
+        "median": 16.700000000000728,
+        "p95": 16.700000000000728,
+        "max": 16.80000000000291
+      },
+      "quality": "balanced"
+    },
+    {
+      "viewport": [
+        320,
+        568
+      ],
+      "quality": "balanced",
+      "overflow": 0
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "quality": "balanced",
+      "overflow": 0
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "quality": "balanced",
+      "overflow": 0
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "quality": "balanced",
+      "overflow": 0
+    }
+  ],
+  "errors": [],
+  "arrivalDetail": 46.79582498030698
+}

@@ -66,7 +66,9 @@ export default function BattleHero() {
 
   useGSAP(() => {
     if (!live) return;
-    gsap.to(travel.current, { progress: 1, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom bottom", scrub: .9, invalidateOnRefresh: true }, onUpdate: sync });
+    travel.current.progress = 0;
+    sync();
+    gsap.to(travel.current, { progress: 1, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: () => `+=${Math.max(1, (root.current?.offsetHeight ?? innerHeight) - (stage.current?.offsetHeight ?? innerHeight))}`, scrub: .55, invalidateOnRefresh: true }, onUpdate: sync });
     // Reveal owns the overview's children; this timeline owns only its wrapper.
     const overview = document.getElementById("experience");
     if (overview) gsap.fromTo(overview, { y: 70, opacity: .35 }, { y: 0, opacity: 1, ease: "none", scrollTrigger: { trigger: overview, start: "top bottom", end: "top 55%", scrub: .7 } });
@@ -76,7 +78,7 @@ export default function BattleHero() {
   const enter = () => {
     if (!live || paused) { document.getElementById("experience")?.scrollIntoView({ behavior: "auto" }); return; }
     const element = root.current;
-    if (element) window.scrollTo({ top: element.getBoundingClientRect().top + scrollY + (element.offsetHeight - innerHeight) * .96, behavior: "smooth" });
+    if (element) window.scrollTo({ top: element.getBoundingClientRect().top + scrollY + (element.offsetHeight - (stage.current?.offsetHeight ?? innerHeight)) * .96, behavior: "smooth" });
   };
 
   return <section ref={root} className={`battle-hero portal-hero ${live ? "portal-live" : "portal-static"} ${live && ready ? "portal-ready" : ""}`} aria-labelledby="hero-title" data-scene={live && ready ? "webgl" : "still"} data-chapter={live ? chapter : 0}>

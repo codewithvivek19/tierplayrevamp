@@ -1,0 +1,61 @@
+{
+  "frames": [
+    {
+      "name": "opening",
+      "width": 1440,
+      "height": 900,
+      "progress": 0,
+      "overflow": false
+    },
+    {
+      "name": "travel",
+      "width": 1440,
+      "height": 900,
+      "progress": 0.55,
+      "overflow": false
+    },
+    {
+      "name": "arrival",
+      "width": 1440,
+      "height": 900,
+      "progress": 0.97,
+      "overflow": false
+    },
+    {
+      "name": "no-post",
+      "width": 1440,
+      "height": 900,
+      "progress": 0.97,
+      "overflow": false
+    },
+    {
+      "name": "roughness",
+      "width": 1440,
+      "height": 900,
+      "progress": 0.97,
+      "overflow": false
+    },
+    {
+      "name": "veins",
+      "width": 1440,
+      "height": 900,
+      "progress": 0.97,
+      "overflow": false
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "progress": 0,
+      "overflow": false
+    },
+    {
+      "name": "mobile-arrival",
+      "width": 390,
+      "height": 844,
+      "progress": 0.97,
+      "overflow": false
+    }
+  ],
+  "errors": []
+}
