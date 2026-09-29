@@ -1,10 +1,25 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import InteriorHero from "@/components/site/InteriorHero";
-import { KineticHeading, SignalLoop, SpotlightPanel } from "@/components/site/InteractivePrimitives";
+import Image from "next/image";
+import { Newspaper } from "lucide-react";
+import PageHero from "@/components/ds/PageHero";
+import { Button, SectionHeader } from "@/components/ds/primitives";
+import { games } from "@/content/site";
 
-export const metadata: Metadata = { title: "Up to Date" };
+export const metadata: Metadata = { title: "Up to Date", description: "Product and game stories will appear here as they are released." };
 
 export default function UpdatePage() {
-  return <main id="main"><InteriorHero eyebrow="Up to date" title="The latest from Tierplay." intro="The original public route contains no published article body, so this page stays honest about what is available." image="/media/generated/theme-v3/dragon-world-v3.webp" imageAlt="Tierplay game world" /><SignalLoop label="Tierplay updates" items={["Games", "Cabinets", "Products", "Player journey", "Support"]} /><section className="empty-editorial section-pad"><SpotlightPanel><span>Archive status / 00</span><KineticHeading>No published updates yet.</KineticHeading><p>New games and Tierplay updates can appear here once the stories, dates and media are approved. Until then, explore the complete recovered catalogue.</p><div><Link className="battle-button" href="/games">Explore games <span aria-hidden="true">↗</span></Link><Link className="text-action" href="/contact-sales">Contact Tierplay <span aria-hidden="true">↗</span></Link></div></SpotlightPanel></section></main>;
+  return <main id="main" className="ds-page">
+    <PageHero compact badge="Up to date" title="Tierplay updates." intro="Product and game stories will appear here as they are released." image="/media/generated/theme-v3/dragon-world-v3.webp" />
+    <section className="ds-section ds-container">
+      <SectionHeader icon={Newspaper} label="Updates" title="More to come." blurb="There are no published stories here yet." />
+      <div className="ds-empty">
+        <div className="ds-empty__stack" aria-hidden="true">{games.slice(0, 3).map((game, index) => <div key={game.slug} style={{ "--i": index } as React.CSSProperties}><Image src={game.image} alt="" fill sizes="(max-width: 960px) 80vw, 30vw" /></div>)}</div>
+        <div className="ds-empty__copy">
+          <h3>Nothing published yet.</h3>
+          <p>Explore the current games while we prepare the next update.</p>
+          <div className="ds-actions"><Button href="/games">Explore games</Button><Button href="/contact-sales" variant="ghost">Contact Tierplay</Button></div>
+        </div>
+      </div>
+    </section>
+  </main>;
 }

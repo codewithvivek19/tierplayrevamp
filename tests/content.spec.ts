@@ -34,7 +34,7 @@ test("all recovered-content routes render without broken media or overflow", asy
 test("catalogue retains the complete named-game evidence and accessible structure", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/games");
-  await expect(page.locator(".board-card")).toHaveCount(6);
+  await expect(page.locator(".ds-board-grid .ds-card")).toHaveCount(6);
   for (const title of ["Rich Times", "Gang of Evils", "Rise of the Dragon", "Bison Showdown", "Tiki Twist", "Sinister Show", "Fortune Quest", "Birix Haven", "Fiery Frenzy", "Jade Empire", "Fiesta Riches", "Mermaid’s Treasure", "Eagle Strike", "Frozen War", "Bandit Bounty"]) {
     await expect(page.locator("body")).toContainText(title);
   }

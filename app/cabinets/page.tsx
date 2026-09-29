@@ -1,28 +1,62 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import InteriorHero from "@/components/site/InteriorHero";
-import CabinetArtifact from "@/components/site/CabinetArtifact";
+import { Columns2, Cpu, MonitorSmartphone } from "lucide-react";
+import PageHero from "@/components/ds/PageHero";
 import Reveal from "@/components/site/Reveal";
-import { KineticHeading, SignalLoop, SpotlightPanel } from "@/components/site/InteractivePrimitives";
+import AltitudeTour from "@/components/cabinet3d/AltitudeTour";
+import TiltedCard from "@/components/reactbits/TiltedCard";
+import { Button, CheckList, Note, SectionHeader } from "@/components/ds/primitives";
 import { cabinetCapabilities, cabinets, legacyNotice } from "@/content/site";
 
-export const metadata: Metadata = { title: "Cabinets" };
+export const metadata: Metadata = { title: "Cabinets", description: "Explore the upright Altitude and curved-screen Pinnacle consoles." };
+
+const [altitude, pinnacle] = cabinets;
+const rows = altitude.specifications.map((item, index) => [item, pinnacle.specifications[index]] as const);
 
 export default function CabinetsPage() {
-  return <main id="main">
-    <InteriorHero eyebrow="Tierplay cabinets" title="Hardware with presence." intro="Altitude and Pinnacle are the two cabinet families documented in Tierplay’s public archive." image="/media/generated/theme-v3/cabinet-lineup-v3.webp" imageAlt="Three Tierplay cabinets presented together" />
-    <SignalLoop label="Cabinet collection" items={["Altitude Console", "Vertical 43-inch display", "Pinnacle Console", "Curved 43-inch display", "4K display", "Modular build"]} />
-    <section className="content-section section-pad">
-      <Reveal className="section-lede"><p className="kicker">The consoles</p><KineticHeading>Two forms. One visual system.</KineticHeading><p>Move across each scene to explore its depth. The cabinet silhouettes are based on recovered Tierplay reference images; final 3D production still requires approved CAD or GLB assets.</p></Reveal>
-      <div className="cabinet-showcase">{cabinets.map((cabinet, index) => <Reveal className="cabinet-showcase-row" key={cabinet.name}>
-        <div className="cabinet-showcase-art"><CabinetArtifact name={cabinet.name} image={cabinet.image} stage={`/media/generated/theme-v3/cabinet-stage-${index === 0 ? "altitude" : "pinnacle"}-v5.webp`} sizes="(max-width: 860px) 100vw, 58vw" /><div className="cabinet-depth-label"><span aria-hidden="true">◇</span><b>Interactive 2.5D</b><small>Move your pointer to explore</small></div></div>
-        <div className="cabinet-showcase-copy"><span>0{index + 1}</span><p className="kicker">{cabinet.label}</p><KineticHeading>{`${cabinet.name} Console`}</KineticHeading><p>{cabinet.copy}</p><ul>{cabinet.specifications.map((item) => <li key={item}>{item}</li>)}</ul><div className="source-thumb"><Image src={cabinet.sourceImage} alt={`${cabinet.name} source cabinet reference`} width={150} height={210} /><small>Recovered product reference</small></div></div>
-      </Reveal>)}</div>
+  return <main id="main" className="ds-page">
+    <PageHero badge="Tierplay cabinets" title="Altitude and Pinnacle." intro="Explore the upright Altitude and curved-screen Pinnacle consoles."
+      image="/media/generated/theme-v3/cabinet-lineup-v3.webp"
+      actions={<><Button href="#altitude-tour-title">Tour the Altitude</Button><Button href="#cabinet-compare" variant="ghost">Compare cabinets</Button></>} />
+
+    <AltitudeTour />
+
+    <section className="ds-section ds-container">
+      <SectionHeader icon={MonitorSmartphone} label="The second console" title={`${pinnacle.name} Console`} blurb={pinnacle.copy} />
+      <div className="ds-panel">
+        <Reveal className="ds-cabinet-art">
+          <TiltedCard>
+            <Image src="/media/generated/theme-v3/cabinet-stage-pinnacle-v5.webp" alt="" fill sizes="(max-width: 960px) 100vw, 48vw" className="v2-pinnacle-stage" />
+            <Image src={pinnacle.image} alt={`${pinnacle.name} cabinet`} fill sizes="(max-width: 960px) 100vw, 48vw" className="v2-pinnacle-product" />
+          </TiltedCard>
+        </Reveal>
+        <div>
+          <span className="ds-card__label">02 / {pinnacle.label}</span>
+          <h3>{pinnacle.name}</h3>
+          <p className="ds-panel__text">{pinnacle.copy}</p>
+          <CheckList items={pinnacle.specifications} />
+          <div className="ds-actions" style={{ marginTop: "var(--s-5)" }}><Button href="/contact-sales">Discuss Pinnacle</Button></div>
+        </div>
+      </div>
     </section>
-    <section className="content-section section-pad capability-section">
-      <Reveal className="section-lede split"><div><p className="kicker">Published capabilities</p><KineticHeading>Designed for the full floor.</KineticHeading></div><p>The original cabinet page lists these shared capabilities. They are not assigned to a specific model until Tierplay approves a current technical sheet.</p></Reveal>
-      <div className="capability-grid">{cabinetCapabilities.map((item, index) => <Reveal key={item}><SpotlightPanel className="capability-card"><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></SpotlightPanel></Reveal>)}</div>
-      <p className="archive-note">{legacyNotice}</p>
+
+    <section className="ds-section ds-container" id="cabinet-compare">
+      <SectionHeader icon={Columns2} label="Side by side" title="Compare the consoles." blurb="Published specifications for both cabinets." />
+      <Reveal>
+        <div className="ds-table-wrap" role="region" aria-label="Cabinet specifications table" tabIndex={0}>
+          <table className="ds-table">
+            <caption className="sr-only">Altitude and Pinnacle published specifications</caption>
+            <thead><tr><th scope="col"><span className="sr-only">Specification</span></th><th scope="col">{altitude.name}<small>{altitude.label}</small></th><th scope="col">{pinnacle.name}<small>{pinnacle.label}</small></th></tr></thead>
+            <tbody>{rows.map(([a, b], index) => <tr key={a}><th scope="row">{String(index + 1).padStart(2, "0")}</th><td>{a}</td><td>{b}</td></tr>)}</tbody>
+          </table>
+        </div>
+      </Reveal>
+    </section>
+
+    <section className="ds-section ds-container">
+      <SectionHeader icon={Cpu} label="Cabinet capabilities" title="Made for the floor." blurb="Capabilities listed for the cabinet range. Confirm model-specific details with Tierplay." />
+      <Reveal><CheckList items={cabinetCapabilities} columns={2} /></Reveal>
+      <Note>{legacyNotice}</Note>
     </section>
   </main>;
 }

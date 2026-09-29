@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Images, ListChecks, Sparkles } from "lucide-react";
+import PageHero from "@/components/ds/PageHero";
 import Reveal from "@/components/site/Reveal";
-import { KineticHeading, SpotlightPanel } from "@/components/site/InteractivePrimitives";
-import { boards, legacyNotice, supportCopy } from "@/content/site";
+import GameplayGallery from "@/components/site/GameplayGallery";
+import { Button, CheckList, GlassCard, Note, SectionHeader, StatBlock } from "@/components/ds/primitives";
+import { boards, gameplay } from "@/content/site";
 
 export function generateStaticParams() { return boards.map((board) => ({ slug: board.slug })); }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  return { title: boards.find((item) => item.slug === slug)?.title ?? "Game board" };
+  const board = boards.find((item) => item.slug === slug);
+  return { title: board?.title ?? "Game board", description: board?.intro };
 }
 
 export default async function GameBoardPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -19,15 +22,34 @@ export default async function GameBoardPage({ params }: { params: Promise<{ slug
   const board = boards[index];
   const previous = boards[(index - 1 + boards.length) % boards.length];
   const next = boards[(index + 1) % boards.length];
-  return <main id="main">
-    <section className="game-detail-hero"><Image src={board.image} alt={`${board.shortTitle} artwork`} fill priority sizes="100vw" /><div className="game-detail-shade"/><div className="game-detail-copy"><p className="kicker">Sunscape archive / {board.number}</p><h1>{board.title}</h1><p>Published June 24, 2024</p></div></section>
-    <section className="content-section section-pad board-profile">
-      <Reveal className="board-profile-intro"><div><p className="kicker">Board profile</p><KineticHeading>{board.shortTitle}</KineticHeading></div><p>{board.intro}</p></Reveal>
-      <div className="board-facts"><SpotlightPanel><span>01</span><b>Game lineup</b><p>{board.games.length ? board.games.join(" · ") : "Not provided in the public source"}</p></SpotlightPanel><SpotlightPanel><span>02</span><b>Free-spin grid</b><p>{board.grid}</p></SpotlightPanel><SpotlightPanel><span>03</span><b>Jackpot description</b><p>{board.jackpot}</p></SpotlightPanel></div>
+  const titles = gameplay.filter((game) => game.board === board.slug);
+  return <main id="main" className="ds-page">
+    <PageHero badge={`Sunscape archive · ${board.number}`} title={board.title} intro="Published June 24, 2024" image={board.image} plate={board.image}
+      actions={<><Button href="/contact-sales">Ask about this board</Button><Button href="/games" variant="ghost">All games</Button></>} />
+
+    <section className="ds-section ds-container">
+      <SectionHeader icon={Sparkles} label="The board" title={board.shortTitle} blurb={board.intro} />
+      <Reveal><StatBlock items={[
+        { label: "Game lineup", value: board.games.length ? board.games.join(" · ") : "Not provided in the public source" },
+        { label: "Free-spin grid", value: board.grid },
+        { label: "Jackpots", value: board.jackpot },
+      ]} /></Reveal>
     </section>
-    <section className="content-section section-pad board-feature-section"><Reveal className="section-lede"><p className="kicker">Additional features</p><KineticHeading>The connected layer.</KineticHeading></Reveal><div className="capability-grid">{board.features.map((feature, featureIndex) => <Reveal key={feature}><SpotlightPanel className="capability-card"><span>{String(featureIndex + 1).padStart(2, "0")}</span><p>{feature}</p></SpotlightPanel></Reveal>)}</div></section>
-    <section className="support-panel section-pad"><div><p className="kicker">Tech support</p><KineticHeading>Here around the clock.</KineticHeading></div><p>{supportCopy}</p><Link className="battle-button" href="/24-7-support">Visit support <span aria-hidden="true">↗</span></Link></section>
-    <section className="supporting-assets section-pad"><div className="supporting-poster"><Image src={board.poster} alt={`${board.shortTitle} supporting artwork`} fill sizes="(max-width: 760px) 90vw, 38vw" /></div><div><p className="kicker">Supporting assets</p><KineticHeading>Sunscapes flyer.</KineticHeading><p>The public page referenced a downloadable Sunscapes flyer. No approved downloadable document was recovered, so the link remains withheld.</p><p className="archive-note">{legacyNotice}</p></div></section>
-    <nav className="game-pagination" aria-label="Other game boards"><Link href={`/our_games/${previous.slug}`}><span>Previous</span><b>{previous.shortTitle}</b></Link><Link href={`/our_games/${next.slug}`}><span>Next</span><b>{next.shortTitle}</b></Link></nav>
+
+    {titles.length ? <section className="ds-section ds-container">
+      <SectionHeader icon={Images} label="In the game" title="See it in play." blurb="Artwork showing each game on a Tierplay cabinet. Select an image to enlarge it." />
+      <GameplayGallery games={titles.map((game) => ({ title: game.title, logo: game.logo, shots: [...game.shots] }))} />
+    </section> : null}
+
+    <section className="ds-section ds-container">
+      <SectionHeader icon={ListChecks} label="Features" title="Features at a glance." />
+      <Reveal><CheckList items={board.features} columns={2} /></Reveal>
+      <Note tone="market">not available for Georgia market</Note>
+    </section>
+
+    <nav className="ds-section ds-container ds-grid ds-grid--2" aria-label="Other game boards">
+      <GlassCard href={`/our_games/${previous.slug}`} label="Previous board" title={previous.shortTitle} tone="violet" media={<Image src={previous.image} alt="" fill sizes="(max-width: 620px) 100vw, 50vw" />} />
+      <GlassCard href={`/our_games/${next.slug}`} label="Next board" title={next.shortTitle} tone="amber" media={<Image src={next.image} alt="" fill sizes="(max-width: 620px) 100vw, 50vw" />} />
+    </nav>
   </main>;
 }

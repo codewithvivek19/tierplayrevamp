@@ -1,8 +1,0 @@
-
-Running 2 tests using 1 worker
-
-
-
-[1/2] tests/plasma-handoff.spec.ts:5:5 › fireball remains luminous through both directions of the pillar handoff
-[2/2] tests/plasma-rendering.spec.ts:6:5 › fireball keeps rendered detail across successive animated frames
-  2 passed (40.0s)

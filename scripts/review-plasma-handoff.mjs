@@ -19,7 +19,7 @@ for (const [phase, progress] of [['hero', 0], ['unfold', .48], ['passage', .64],
     function tick(time) { if (last !== undefined) values.push(time - last); last = time; if (values.length < 120) requestAnimationFrame(tick); else {values.sort((a,b)=>a-b);resolve({median:values[60],p95:values[114],max:values[119]});} }
     requestAnimationFrame(tick);
   }));
-  const frame = await page.screenshot({ path: `docs/review/plasma-handoff/metal-desktop-${phase}.png` });
+  const frame = await page.screenshot({ path: `test-results/review/plasma-handoff/metal-desktop-${phase}.png` });
   if (phase === 'arrival') {
     const pixels = await sharp(frame).extract({left:1400,top:400,width:400,height:400}).stats();
     evidence.arrivalDetail = Math.max(...pixels.channels.map(c=>c.stdev));
@@ -29,8 +29,8 @@ for (const [phase, progress] of [['hero', 0], ['unfold', .48], ['passage', .64],
 }
 for (const [width,height] of [[320,568],[390,844],[768,1024],[844,390]]) {
   await page.setViewportSize({width,height}); await page.waitForTimeout(350); await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'})); await page.waitForTimeout(1300);
-  await page.screenshot({path:`docs/review/plasma-handoff/metal-${width}x${height}.png`});
+  await page.screenshot({path:`test-results/review/plasma-handoff/metal-${width}x${height}.png`});
   evidence.phases.push({viewport:[width,height], quality:await page.locator('canvas').getAttribute('data-quality'), overflow:await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)});
 }
-await writeFile('docs/review/plasma-handoff/metal-review.json',JSON.stringify(evidence,null,2));
+await writeFile('test-results/review/plasma-handoff/metal-review.json',JSON.stringify(evidence,null,2));
 console.log(JSON.stringify(evidence,null,2)); await browser.close();

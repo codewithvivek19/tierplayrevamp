@@ -9,18 +9,15 @@ import Fireball from "./Fireball";
 import PointerRadiance from "./PointerRadiance";
 import type { PortalState } from "./portalState";
 
-export default function PortalEnergy({ sequence, software }: { sequence: PortalState; software: boolean }) {
+export default function PortalEnergy({ sequence, software, shadows = false }: { sequence: PortalState; software: boolean; shadows?: boolean }) {
   const size = useThree(s => s.size);
   const framing = portalFraming(size.width, size.height);
   const volume = useRef<Group>(null);
   const landing = useRef<ShaderMaterial>(null);
   const light = useRef<PointLight>(null);
-  const orbit = useRef<Group>(null);
-  const orbitMaterials = useRef<(ShaderMaterial | null)[]>([]);
   const impulse = useRef(0);
   const previous = useRef(sequence.progress);
   const landingUniforms = useMemo(() => ({ uTime: {value:0}, uOpacity: {value:0} }), []);
-  const orbitUniforms = useMemo(() => ({ uTime: {value:0}, uOpacity:{value:1} }), []);
   useFrame((_, delta) => {
     const p=sequence.progress;
     const travel=MathUtils.smootherstep(p,.32,.80);
@@ -37,26 +34,15 @@ export default function PortalEnergy({ sequence, software }: { sequence: PortalS
       volume.current.rotation.set(0,0,MathUtils.lerp(-.62,0,stretch));
       if (light.current) {
         light.current.position.copy(volume.current.position); light.current.position.y+=stretch*4; light.current.position.z+=1;
-        light.current.intensity=25+stretch*23+impulse.current*8;
+        light.current.intensity=(95+stretch*40+impulse.current*25)*MathUtils.lerp(.28,1,sequence.intro??1)*(1+Math.sin(sequence.time*9.1)*.03+Math.sin(sequence.time*23.7)*.02);
       }
-    }
-    if (orbit.current) {
-      const opacity=1-MathUtils.smootherstep(p,.30,.63);
-      orbit.current.visible=opacity>.001;
-      orbit.current.position.set(framing.x*(1-travel),MathUtils.lerp(framing.y,3.8,travel),MathUtils.lerp(-1.5,-16,travel));
-      orbit.current.scale.setScalar(framing.scale*(1+stretch*.25));
-      orbit.current.rotation.set(0,p*.7+Math.sin(sequence.time*.12)*.08,-.24+p*.16);
-      for (const m of orbitMaterials.current) if(m){m.uniforms.uTime.value=sequence.time;m.uniforms.uOpacity.value=opacity;}
     }
     if(landing.current){landing.current.uniforms.uTime.value=sequence.time;landing.current.uniforms.uOpacity.value=MathUtils.smootherstep(p,.60,.85)*.6;}
   }, -.5);
   return <>
     <group ref={volume}><Suspense fallback={null}><Fireball sequence={sequence} impulse={impulse} compact={software || size.width/size.height<1.05}/></Suspense></group>
-    <group ref={orbit}>{[0,1,2].map(i=><group key={i} rotation={[1.08+i*.29,.12-i*.1,i*.32]}>
-      <mesh><torusGeometry args={[4.7+i*.7,.009,4,180]}/><shaderMaterial ref={m=>{orbitMaterials.current[i]=m;}} vertexShader={vertex} fragmentShader={`varying vec2 vUv;uniform float uTime;uniform float uOpacity;void main(){float head=pow(fract(vUv.x-uTime*.045),18.);gl_FragColor=vec4(mix(vec3(.23,.2,.32),vec3(.9,.8,1.1),head),(.22+head*.7)*uOpacity);}`} uniforms={orbitUniforms} transparent depthWrite={false} blending={AdditiveBlending}/></mesh>
-    </group>)}</group>
     <mesh position={[0,-3.65,-16]} rotation={[-Math.PI/2,0,0]}><planeGeometry args={[7,7]}/><shaderMaterial ref={landing} vertexShader={vertex} fragmentShader={landingFragment} uniforms={landingUniforms} transparent depthWrite={false} blending={AdditiveBlending}/></mesh>
-    <pointLight ref={light} color="#c3b7ff" intensity={30} distance={22}/>
+    <pointLight ref={light} color="#b99bff" intensity={95} distance={34} decay={2} castShadow={false} shadow-mapSize-width={1024} shadow-mapSize-height={1024} shadow-bias={-.002} shadow-normalBias={.05} shadow-radius={6} shadow-camera-near={.5} shadow-camera-far={34}/>
     <PointerRadiance sequence={sequence}/>
   </>;
 }

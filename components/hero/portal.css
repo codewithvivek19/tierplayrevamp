@@ -1,155 +1,81 @@
-.battle-hero.portal-hero { max-height:none; height:auto; min-height:0; overflow:visible; isolation:isolate; }
-.portal-hero.portal-live { height:480svh; }
-.portal-stage { position:sticky; top:0; height:100svh; min-height:0; overflow:hidden; isolation:isolate; background:#090911; --portal-progress:0; --intro-opacity:1; --intro-y:0px; --scene-opacity:1; --arrival-opacity:0; --arrival-radius:0%; --arrival-scale:1.22; --arrival-title:0; --arrival-y:45px; --passage-opacity:0; }
-.portal-canvas { position:absolute; inset:0; opacity:0; transition:opacity 1.1s ease; pointer-events:none; }
-.portal-ready .portal-canvas { opacity:var(--scene-opacity); transition:none; }
-.portal-ready .battle-hero-image { opacity:0; }
-.portal-stage::after { content:""; position:absolute; inset:0; pointer-events:none; background:url('/media/brainnft-noise.png') center/480px; opacity:.045; mix-blend-mode:soft-light; }
-.portal-hero .battle-hero-image { transition:opacity 1s ease; }
-.portal-hero .battle-hero-shade { pointer-events:none; background:linear-gradient(90deg,#08090dd9 0%,#08090d55 34%,transparent 65%),linear-gradient(0deg,#101012 0%,#10101218 30%,transparent 65%); }
-.portal-hero .battle-hero-content { padding-block:200px 146px; justify-content:center; pointer-events:none; opacity:var(--intro-opacity); transform:translate3d(0,var(--intro-y),0); }
-.portal-hero .battle-hero-content a,.portal-hero .battle-hero-content button { pointer-events:auto; }
-.portal-hero .battle-hero-content[inert] a,.portal-hero .battle-hero-content[inert] button { pointer-events:none; }
-.portal-hero .battle-hero-copy { max-width:760px; }
-.portal-hero .battle-hero-copy .portal-eyebrow,.portal-eyebrow { font:500 11px/1.5 Inter,sans-serif; letter-spacing:.17em; text-transform:uppercase; color:#b7adcc; margin:0 0 28px; }
-.portal-hero h1 { font-size:clamp(66px,7vw,110px); font-weight:400; letter-spacing:-.065em; line-height:1.06!important; margin:0 0 30px; text-wrap:balance; }
-.portal-hero h1>span { display:block; }
-.portal-hero h1 em,.portal-arrival-copy em { font-style:normal; color:#d4c0ed; }
-.portal-hero .battle-hero-copy .portal-description { max-width:450px; font-size:16px; line-height:1.65; color:#c9c5d1; margin-bottom:30px; text-wrap:pretty; }
-.portal-actions { display:flex; align-items:center; flex-wrap:wrap; gap:26px; }
-.portal-hero .battle-button { padding:17px 23px; font-size:13px; border-radius:6px; }
-.portal-enter { border:0; background:none; display:flex; align-items:center; gap:16px; min-height:48px; padding:0; color:#ded8e8; font:400 13px/1.4 Inter,sans-serif; cursor:pointer; }
-.portal-enter span { display:grid; place-items:center; width:28px; height:28px; border:1px solid #ffffff30; border-radius:50%; }
-.portal-enter:hover { color:#fff; }
-.portal-hero .hero-product-strip { position:absolute; bottom:115px; left:0; right:0; display:flex; gap:0; margin:0; max-width:570px; border-top:1px solid #ffffff20; padding-top:19px; }
-.portal-hero .hero-product-strip a { flex:1; font-size:13px; font-weight:400; letter-spacing:0; gap:10px; min-height:35px; }
-.portal-hero .hero-product-strip span { font:10px/1 monospace; color:#b7a7c8; }
-.portal-hero .hero-product-strip b { font-size:12px; font-weight:400; color:#8b7c9d; padding-right:22px; }
-.portal-caption { position:absolute; top:141px; left:var(--gutter); display:flex; align-items:center; gap:11px; color:#d7cbe5; font:10px/1.4 monospace; letter-spacing:.15em; }
-.portal-caption>span:last-child { margin-left:26px; opacity:.7; font-variant-numeric:tabular-nums; }
-.portal-signal { width:4px; height:4px; border-radius:50%; background:#d7aaff; box-shadow:0 0 13px #a852ff; }
-.portal-object-caption { position:absolute; right:7%; bottom:145px; display:flex; align-items:center; gap:15px; opacity:var(--intro-opacity); }
-.portal-object-caption>span { font:9px/1.4 monospace; letter-spacing:.16em; color:#c8b6db; }
-.portal-object-caption i { width:45px; height:1px; background:#a490be55; }
-.portal-object-caption small { font:12px/1.4 Inter,sans-serif; color:#aaa0b8; }
-.portal-controls { position:absolute; bottom:29px; right:var(--gutter); display:flex; gap:20px; z-index:4; }
-.portal-controls button,.portal-controls a { display:flex; gap:12px; align-items:center; justify-content:center; min-height:44px; border:0; border-radius:0; padding:0 5px; background:transparent; color:#cdc5d7; font-size:11px; cursor:pointer; }
-.portal-controls button:hover,.portal-controls a:hover { color:#fff; }
-.portal-scroll-label { position:absolute; left:var(--gutter); bottom:35px; display:flex; align-items:center; gap:15px; font:9px/1.4 monospace; letter-spacing:.14em; color:#cdbedb; }
-.portal-scroll-glyph { width:32px; height:32px; border:1px solid #ffffff25; border-radius:50%; display:grid; place-items:center; font:16px/1 Inter; }
-.portal-progress { position:absolute; bottom:0; left:0; height:1px; width:100%; background:linear-gradient(90deg,#664efc,#ed94ec); transform:scaleX(var(--portal-progress)); transform-origin:left; }
-.portal-passage { position:absolute; bottom:20%; left:var(--gutter); opacity:var(--passage-opacity); pointer-events:none; }
-.portal-passage>span { color:#ddd1ec; font:11px/1.5 Inter; letter-spacing:.14em; text-transform:uppercase; }
-.portal-passage p { color:#f4eef9; font:400 clamp(24px,3vw,44px)/1.25 Inter; letter-spacing:-.045em; margin-top:13px; }
-.portal-arrival { position:absolute; inset:0; opacity:var(--arrival-opacity); clip-path:circle(var(--arrival-radius) at 66% 47%); pointer-events:none; }
-.portal-arrival>img { object-fit:cover; object-position:50% 50%; transform:scale(var(--arrival-scale)); }
-.portal-arrival-shade { position:absolute; inset:0; background:linear-gradient(0deg,#101012 0%,#10101245 45%,#1010120a),linear-gradient(90deg,#0c081c66,transparent 80%); }
-.portal-arrival-copy { position:absolute; inset:auto var(--gutter) 20%; opacity:var(--arrival-title); transform:translate3d(0,var(--arrival-y),0); }
-.portal-arrival-copy h2 { font:400 clamp(54px,6.5vw,96px)/1.08 Inter,sans-serif; letter-spacing:-.06em; margin:0 0 30px; color:#fff; text-transform:none; }
-.portal-arrival-copy a { display:inline-flex; align-items:center; gap:24px; font:14px/1.5 Inter; min-height:44px; color:#eee5f7; border-bottom:1px solid #d6c3ed70; }
-.experience-overview { scroll-margin-top:115px; }
-.experience-overview .experience-tile>a { position:relative; display:block; width:100%; height:100%; }
-@media(min-width:1700px) { .portal-hero .hero-product-strip { bottom:145px; } .portal-hero .battle-hero-content { padding-bottom:180px; } }
-@media(max-width:1100px) { .portal-object-caption { display:none; } .portal-hero h1 { font-size:clamp(64px,7.5vw,90px); } }
-@media(max-width:900px) {
- .portal-hero .battle-hero-content { text-align:left; justify-content:center; padding-block:190px 155px; }
- .portal-hero .battle-hero-copy { margin:0; max-width:600px; }
- .portal-hero .hero-product-strip { justify-content:flex-start; max-width:490px; }
- .portal-hero .battle-hero-shade { background:linear-gradient(0deg,#101012 0%,#10101288 35%,transparent 74%); }
-}
-@media(max-width:650px) {
- .portal-hero.portal-live { height:330svh; }
- .portal-stage { min-height:0; }
- .portal-caption { top:106px; font-size:8px; }
- .portal-caption>span:last-child { margin-left:8px; }
- .portal-hero .battle-hero-content { width:100%; max-width:none; padding:330px 24px 135px; justify-content:flex-end; }
- .portal-hero h1 { font-size:clamp(45px,11.7vw,70px); margin-bottom:20px; letter-spacing:-.06em; }
- .portal-hero .battle-hero-copy .portal-eyebrow { font-size:9px; margin-bottom:16px; letter-spacing:.12em; }
- .portal-hero .battle-hero-copy .portal-description { font-size:14px; line-height:1.6; margin-bottom:20px; max-width:340px; }
- .portal-desktop-break { display:none; }
- .portal-actions { gap:10px 18px; }
- .portal-hero .battle-button { font-size:12px; padding:15px 17px; }
- .portal-enter { font-size:11px; gap:7px; }
- .portal-enter span { display:none; }
- .portal-hero .hero-product-strip { left:24px; right:24px; bottom:81px; padding-top:12px; max-width:none; }
- .portal-hero .hero-product-strip a { font-size:11px; gap:6px; }
- .portal-hero .hero-product-strip b { display:none; }
- .portal-hero .hero-product-strip span { font-size:8px; }
- .portal-controls { left:24px; right:24px; bottom:18px; justify-content:space-between; gap:10px; }
- .portal-controls button,.portal-controls a { font-size:10px; }
- .portal-scroll-label { display:none; }
- .portal-hero .battle-hero-shade { background:linear-gradient(0deg,#101012 0%,#101012f2 22%,#10101250 48%,transparent 76%); }
- .portal-passage { bottom:25%; right:24px; }
- .portal-passage p { font-size:31px; }
- .portal-arrival { clip-path:circle(var(--arrival-radius) at 50% 38%); }
- .portal-arrival>img { object-position:53% center; }
- .portal-arrival-copy { bottom:23%; }
- .portal-arrival-copy h2 { font-size:56px; }
- .portal-arrival-copy a { font-size:12px; gap:16px; }
-}
-@media(max-width:380px) { .portal-stage { min-height:0; } .portal-hero h1 { font-size:43px; } .portal-hero .battle-hero-content { padding-top:260px; } .portal-actions { gap:6px 13px; } .portal-hero .battle-button { padding:14px; } .portal-enter { font-size:10px; } }
-@media(max-height:650px) and (min-width:651px) { .portal-stage { min-height:0; } .portal-caption { top:118px; } .portal-hero h1 { font-size:65px; } .portal-hero .battle-hero-content { padding-top:170px; padding-bottom:140px; } .portal-hero .hero-product-strip { bottom:88px; } }
-@media(prefers-reduced-motion:reduce) { .portal-stage { position:relative; } .portal-hero .battle-hero-image,.portal-canvas { transition:none; } }
-.portal-static-gateway { position:relative; min-height:75svh; display:flex; align-items:flex-end; padding:100px var(--gutter); overflow:hidden; }
-.portal-static-gateway>img { object-fit:cover; }
-.portal-static-gateway::after { content:""; position:absolute; inset:0; background:linear-gradient(0deg,#101012,transparent 100%); }
-.portal-static-gateway>div { position:relative; z-index:1; max-width:650px; }
-.portal-static-gateway h2 { font-size:clamp(42px,6vw,80px); line-height:1.08; letter-spacing:-.05em; margin:0 0 30px; }
-.portal-arrival-copy { inset:auto auto 17% var(--gutter); max-width:34%; }
-.portal-arrival-copy h2 { font-size:clamp(42px,5vw,76px); }
-.portal-hero[data-chapter="2"] .battle-hero-shade { background:linear-gradient(90deg,#08090d99,transparent 46%),linear-gradient(0deg,#101012,transparent 30%); }
-.portal-controls button:focus-visible,.portal-controls a:focus-visible,.portal-enter:focus-visible,.portal-arrival-copy a:focus-visible { outline:2px solid #eee0ff; outline-offset:5px; }
-@media(max-width:650px) {
- .portal-arrival-copy { left:24px; right:24px; bottom:15%; max-width:none; }
- .portal-arrival-copy h2 { font-size:48px; }
- .portal-hero[data-chapter="2"] .battle-hero-shade { background:linear-gradient(0deg,#101012 0%,#101012c9 23%,transparent 65%); }
- .portal-static-gateway { padding:80px 24px; }
-}
+/* Homepage hero: stage, copy safe zones and chapter copy. The 3D scene itself lives in the canvas. */
+.battle-hero.portal-hero { position: relative; isolation: isolate; background: var(--ink); max-height: none; height: auto; min-height: 0; overflow: visible; padding: 0; }
+.portal-hero.portal-live { height: 700svh; }
+.portal-hero.portal-static { min-height: 100svh; }
+.portal-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; isolation: isolate; background: #06050a;
+  --portal-progress: 0; --intro-opacity: 1; --intro-y: 0px; --scene-opacity: 1; --arrival-opacity: 0; --arrival-radius: 0%; --arrival-scale: 1.22; --arrival-title: 0; --arrival-y: 45px; --passage-opacity: 0; }
+.portal-static .portal-stage { position: relative; }
+.battle-hero-image { position: absolute; inset: 0; transition: opacity 1s ease; }
+.battle-hero-image img { object-fit: cover; object-position: 62% 50%; }
+.portal-canvas { position: absolute; inset: 0; opacity: 0; transition: opacity 1.1s ease; pointer-events: none; }
+.portal-ready .portal-canvas { opacity: var(--scene-opacity); transition: none; }
+.portal-ready .battle-hero-image { opacity: 0; }
+.portal-stage::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: url('/media/brainnft-noise.png') center / 480px; opacity: .035; mix-blend-mode: soft-light; }
 
-/* Stage composition follows the available viewport, including short phones.
-   The same three chapters remain reachable without clipping the controls. */
-@media (max-width: 650px) {
- .portal-hero .battle-hero-content { padding-top: min(39svh, 330px); padding-bottom: 135px; }
- .portal-hero .battle-hero-copy { max-width: 100%; }
- .portal-stage::after { opacity: .025; }
+/* Scrim: protects copy only where it sits, leaving the portal clear. */
+.battle-hero-shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgb(6 5 10 / .82) 0%, rgb(6 5 10 / .38) 30%, transparent 52%), linear-gradient(0deg, rgb(6 5 10 / .9) 0%, transparent 26%); }
+.portal-hero[data-chapter="1"] .battle-hero-shade { background: linear-gradient(0deg, rgb(6 5 10 / .6) 0%, transparent 30%); }
+.portal-hero[data-chapter="2"] .battle-hero-shade { background: linear-gradient(90deg, rgb(6 5 10 / .72), transparent 46%), linear-gradient(0deg, rgb(6 5 10 / .9), transparent 30%); }
+
+/* Opening copy: left safe column on landscape screens. */
+.hero-copy-layer { box-sizing: border-box; text-align: left; position: absolute; inset: 0; z-index: 2; width: auto; max-width: none; margin: 0; display: flex; align-items: center; padding: calc(var(--header) + 32px) var(--gutter) 120px; opacity: var(--intro-opacity); transform: translate3d(0, var(--intro-y), 0); pointer-events: none; }
+.hero-copy-layer a, .hero-copy-layer button { pointer-events: auto; }
+.hero-copy-layer[inert] a, .hero-copy-layer[inert] button { pointer-events: none; }
+.hero-copy { margin: 0; text-align: left; display: grid; justify-items: start; gap: 22px; width: min(38vw, 620px); min-width: 420px; }
+.portal-hero h1 { margin: 0; font-size: clamp(3rem, 1.8rem + 4.2vw, 6rem); font-weight: 500; line-height: 1; letter-spacing: -.04em; color: var(--text); }
+.portal-hero h1 em, .portal-arrival-copy em { color: var(--violet-soft); }
+.portal-description { max-width: 34ch; color: var(--text-soft); font-size: var(--fs-lead); line-height: 1.5; }
+
+/* Chapter copy */
+.portal-passage { position: absolute; z-index: 2; left: var(--gutter); bottom: 18%; opacity: var(--passage-opacity); pointer-events: none; }
+.portal-passage p { font-size: clamp(1.75rem, 1rem + 2.6vw, 3rem); font-weight: 400; letter-spacing: -.035em; color: var(--text); }
+.portal-arrival-copy { position: absolute; z-index: 2; left: var(--gutter); bottom: 16%; display: grid; justify-items: start; gap: 24px; max-width: min(36vw, 560px); opacity: var(--arrival-title); transform: translate3d(0, var(--arrival-y), 0); }
+.portal-arrival-copy h2 { font-size: clamp(2.5rem, 1.4rem + 3.6vw, 4.75rem); font-weight: 500; letter-spacing: -.04em; line-height: 1.02; }
+
+/* Controls: one compact glass pill */
+.portal-controls { position: absolute; z-index: 4; right: var(--gutter); bottom: 24px; display: flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid var(--line-2); border-radius: var(--r-pill); background: rgb(12 10 18 / .5); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.portal-icon-button { display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: var(--text-soft); cursor: pointer; transition: background var(--d-1), color var(--d-1); }
+.portal-icon-button:hover, .portal-icon-button[aria-pressed="true"] { background: rgb(255 255 255 / .1); color: var(--text); }
+.portal-skip { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border-radius: var(--r-pill); color: var(--text-soft); font-size: .8125rem; transition: background var(--d-1), color var(--d-1); }
+.portal-skip:hover { background: rgb(255 255 255 / .08); color: var(--text); }
+.portal-progress { position: absolute; z-index: 3; bottom: 0; left: 0; height: 2px; width: 100%; background: linear-gradient(90deg, var(--violet), var(--amber)); transform: scaleX(var(--portal-progress)); transform-origin: left; }
+
+/* Static gateway (reduced motion / no WebGL) */
+.portal-static-gateway { position: relative; min-height: 80svh; display: flex; align-items: flex-end; padding: var(--s-9) var(--gutter); overflow: hidden; }
+.portal-static-gateway > img { object-fit: cover; }
+.portal-static-gateway::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, var(--ink), transparent 80%); }
+.portal-static-gateway > div { position: relative; z-index: 1; display: grid; justify-items: start; gap: 22px; max-width: 640px; }
+.portal-static-gateway h2 { font-size: var(--fs-display); letter-spacing: var(--track-display); line-height: 1.02; }
+
+/* Portrait: copy anchors to the bottom band; the upper half stays clear for the portal. */
+@media (orientation: portrait), (max-aspect-ratio: 1/1) {
+  .hero-copy-layer { align-items: flex-end; padding: 0 var(--gutter) 96px; }
+  .hero-copy { width: 100%; min-width: 0; max-width: 640px; gap: 16px; }
+  .portal-hero h1 { font-size: clamp(2.6rem, 1.2rem + 7vw, 4.75rem); }
+  .battle-hero-shade { background: linear-gradient(0deg, rgb(6 5 10 / .96) 0%, rgb(6 5 10 / .82) 26%, rgb(6 5 10 / .2) 50%, transparent 62%); }
+  .portal-hero[data-chapter="2"] .battle-hero-shade { background: linear-gradient(0deg, rgb(6 5 10 / .94) 0%, rgb(6 5 10 / .6) 30%, transparent 58%); }
+  .portal-arrival-copy { right: var(--gutter); bottom: 96px; max-width: none; gap: 18px; }
+  .portal-passage { bottom: 110px; right: var(--gutter); }
+  .portal-controls { left: var(--gutter); right: var(--gutter); bottom: 20px; justify-content: space-between; }
 }
-@media (max-width: 650px) and (max-height: 740px) {
- .portal-caption { top: 90px; }
- .portal-hero .battle-hero-content { padding: 190px 20px 112px; }
- .portal-hero h1 { font-size: clamp(36px, 10.2vw, 52px); margin-bottom: 12px; }
- .portal-hero .battle-hero-copy .portal-eyebrow { margin-bottom: 10px; font-size: 8px; }
- .portal-hero .battle-hero-copy .portal-description { font-size: 12px; margin-bottom: 12px; }
- .portal-hero .battle-button { padding: 12px 14px; min-height: 44px; }
- .portal-hero .hero-product-strip { left: 20px; right: 20px; bottom: 65px; padding-top: 8px; }
- .portal-controls { left: 16px; right: 16px; bottom: 10px; gap: 6px; }
- .portal-controls button,.portal-controls a { font-size: 9px; gap: 6px; }
- .portal-arrival-copy { bottom: 20%; }
- .portal-arrival-copy h2 { font-size: 40px; }
+@media (max-width: 420px) {
+  .portal-description { font-size: 1rem; }
+  .hero-copy .ds-actions { gap: 10px; }
+  .hero-copy .ds-button { padding: 0 16px; min-height: 46px; }
 }
-@media (min-width: 651px) and (max-height: 740px) {
- .portal-caption { top: 105px; }
- .portal-hero .battle-hero-content { padding-block: 135px 120px; }
- .portal-hero h1 { font-size: clamp(42px, 6.2vw, 72px); margin-bottom: 18px; }
- .portal-hero .battle-hero-copy .portal-eyebrow { margin-bottom: 12px; }
- .portal-hero .battle-hero-copy .portal-description { font-size: 14px; margin-bottom: 18px; }
- .portal-hero .hero-product-strip { bottom: 75px; padding-top: 10px; }
+@media (orientation: portrait) and (max-height: 700px) {
+  .hero-copy .ds-badge { display: none; }
+  .portal-hero h1 { font-size: clamp(2.3rem, 10vw, 3.2rem); }
 }
+/* Short landscape phones: one-line title, no description. */
 @media (orientation: landscape) and (max-height: 520px) {
- .portal-caption,.portal-hero .hero-product-strip,.portal-scroll-label { display: none; }
- .portal-hero .battle-hero-content { padding-block: 100px 60px; }
- .portal-hero h1 { font-size: 38px; margin-bottom: 10px; }
- .portal-hero .battle-hero-copy .portal-eyebrow { display: none; }
- .portal-hero .battle-hero-copy .portal-description { font-size: 12px; line-height: 1.45; margin-bottom: 10px; }
- .portal-hero .battle-button { padding: 10px 16px; min-height: 44px; }
- .portal-controls { bottom: 5px; }
- .portal-arrival-copy { bottom: 20%; max-width: 48%; }
- .portal-arrival-copy h2 { font-size: 36px; margin-bottom: 12px; }
+  .hero-copy-layer { padding: 70px var(--gutter) 64px; align-items: flex-end; }
+  .hero-copy { min-width: 0; width: 46vw; gap: 12px; }
+  .hero-copy .ds-badge, .portal-description { display: none; }
+  .portal-hero h1 { font-size: clamp(1.9rem, 5.2vw, 2.6rem); }
+  .portal-arrival-copy { bottom: 64px; max-width: 46vw; gap: 12px; }
+  .portal-arrival-copy h2 { font-size: 2rem; }
+  .portal-controls { bottom: 10px; }
 }
-
-@media (min-width: 651px) and (max-width: 1000px) and (orientation: portrait) {
- .portal-hero .battle-hero-content { padding-top: 44svh; padding-bottom: 170px; justify-content: flex-end; }
- .portal-hero h1 { font-size: clamp(58px, 8vw, 76px); }
- .portal-hero .battle-hero-copy { max-width: 640px; }
- .portal-hero .battle-hero-shade { background: linear-gradient(0deg,#101012 0%,#101012eb 24%,#10101230 58%,transparent 80%); }
- .portal-arrival-copy { max-width: 70%; bottom: 18%; }
-}
+@media (max-width: 650px) { .portal-hero.portal-live { height: 480svh; } }
+@media (prefers-reduced-motion: reduce) { .portal-stage { position: relative; } .battle-hero-image, .portal-canvas { transition: none; } }

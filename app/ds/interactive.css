@@ -1,0 +1,299 @@
+/* Component styles for interactive pieces (3D stages, galleries, switchers, reveals). */
+/* Tierplay v2 — "the floor after dark". Scoped to v2 classes; the homepage hero is untouched. */
+:root {
+  --v-ink: #08070c; --v-surface: #110f17; --v-raise: #18151f; --v-line: #ffffff17; --v-line-strong: #ffffff30;
+  --v-text: #f4eff8; --v-soft: #c2bacd; --v-dim: #8e869a;
+  --led-violet: #9e05ff; --led-blue: #2a55ff; --led-cyan: #05e6ff; --led-magenta: #ff0a75;
+  --v-ease: cubic-bezier(.2, .8, .2, 1); --v-wide: 1320px;
+}
+/* ---------- Shared type and controls ---------- */
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.tp-label { display: inline-flex; align-items: center; gap: 10px; margin: 0; color: var(--v-soft); font: 500 11px/1.4 ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .14em; text-transform: uppercase; }
+.tp-label::before { content: ""; width: 6px; height: 6px; flex: none; background: var(--led-violet); box-shadow: 0 0 10px var(--led-violet), 0 0 2px #fff; }
+.tp-button { display: inline-flex; align-items: center; gap: 14px; min-height: 52px; padding: 0 26px; border-radius: 999px; background: var(--v-text); color: #0c0a12; font-size: 14px; font-weight: 600; letter-spacing: .01em; transition: background .2s, box-shadow .3s var(--v-ease); }
+.tp-button:hover { background: #e3d4ff; box-shadow: 0 0 0 6px #9e05ff26, 0 10px 40px #9e05ff40; }
+.tp-link { display: inline-flex; align-items: center; gap: 18px; min-height: 44px; width: fit-content; color: var(--v-text); font-size: 14px; border-bottom: 1px solid #ffffff66; transition: color .2s, border-color .2s, gap .3s var(--v-ease); }
+.tp-link:hover { color: #dcc6ff; border-color: #dcc6ff; gap: 26px; }
+.magnet, .magnet-inner { display: inline-block; }
+/* SplitText masked lines: text is plain until split. */
+.split-text .split-line { padding-bottom: .16em; margin-bottom: -.16em; }
+.scroll-reveal-word { display: inline-block; }
+/* GlareHover (React Bits) */
+.glare-hover { position: absolute; inset: 0; overflow: hidden; }
+.glare-hover::before { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(var(--gh-angle), transparent 58%, var(--gh-rgba) 68%, transparent 78%); background-size: 260% 260%; background-position: -100% -100%; transition: background-position .9s var(--v-ease); }
+a:hover .glare-hover::before, a:focus-visible .glare-hover::before, .glare-hover:hover::before { background-position: 100% 100%; }
+.glare-hover img { object-fit: cover; transition: transform 1s var(--v-ease); }
+a:hover .glare-hover img { transform: scale(1.04); }
+/* TiltedCard (React Bits) */
+.tilted-card { position: relative; margin: 0; width: 100%; height: 100%; perspective: 900px; }
+.tilted-card-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; }
+.tilted-card-overlay { position: absolute; left: 22px; top: 22px; z-index: 3; transform: translateZ(40px); }
+.v2-hero-media { position: absolute; inset: -4% 0 0; will-change: transform; }
+.v2-hero-media img { object-fit: cover; filter: saturate(.85) contrast(1.06); }
+/* ---------- Altitude tour (cabinets) ---------- */
+.altitude-tour { position: relative; height: calc(100svh + 6 * 70svh); background: radial-gradient(ellipse 70% 50% at 62% 70%, #1b1030 0%, transparent 70%), var(--v-ink); }
+.altitude-tour-sticky { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.altitude-tour-glow { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 34% 12% at 62% 88%, #7a2cff42, transparent 70%), radial-gradient(circle at 62% 48%, #2a55ff14, transparent 40%); }
+.altitude-tour-stage { position: absolute; inset: 0; touch-action: pan-y; cursor: grab; }
+.altitude-tour-stage[data-dragging] { cursor: grabbing; }
+.cabinet-stage-canvas { position: absolute !important; inset: 0; }
+.altitude-tour-fallback { position: absolute; right: 12%; bottom: 5%; height: 82%; width: auto; object-fit: contain; filter: drop-shadow(0 30px 40px #000c); }
+.altitude-tour[data-ready="true"] .altitude-tour-fallback { opacity: 0; }
+.altitude-tour-leader { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.altitude-tour-leader line { stroke: #ffffffa8; stroke-width: 1; stroke-dasharray: 3 5; opacity: 0; transition: opacity .35s; }
+.altitude-tour-dot { position: absolute; left: -7px; top: -7px; width: 14px; height: 14px; border-radius: 50%; border: 1px solid #fff; box-shadow: 0 0 0 5px #ffffff1a, 0 0 18px var(--led-cyan); pointer-events: none; opacity: 0; transition: opacity .35s; }
+.altitude-tour-dot::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: #fff; }
+.altitude-tour[data-leader="on"] .altitude-tour-leader line, .altitude-tour[data-leader="on"] .altitude-tour-dot { opacity: 1; }
+.altitude-tour-head { position: absolute; z-index: 2; left: var(--gutter); top: calc(var(--header) + clamp(24px, 4vh, 48px)); pointer-events: none; }
+.altitude-tour-head h2 { margin: 18px 0 10px; font-size: clamp(34px, 3.6vw, 58px); font-weight: 500; letter-spacing: -.055em; line-height: 1; }
+.altitude-tour-hint { color: var(--v-dim); font-size: 12px; letter-spacing: .04em; }
+.altitude-tour-cards { position: absolute; z-index: 2; left: var(--gutter); bottom: clamp(96px, 15vh, 150px); width: min(430px, 34vw); margin: 0; padding: 0; list-style: none; display: grid; }
+.altitude-tour-cards li { grid-area: 1 / 1; align-self: end; padding: 28px 30px 30px; background: #0d0b14b8; border: 1px solid var(--v-line-strong); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); opacity: 0; transform: translateY(18px); visibility: hidden; transition: opacity .45s var(--v-ease), transform .6s var(--v-ease), visibility 0s .45s; }
+.altitude-tour-cards li[data-active="true"] { opacity: 1; transform: none; visibility: visible; transition: opacity .45s var(--v-ease), transform .6s var(--v-ease); }
+.altitude-tour-cards h3 { margin: 16px 0 12px; font-size: clamp(26px, 2.4vw, 38px); font-weight: 500; letter-spacing: -.045em; line-height: 1.04; }
+.altitude-tour-cards p:not(.tp-label) { color: var(--v-soft); font-size: 15px; line-height: 1.55; }
+.altitude-tour-actions { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: center; margin-top: 24px; }
+.altitude-tour-nav { position: absolute; z-index: 3; left: var(--gutter); right: var(--gutter); bottom: 28px; display: flex; gap: 4px; }
+.altitude-tour-sticky::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 150px; z-index: 1; pointer-events: none; background: linear-gradient(transparent, #08070cf2 75%); }
+.altitude-tour-nav button { flex: 1; display: grid; gap: 6px; padding: 12px 0 0; border: 0; border-top: 1px solid var(--v-line-strong); background: none; text-align: left; cursor: pointer; color: var(--v-dim); transition: color .25s, border-color .25s; }
+.altitude-tour-nav button span { font: 500 10px/1 ui-monospace, Menlo, monospace; letter-spacing: .12em; }
+.altitude-tour-nav button b { font-size: 12px; font-weight: 500; }
+.altitude-tour-nav button:hover, .altitude-tour-nav button[aria-current] { color: var(--v-text); border-color: var(--v-text); }
+.altitude-tour-nav button[aria-current] { border-top-width: 2px; border-color: var(--led-cyan); box-shadow: 0 -8px 20px -12px var(--led-cyan); }
+/* Reduced motion / no WebGL: a static composition with every chapter visible. */
+.altitude-tour:is([data-mode="still"], [data-mode="image"]) { height: auto; padding-block: clamp(60px, 8vw, 120px); }
+.altitude-tour:is([data-mode="still"], [data-mode="image"]) .altitude-tour-sticky { position: relative; height: auto; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 40px; padding-inline: var(--gutter); overflow: visible; }
+.altitude-tour:is([data-mode="still"], [data-mode="image"]) .altitude-tour-stage { position: relative; grid-column: 2; grid-row: 1 / 3; min-height: 760px; cursor: default; }
+.altitude-tour:is([data-mode="still"], [data-mode="image"]) .altitude-tour-fallback { right: 10%; }
+.altitude-tour:is([data-mode="still"], [data-mode="image"]) .altitude-tour-head { position: static; grid-column: 1; }
+.altitude-tour:is([data-mode="still"], [data-mode="image"]) .altitude-tour-cards { position: static; width: auto; grid-column: 1; gap: 10px; }
+.altitude-tour:is([data-mode="still"], [data-mode="image"]) .altitude-tour-cards li { grid-area: auto; opacity: 1; transform: none; visibility: visible; padding: 20px 22px; }
+.floating-altitude { position: absolute; inset: -10% -12% 250px -14%; touch-action: pan-y; cursor: grab; }
+.floating-altitude[data-dragging] { cursor: grabbing; }
+.floating-altitude-canvas { position: absolute; inset: 0; }
+.floating-altitude-light { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 36% 9% at 58% 93%, #7a2cff4d, transparent 70%), radial-gradient(circle at 58% 55%, #6d2bff1c, transparent 42%); }
+.floating-altitude-fallback { position: absolute; left: 58%; bottom: 3%; height: 80%; transform: translateX(-50%); object-fit: contain; filter: drop-shadow(0 30px 40px #000c); transition: opacity .5s; }
+.floating-altitude[data-ready="true"] .floating-altitude-fallback { opacity: 0; }
+.floating-altitude-hint { position: absolute; right: 16%; top: 22%; color: var(--v-dim); font: 500 10px/1 ui-monospace, Menlo, monospace; letter-spacing: .16em; text-transform: uppercase; }
+.floating-altitude-hint::before { content: "⟷"; display: block; margin-bottom: 8px; font-size: 16px; color: var(--v-soft); letter-spacing: 0; }
+.v2-pinnacle-stage { object-fit: cover; filter: brightness(.6) saturate(.9); }
+.v2-pinnacle-product { object-fit: contain; padding: 8% 18% 4%; transform: translateZ(50px); filter: drop-shadow(0 30px 34px #000d) drop-shadow(0 0 30px #9e05ff40); }
+.tilted-card-inner { overflow: hidden; border: 1px solid var(--v-line); background: #0f0d15; }
+.sticky-swap { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(40px, 6vw, 100px); align-items: start; }
+.sticky-swap-media { position: sticky; top: calc(var(--header) + 24px); height: calc(100svh - var(--header) - 48px); max-height: 760px; overflow: hidden; background: #110f17; }
+.sticky-swap-frame { position: absolute; inset: 0; opacity: 0; transform: scale(1.06); transition: opacity .8s var(--v-ease), transform 1.4s var(--v-ease); }
+.sticky-swap-frame[data-active="true"] { opacity: 1; transform: none; }
+.sticky-swap-frame img { object-fit: cover; }
+.sticky-swap-frame span { position: absolute; left: 24px; bottom: 22px; z-index: 1; font: 500 clamp(44px, 6vw, 96px)/1 Manrope, sans-serif; letter-spacing: -.06em; color: #ffffffe0; text-shadow: 0 0 40px #0009; }
+.sticky-swap-progress { position: absolute; right: 18px; top: 18px; bottom: 18px; width: 2px; background: #ffffff24; }
+.sticky-swap-progress i { position: absolute; inset: 0; transform-origin: top; background: var(--led-cyan); box-shadow: 0 0 10px var(--led-cyan); transition: transform .6s var(--v-ease); }
+.sticky-swap-steps { display: grid; }
+.sticky-swap-step { min-height: 78svh; display: flex; flex-direction: column; justify-content: center; opacity: 1; }
+.sticky-swap-step h3 { transition: color .5s; }
+.sticky-swap-step[data-active="true"] h3 { color: var(--violet-soft); }
+.sticky-swap-inline { display: none; position: relative; aspect-ratio: 4 / 3; margin-bottom: 26px; overflow: hidden; }
+.sticky-swap-inline img { object-fit: cover; }
+.game-reel { position: relative; }
+.game-reel-sticky { display: flex; flex-direction: column; justify-content: center; gap: clamp(24px, 3vw, 44px); }
+.game-reel[data-travel] .game-reel-sticky { position: sticky; top: 0; height: 100svh; padding-top: var(--header); overflow: hidden; }
+.game-reel-window { overflow: hidden; }
+.game-reel:not([data-travel]) .game-reel-window { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; padding-bottom: 6px; }
+.game-reel:not([data-travel]) .game-reel-track li { scroll-snap-align: start; }
+.game-reel-track { display: flex; gap: clamp(14px, 1.6vw, 24px); width: max-content; margin: 0; padding: 0 var(--gutter); list-style: none; }
+.game-reel-track li { width: min(40vw, 660px); }
+.game-reel-card { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; background: #15121b; }
+.game-reel-card img { object-fit: cover; }
+.game-reel-card::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, #08070cf0, transparent 50%); }
+.game-reel-meta { position: absolute; z-index: 3; left: clamp(20px, 2.4vw, 34px); right: clamp(20px, 2.4vw, 34px); bottom: clamp(20px, 2.4vw, 30px); display: grid; gap: 12px; }
+.game-reel-meta b { font-size: clamp(32px, 3.4vw, 58px); font-weight: 500; letter-spacing: -.055em; line-height: .98; }
+.game-reel-meta i { font-style: normal; font-size: 13px; color: var(--v-soft); }
+/* ---------- Games ---------- */
+.logo-grid { --grid-rx: 0deg; --grid-ry: 0deg; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; perspective: 1200px; transform: rotateX(var(--grid-rx)) rotateY(var(--grid-ry)); transform-style: preserve-3d; transition: transform .6s var(--v-ease); }
+.logo-grid-tile { --lift: 0; transform: translateZ(calc(var(--lift) * 60px)) translateY(calc(var(--lift) * -8px)); transition: transform .5s var(--v-ease); }
+.logo-grid-tile a { position: relative; display: grid; place-items: center; aspect-ratio: 1.55; padding: 12% 14%; background: radial-gradient(circle at 50% 60%, #2a1848 0%, #110f17 70%); border: 1px solid var(--v-line); overflow: hidden; transition: border-color .4s, box-shadow .5s var(--v-ease); }
+.logo-grid-tile a::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, #9e05ff55, transparent 60%); opacity: calc(var(--lift) * 1); transition: opacity .5s; }
+.logo-grid-tile a:hover, .logo-grid-tile a:focus-visible { border-color: #b98cff80; box-shadow: 0 30px 60px -30px #9e05ff90; }
+.logo-grid-tile img { position: relative; width: 100%; height: auto; object-fit: contain; filter: drop-shadow(0 10px 22px #000b); transition: transform .5s var(--v-ease); }
+.logo-grid-tile a:hover img { transform: scale(1.06); }
+.logo-grid-tile .tp-label { position: absolute; left: 16px; top: 14px; }
+.mechanic-switcher-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--v-line-strong); margin-bottom: clamp(24px, 3vw, 40px); overflow-x: auto; }
+.mechanic-switcher-tabs button { position: relative; display: flex; align-items: baseline; gap: 10px; padding: 18px 28px 18px 0; margin-right: 28px; border: 0; background: none; color: var(--v-dim); font-size: clamp(18px, 1.8vw, 28px); letter-spacing: -.03em; cursor: pointer; white-space: nowrap; transition: color .25s; }
+.mechanic-switcher-tabs button span { font: 500 10px/1 ui-monospace, Menlo, monospace; letter-spacing: .1em; }
+.mechanic-switcher-tabs button::after { content: ""; position: absolute; left: 0; right: 28px; bottom: -1px; height: 2px; background: var(--led-cyan); box-shadow: 0 0 12px var(--led-cyan); transform: scaleX(0); transform-origin: left; transition: transform .45s var(--v-ease); }
+.mechanic-switcher-tabs button[aria-selected="true"] { color: var(--v-text); }
+.mechanic-switcher-tabs button[aria-selected="true"]::after { transform: scaleX(1); }
+.mechanic-switcher-tabs button:hover { color: var(--v-text); }
+.mechanic-switcher-body { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(30px, 5vw, 80px); align-items: center; }
+.mechanic-switcher-stage { position: relative; aspect-ratio: 1; overflow: hidden; background: #110f17; }
+.mechanic-switcher-shot { position: absolute; inset: 0; opacity: 0; transform: scale(1.04); transition: opacity .55s var(--v-ease), transform .9s var(--v-ease); animation: v2-fade .6s var(--v-ease); }
+.mechanic-switcher-shot[data-active="true"] { opacity: 1; transform: none; }
+.mechanic-switcher-shot img { object-fit: cover; }
+.mechanic-switcher-caption { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; display: flex; justify-content: space-between; align-items: end; padding: 60px 24px 20px; background: linear-gradient(0deg, #08070ce6, transparent); }
+.mechanic-switcher-caption b { font-size: clamp(22px, 2vw, 32px); font-weight: 500; letter-spacing: -.04em; }
+.mechanic-switcher-copy { max-width: 32ch; margin-bottom: 36px; font-size: clamp(22px, 2.2vw, 34px); line-height: 1.2; letter-spacing: -.035em; }
+.mechanic-switcher-games { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.mechanic-switcher-games button, .gameplay-gallery-games button { display: grid; place-items: center; aspect-ratio: 1.7; padding: 10px 14px; border: 1px solid var(--v-line); background: #110f17; cursor: pointer; opacity: .55; transition: opacity .25s, border-color .25s, background .25s; }
+.mechanic-switcher-games button img, .gameplay-gallery-games button img { width: 100%; height: auto; object-fit: contain; }
+.mechanic-switcher-games button:hover, .gameplay-gallery-games button:hover { opacity: .9; }
+.mechanic-switcher-games button[aria-pressed="true"], .gameplay-gallery-games button[aria-pressed="true"] { opacity: 1; border-color: #b98cff99; background: radial-gradient(circle, #2a1848, #110f17 75%); }
+@keyframes v2-fade { from { opacity: 0; } }
+/* FlowingMenu (React Bits) */
+.flowing-menu { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--v-line-strong); }
+.flowing-menu-row { position: relative; overflow: hidden; border-bottom: 1px solid var(--v-line-strong); }
+.flowing-menu-link { position: relative; z-index: 1; display: grid; grid-template-columns: 70px minmax(0, 1fr) minmax(0, 1fr) 90px 40px; gap: 20px; align-items: center; min-height: clamp(110px, 14vh, 150px); }
+.flowing-menu-index { color: var(--v-dim); font: 500 11px/1 ui-monospace, Menlo, monospace; }
+.flowing-menu-label { font-size: clamp(34px, 5vw, 80px); font-weight: 500; letter-spacing: -.06em; line-height: 1; }
+.flowing-menu-detail { color: var(--v-soft); font-size: 15px; }
+.flowing-menu-thumb { width: 90px; aspect-ratio: 1.4; background-size: cover; background-position: center; border: 1px solid var(--v-line); }
+.flowing-menu-link b { font-weight: 400; font-size: 20px; }
+.flowing-menu-marquee { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; background: var(--v-text); color: #0c0a12; transform: translateY(101%); }
+.flowing-menu-track { display: flex; align-items: center; height: 100%; width: max-content; }
+.flowing-menu-part { display: flex; align-items: center; flex: none; }
+.flowing-menu-part span { padding: 0 2vw; font-size: clamp(34px, 5vw, 80px); font-weight: 500; letter-spacing: -.06em; white-space: nowrap; }
+.flowing-menu-part span:nth-of-type(2) { font-size: clamp(16px, 1.5vw, 22px); letter-spacing: -.01em; }
+.flowing-menu-part i { width: clamp(140px, 14vw, 220px); height: clamp(64px, 8vh, 96px); border-radius: 999px; background-size: cover; background-position: center; }
+@keyframes v2-plate { from { opacity: 0; transform: translateY(-36%) perspective(1200px) rotateY(-18deg); } }
+.gameplay-gallery-games { display: grid; grid-template-columns: repeat(3, minmax(0, 190px)); gap: 8px; margin-bottom: 18px; }
+.gameplay-gallery-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.gameplay-gallery-grid li { animation: v2-rise .7s var(--v-ease) both; }
+.gameplay-gallery-grid li:nth-child(even) { margin-top: clamp(20px, 4vw, 60px); }
+.gameplay-gallery-grid button { position: relative; display: block; width: 100%; aspect-ratio: 1; padding: 0; overflow: hidden; border: 1px solid var(--v-line); background: #110f17; cursor: zoom-in; }
+.gameplay-gallery-grid img { object-fit: cover; transition: transform .8s var(--v-ease), filter .4s; }
+.gameplay-gallery-grid button:hover img { transform: scale(1.06); }
+.gameplay-gallery-grid .tp-label { position: absolute; left: 14px; bottom: 14px; z-index: 1; padding: 6px 10px; background: #08070cc0; backdrop-filter: blur(8px); }
+@keyframes v2-rise { from { opacity: 0; transform: translateY(24px); } }
+.gameplay-dialog { width: min(92vw, 880px); max-height: 92svh; padding: 0; border: 1px solid var(--v-line-strong); background: #0d0b12; color: var(--v-text); }
+.gameplay-dialog::backdrop { background: #04030699; backdrop-filter: blur(12px); }
+.gameplay-dialog[open] { animation: v2-rise .45s var(--v-ease); }
+.gameplay-dialog figure { margin: 0; }
+.gameplay-dialog-image { position: relative; aspect-ratio: 1; max-height: 74svh; margin-inline: auto; }
+.gameplay-dialog-image img { object-fit: contain; }
+.gameplay-dialog figcaption { display: flex; justify-content: space-between; align-items: center; padding: 18px 22px 0; }
+.gameplay-dialog figcaption b { font-size: 24px; font-weight: 500; letter-spacing: -.04em; }
+.gameplay-dialog-controls { display: flex; gap: 8px; padding: 16px 22px 22px; }
+.gameplay-dialog-controls button { min-width: 48px; min-height: 44px; padding: 0 16px; border: 1px solid var(--v-line-strong); background: none; color: var(--v-text); cursor: pointer; }
+.gameplay-dialog-controls button:hover { background: #ffffff10; }
+.gameplay-dialog-close { margin-left: auto; }
+.link-network { margin: 0; }
+.link-network svg { width: 100%; height: auto; overflow: visible; }
+.link-network-orbit { fill: none; stroke: #ffffff14; stroke-dasharray: 2 6; }
+.link-network-path { stroke: #ffffff1c; stroke-width: 1; }
+.link-network-pulse { stroke: #c79bff; stroke-width: 2; stroke-linecap: round; stroke-dasharray: 18 400; stroke-dashoffset: 0; filter: drop-shadow(0 0 4px #9e05ff); animation: link-flow 2.8s linear infinite; }
+.link-network-machine { fill: #1a1624; stroke: #ffffff40; }
+.link-network-screen { fill: #2a55ff; opacity: .75; animation: link-blink 2.8s ease-in-out infinite; }
+.link-network-core { fill: #f4eff8; }
+.link-network-halo { animation: link-breathe 2.8s ease-in-out infinite; transform-origin: 300px 210px; }
+.link-network-ring { fill: none; stroke: #c79bff; stroke-width: 1.5; transform-origin: 300px 210px; animation: link-ring 2.8s ease-out infinite; }
+.link-network-ring-2 { animation-delay: 1.4s; }
+.link-network figcaption { margin-top: 16px; color: var(--v-dim); font-size: 13px; }
+@keyframes link-flow { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -418; } }
+@keyframes link-ring { from { transform: scale(.7); opacity: .9; } to { transform: scale(2.2); opacity: 0; } }
+@keyframes link-breathe { 50% { transform: scale(1.12); } }
+@keyframes link-blink { 50% { opacity: 1; fill: #05e6ff; } }
+/* ---------- Journey, CTA, contact { text-align: left; border-top: 1px solid var(--v-line); }
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+  .v2-pillars { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .v2-pillars > li:nth-child(2n) .v2-pillar { border-right: 0; }
+  .v2-pillars > li:nth-child(3) .v2-pillar { padding-left: 0; }
+  .flowing-menu-link { grid-template-columns: 50px minmax(0, 1fr) 90px 30px; }
+  .flowing-menu-detail { display: none; }
+}
+@media (max-width: 860px) {
+  .sticky-swap, .mechanic-switcher-body { grid-template-columns: 1fr; }
+  .floating-altitude { inset: 0 -6% 26% -6%; }
+  .floating-altitude-fallback { left: 50%; height: 88%; }
+  .floating-altitude-hint { right: 8%; top: 8%; }
+  .sticky-swap-media { display: none; }
+  .sticky-swap-inline { display: block; }
+  .sticky-swap-step { min-height: 0; opacity: 1; padding-block: 30px; }
+  .logo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gameplay-gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .game-reel-window { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .game-reel-window::-webkit-scrollbar { display: none; }
+  .game-reel-track li { width: 82vw; scroll-snap-align: center; }
+  .altitude-tour-cards { left: 16px; right: 16px; width: auto; bottom: 74px; }
+  .altitude-tour-cards li { padding: 20px 22px; }
+  .altitude-tour-cards h3 { font-size: 26px; margin: 12px 0 8px; }
+  .altitude-tour-head { left: 16px; right: 16px; top: calc(var(--header) + 14px); }
+  .altitude-tour-head h2 { font-size: 30px; margin: 12px 0 6px; }
+  .altitude-tour-sticky::before { content: ""; position: absolute; inset: 0 0 auto; height: 260px; z-index: 1; pointer-events: none; background: linear-gradient(#08070cf0 45%, transparent); }
+  .altitude-tour-nav { left: 16px; right: 16px; bottom: 18px; }
+  .altitude-tour-nav button b { display: none; }
+  .altitude-tour-fallback { right: 50%; transform: translateX(50%); bottom: 30%; height: 50%; }
+  .altitude-tour:is([data-mode="still"], [data-mode="image"]) .altitude-tour-sticky { grid-template-columns: 1fr; padding-inline: 20px; }
+  .altitude-tour:is([data-mode="still"], [data-mode="image"]) .altitude-tour-stage { grid-column: 1; grid-row: 2; min-height: 520px; }
+  .altitude-tour:is([data-mode="still"], [data-mode="image"]) .altitude-tour-fallback { right: 50%; bottom: 4%; height: 90%; transform: translateX(50%); }
+  .altitude-tour:is([data-mode="still"], [data-mode="image"]) .altitude-tour-cards { grid-row: 3; }
+}
+@media (max-width: 560px) {
+  .logo-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mechanic-switcher-games { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .mechanic-switcher-tabs button { padding-right: 14px; margin-right: 14px; font-size: 18px; }
+  .flowing-menu-link { grid-template-columns: 34px minmax(0, 1fr) 72px; gap: 12px; }
+  .flowing-menu-link b { display: none; }
+  .flowing-menu-thumb { width: 72px; }
+  .gameplay-gallery-games { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .link-network-pulse, .link-network-ring, .link-network-halo, .link-network-screen { animation: none; }
+  .link-network-ring { opacity: 0; }
+  .logo-grid, .logo-grid-tile, .sticky-swap-frame, .mechanic-switcher-shot, .gameplay-gallery-grid li { transition: none; animation: none; transform: none; }
+}
+/* DepthText (React Bits, adapted): extruded type that inherits each heading's own typography. */
+.depth-text { display: inline-block; perspective: 900px; perspective-origin: 50% 48%; isolation: isolate; }
+h1.depth-text, h2.depth-text { display: block; }
+.depth-text > .depth-text__stage { position: relative; display: inline-grid; transform-style: preserve-3d; transform: rotateX(-1.9deg) rotateY(2.5deg); will-change: transform; }
+.depth-text__layer, .depth-text__face { grid-area: 1 / 1; display: block; transform-style: preserve-3d; backface-visibility: hidden; }
+.depth-text__layer { pointer-events: none; user-select: none; }
+.depth-text__layer::before { content: attr(data-text); white-space: pre-line; }
+.depth-text__layer em { color: inherit !important; }
+.depth-text__face { position: relative; transform: translateZ(.6px); text-shadow: 0 18px 32px color-mix(in srgb, var(--depth-color) 34%, transparent), 0 3px 8px #00000066; }
+.depth-text__line { display: block; }
+.portal-hero h1.depth-text > .depth-text__stage, .portal-arrival-copy h2.depth-text > .depth-text__stage { display: inline-grid; }
+@keyframes v2-title-in { from { opacity: 0; transform: translateY(26px); filter: blur(8px); } }
+@media (prefers-reduced-motion: reduce) {
+  .depth-text > .depth-text__stage { will-change: auto; }
+}
+/* GridScan (React Bits, adapted) behind the whole footer. */
+.site-footer { position: relative; isolation: isolate; overflow: hidden; }
+.site-footer > :not(.footer-gridscan) { position: relative; z-index: 1; }
+.footer-gridscan { position: absolute; inset: 0; z-index: 0; pointer-events: none; -webkit-mask-image: linear-gradient(transparent, #000 18%, #000 88%, transparent); mask-image: linear-gradient(transparent, #000 18%, #000 88%, transparent); }
+.grid-scan, .grid-scan canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; display: block; }
+/* Cabinet 3D refinements (ModelViewer-inspired): fade-in, part pins, chapter progress, 360° viewer. */
+.cabinet-stage-canvas { transition: opacity .9s var(--v-ease); }
+.altitude-tour[data-ready="false"] .cabinet-stage-canvas, .altitude-explorer-stage[data-ready="false"] .cabinet-stage-canvas, .floating-altitude[data-ready="false"] .cabinet-stage-canvas { opacity: 0; }
+.altitude-tour-pins { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.altitude-tour-pin, .altitude-explorer-pin { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 10px; margin: -11px 0 0 -11px; padding: 0; border: 0; background: none; color: var(--v-text); cursor: pointer; pointer-events: auto; transition: opacity .35s; }
+.altitude-tour-pin[data-visible="false"], .altitude-explorer-pin[data-visible="false"] { opacity: 0; pointer-events: none; }
+.altitude-tour-pin i, .altitude-explorer-pin i { position: relative; width: 22px; height: 22px; flex: none; border-radius: 50%; border: 1px solid #ffffff80; background: #0d0b14aa; backdrop-filter: blur(6px); transition: transform .3s var(--v-ease), border-color .3s, box-shadow .3s; }
+.altitude-tour-pin i::after, .altitude-explorer-pin i::after { content: ""; position: absolute; inset: 7px; border-radius: 50%; background: #fff; }
+.altitude-tour-pin span, .altitude-explorer-pin span { font: 500 10px/1 ui-monospace, Menlo, monospace; letter-spacing: .14em; text-transform: uppercase; padding: 6px 9px; background: #0d0b14cc; border: 1px solid var(--v-line-strong); opacity: 0; transform: translateX(-6px); transition: opacity .25s, transform .3s var(--v-ease); white-space: nowrap; }
+.altitude-tour-pin:hover span, .altitude-tour-pin:focus-visible span, .altitude-explorer-pin span { opacity: 1; transform: none; }
+.altitude-tour-pin:hover i, .altitude-explorer-pin:hover i { transform: scale(1.18); border-color: #fff; }
+.altitude-tour-pin[data-active="true"] { opacity: 0; pointer-events: none; }
+.altitude-explorer-pin[data-active="true"] i { border-color: var(--led-cyan); box-shadow: 0 0 0 6px #05e6ff22, 0 0 20px var(--led-cyan); }
+.altitude-tour-explore { pointer-events: auto; display: inline-flex; align-items: center; gap: 10px; margin-top: 14px; min-height: 40px; padding: 0 16px; border: 1px solid var(--v-line-strong); border-radius: 999px; background: #0d0b14b0; backdrop-filter: blur(10px); color: var(--v-text); font-size: 12px; letter-spacing: .04em; cursor: pointer; transition: border-color .2s, background .2s; }
+.altitude-tour-explore:hover { border-color: #fff; background: #1a1428; }
+.altitude-tour-explore span { font-size: 15px; }
+.altitude-tour-nav button { position: relative; }
+.altitude-tour-fill { position: absolute; left: 0; right: 0; top: -1px; height: 2px; transform-origin: left; transform: scaleX(0); background: linear-gradient(90deg, var(--led-violet), var(--led-cyan)); box-shadow: 0 0 10px #05e6ff66; pointer-events: none; }
+.altitude-tour-actions button.tp-link { background: none; border-top: 0; border-left: 0; border-right: 0; padding: 0; cursor: pointer; font: inherit; font-size: 14px; }
+.altitude-explorer { width: 100vw; height: 100svh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: radial-gradient(ellipse 60% 55% at 50% 58%, #1b1030 0%, #07060b 72%); color: var(--v-text); }
+.altitude-explorer::backdrop { background: #030206e6; }
+.altitude-explorer[open] { display: grid; grid-template-rows: auto 1fr auto; animation: v2-fade .5s var(--v-ease); }
+.altitude-explorer-head { padding: 28px var(--gutter) 0; }
+.altitude-explorer-head h2 { margin: 12px 0 8px; font-size: clamp(28px, 3vw, 44px); font-weight: 500; letter-spacing: -.05em; }
+.altitude-explorer-hint { color: var(--v-dim); font-size: 12px; }
+.altitude-explorer-stage { position: relative; min-height: 0; touch-action: none; cursor: grab; }
+.altitude-explorer-stage[data-dragging] { cursor: grabbing; }
+.altitude-explorer-fallback { position: absolute; inset: 0; display: grid; place-items: center; color: var(--v-soft); }
+.altitude-explorer-foot { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 18px var(--gutter) 26px; border-top: 1px solid var(--v-line); }
+.altitude-explorer-foot p { color: var(--v-soft); font-size: 15px; }
+.altitude-explorer-foot div { display: flex; align-items: center; gap: 22px; }
+.altitude-explorer-foot .tp-link { background: none; border-top: 0; border-left: 0; border-right: 0; cursor: pointer; font: inherit; font-size: 14px; }
+@media (max-width: 820px) {
+  .altitude-tour-pin span { display: none; }
+  .altitude-explorer-foot { flex-direction: column; align-items: flex-start; }
+  .altitude-explorer-pin span { font-size: 9px; padding: 4px 6px; }
+}

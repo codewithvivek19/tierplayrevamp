@@ -60,7 +60,7 @@ void main(){
  float n=fbm(vec3(vUv*vec2(9.,3.),uTime*.02));
  // Guard interpolated edge UVs: NaN alpha can poison the entire HDR bloom chain.
  float falloff=pow(max(0.,1.-abs(vUv.y-.5)*2.),3.)*sqrt(max(0.,sin(clamp(vUv.x,0.,1.)*3.14159265)));
- gl_FragColor=vec4(vec3(.24,.18,.34),n*falloff*.2);
+ gl_FragColor=vec4(vec3(.2,.19,.25),n*falloff*.2);
 }`;
 export const beamFragment = /* glsl */ `
 varying vec2 vUv; uniform float uTime; ${noise}

@@ -3,7 +3,7 @@ export const altitude = {
   name: "Altitude",
   category: "Vertical monitor cabinet",
   sourceUrl: "https://electronhubs.com/cabinets/",
-  sourceSnapshot: "docs/research/live-cabinets.html",
+  sourceSnapshot: "archived source snapshot in Git history",
   referenceImage: "/media/altitude.webp",
   referenceWidth: 189,
   referenceHeight: 500,

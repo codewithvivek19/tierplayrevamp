@@ -11,7 +11,7 @@ for (const [width, height] of [[1440, 900], [1024, 768], [768, 1024], [390, 844]
     await expect(page).toHaveTitle(/Tierplay/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(/Play beyond/i);
     await expect(page.locator(".battle-hero")).toBeVisible();
-    await expect(page.getByRole("heading", { name: /Six worlds/i })).toBeAttached();
+    await expect(page.getByRole("heading", { name: /The Sunscape lineup/i })).toBeAttached();
     await expect(page.getByRole("link", { name: "Contact sales", exact: true }).last()).toBeAttached();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     expect(errors).toEqual([]);

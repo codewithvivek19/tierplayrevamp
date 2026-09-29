@@ -10,3 +10,7 @@ tsconfig.tsbuildinfo
 .codex/
 .openai/
 Codex Image*.png
+.claude/
+.mcp.json
+CLAUDE.md
+docs/claude-*

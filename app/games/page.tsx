@@ -1,30 +1,42 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
-import InteriorHero from "@/components/site/InteriorHero";
+import { Dices, Grid2x2, LayoutGrid } from "lucide-react";
+import PageHero from "@/components/ds/PageHero";
 import Reveal from "@/components/site/Reveal";
-import { KineticHeading, SignalLoop, SpotlightPanel, TiltSurface } from "@/components/site/InteractivePrimitives";
-import { boards, gameMechanics, legacyNotice } from "@/content/site";
+import MechanicSwitcher from "@/components/site/MechanicSwitcher";
+import GameLogoGrid from "@/components/site/GameLogoGrid";
+import { Button, GlassCard, Note, SectionHeader } from "@/components/ds/primitives";
+import { boards, gameplay, legacyNotice } from "@/content/site";
 
-export const metadata: Metadata = { title: "Games" };
+export const metadata: Metadata = { title: "Games", description: "Six Sunscape boards with fifteen named games across the first five releases." };
 
 export default function GamesPage() {
-  return <main id="main">
-    <InteriorHero eyebrow="Sunscape series" title="Six boards. Fifteen named games." intro="Explore every game board and title recovered from Tierplay’s public catalogue." image="/media/generated/theme-v3/dragon-world-v3.webp" imageAlt="Rise of the Dragon game world" />
-    <SignalLoop label="Named games in the Sunscape archive" items={boards.flatMap((board) => board.games)} />
-    <section className="content-section section-pad">
-      <Reveal className="section-lede"><p className="kicker">Board catalogue</p><KineticHeading>Choose your Sunscape.</KineticHeading><p>Each board is preserved as its own release, with the game names and feature language published on the original site.</p></Reveal>
-      <div className="board-grid">
-        {boards.map((board) => <Reveal key={board.slug}><SpotlightPanel className="board-card">
-          <TiltSurface className="board-card-media"><Image src={board.image} alt={`${board.shortTitle} game board artwork`} fill sizes="(max-width: 760px) 100vw, 46vw" /></TiltSurface>
-          <div className="board-card-copy"><span>{board.number}</span><p className="kicker">Skill game board</p><h2>{board.shortTitle}</h2><p>{board.games.length ? board.games.join(" · ") : "Published catalogue details pending"}</p><Link className="battle-button" href={`/our_games/${board.slug}`}>Enter board <span aria-hidden="true">↗</span></Link></div>
-        </SpotlightPanel></Reveal>)}
-      </div>
-      <p className="archive-note">{legacyNotice}</p><p className="market-note">not available for Georgia market</p>
+  return <main id="main" className="ds-page">
+    <PageHero badge="Sunscape series" title="Find your next game." intro="Six Sunscape boards with fifteen named games across the first five releases."
+      image="/media/generated/theme-v3/dragon-world-v3.webp"
+      actions={<><Button href="#boards">Browse the boards</Button><Button href="/games-collection" variant="ghost">Full collection</Button></>} />
+
+    <section className="ds-section ds-container">
+      <SectionHeader icon={LayoutGrid} label="Featured titles" title="Six worlds to play." blurb="The Sunscape 1 and 2 games, each with its own world. Choose a title to open its board." />
+      <GameLogoGrid items={gameplay.map((game) => ({ title: game.title, logo: game.logo, href: `/our_games/${game.board}` }))} />
     </section>
-    <section className="content-section section-pad mechanic-section">
-      <Reveal className="section-lede split"><div><p className="kicker">Incredible features</p><KineticHeading>Built around the moment.</KineticHeading></div><p>Free spins, nudge, bonuses and jackpots are the recurring mechanics named throughout the recovered Sunscape material.</p></Reveal>
-      <div className="mechanic-grid">{gameMechanics.map((item) => <Reveal key={item.title}><SpotlightPanel className="mechanic-card"><div className="mechanic-art"><Image src={item.image} alt="" fill sizes="(max-width: 650px) 90vw, 24vw" /></div><div><h3>{item.title}</h3><p>{item.copy}</p></div></SpotlightPanel></Reveal>)}</div>
+
+    <section className="ds-section ds-container">
+      <SectionHeader icon={Dices} label="Game mechanics" title="What happens in play." blurb="Free spins, nudges, bonuses and jackpots feature across the range. Choose a mechanic, then a game." />
+      <Reveal><MechanicSwitcher /></Reveal>
+    </section>
+
+    <section className="ds-section ds-container" id="boards">
+      <SectionHeader icon={Grid2x2} label="Board catalogue" title="Choose your Sunscape." blurb="Each board groups three games with shared features." />
+      <div className="ds-grid ds-grid--3 ds-board-grid">
+        {boards.map((board, i) => <Reveal key={board.slug}>
+          <GlassCard href={`/our_games/${board.slug}`} title={board.shortTitle} label={`${board.number} / ${board.grid}`} tone={i % 2 ? "amber" : "violet"}
+            text={board.games.length ? board.games.join(" · ") : "Game lineup to be announced"}
+            media={<Image src={board.image} alt="" fill sizes="(max-width: 960px) 100vw, 33vw" />} />
+        </Reveal>)}
+      </div>
+      <Note>{legacyNotice}</Note>
+      <Note tone="market">not available for Georgia market</Note>
     </section>
   </main>;
 }

@@ -21,13 +21,21 @@ void main(){
  vec2 r=vec2(fbm(nebP+4.*q+t),fbm(nebP+4.*q+2.8));
  float f=fbm(nebP+4.*r);
  float ring=smoothstep(.02,.32,dist)*(1.-smoothstep(.65,1.3,dist));
- vec3 color=mix(vec3(.055,.070,.12),vec3(.18,.10,.24),smoothstep(.2,.6,f));
- color=mix(color,vec3(.38,.33,.43),smoothstep(.48,.86,f));
+ vec3 color=mix(vec3(.05,.056,.072),vec3(.13,.11,.16),smoothstep(.2,.6,f));
+ color=mix(color,vec3(.3,.29,.32),smoothstep(.48,.86,f));
  float dust=smoothstep(.3,.9,fbm(nebP*1.5+r));
  dust=mix(1.,dust,smoothstep(0.,.3,dist));
  vec3 nebula=color*(.3+ring)*pow(f,1.2)*mix(.38,1.,dust)*.24;
  nebula*=smoothstep(.38,.56,gl_FragCoord.y/uResolution.y);
- gl_FragColor=vec4(vec3(.006,.006,.012)+nebula,1.);
+ // Milky Way: a diagonal band of unresolved stars cut by dark dust lanes (upper left).
+ vec2 sp=(gl_FragCoord.xy-.5*uResolution)/uResolution.y;
+ vec2 axis=normalize(vec2(1.,-.62));
+ float across=dot(sp-vec2(-.42,.2),vec2(-axis.y,axis.x));
+ float band=exp(-across*across*38.)*smoothstep(.35,-.25,dot(sp,axis));
+ float glow=fbm(sp*7.+2.)*.6+fbm(sp*21.)*.4;
+ float lanes=smoothstep(.42,.72,fbm(sp*11.+vec2(9.,3.)));
+ vec3 galaxy=mix(vec3(.22,.21,.27),vec3(.36,.3,.42),glow)*band*glow*(1.-lanes*.75)*.55;
+ gl_FragColor=vec4(vec3(.006,.006,.012)+nebula+galaxy,1.);
 }`;
 
 export default function CosmicBackdrop({ sequence, compact }: { sequence: PortalState; compact: boolean }) {

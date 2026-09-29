@@ -4,7 +4,7 @@ import { test, expect } from "@playwright/test";
 test.use({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2, reducedMotion: "no-preference" });
 
 test("fireball keeps rendered detail across successive animated frames", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/?no-preloader");
   await expect(page.locator(".portal-hero")).toHaveAttribute("data-scene", "webgl", { timeout: 25000 });
   await page.waitForTimeout(600);
   const samples: Buffer[] = [];

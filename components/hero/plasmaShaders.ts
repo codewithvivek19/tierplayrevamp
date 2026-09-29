@@ -97,7 +97,7 @@ export const landingFragment = /* glsl */ `
 varying vec2 vUv; uniform float uTime; uniform float uOpacity;
 void main(){
  vec2 p=(vUv-.5)*2.; float r=length(p);
- float rays=.65+.35*sin(atan(p.y,p.x)*16.+uTime*.5+r*12.);
+ float rays=.65+.35*sin(atan(p.y,p.x+1e-5)*16.+uTime*.5+r*12.);
  float halo=exp(-r*5.)*.4+exp(-r*18.)*2.;
  gl_FragColor=vec4(vec3(.62,.30,1.1)*(halo+rays*exp(-r*8.)*.2),uOpacity*(1.-smoothstep(.65,1.,r)));
  #include <tonemapping_fragment>

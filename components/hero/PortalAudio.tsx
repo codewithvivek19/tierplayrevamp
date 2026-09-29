@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Volume2, VolumeX } from "lucide-react";
 import type { PortalState } from "./portalState";
 
 /** Optional synthesized atmosphere. Audio starts only after a deliberate click. */
@@ -35,5 +36,6 @@ export default function PortalAudio({ sequence, active, paused }: { sequence: Po
     return () => clearInterval(timer);
   }, [enabled, active, paused, sequence]);
   useEffect(() => () => { void engine.current?.context.close(); engine.current = null; }, []);
-  return <button type="button" aria-pressed={enabled} onClick={toggle}>{enabled ? "Mute sound" : "Enable sound"}<span aria-hidden="true">{enabled ? "♪" : "♩"}</span></button>;
+  const label = enabled ? "Mute sound" : "Enable sound";
+  return <button type="button" className="portal-icon-button" aria-pressed={enabled} aria-label={label} title={label} onClick={toggle}>{enabled ? <Volume2 aria-hidden="true" size={15} strokeWidth={1.75}/> : <VolumeX aria-hidden="true" size={15} strokeWidth={1.75}/>}</button>;
 }

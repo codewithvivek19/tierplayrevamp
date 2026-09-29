@@ -13,9 +13,9 @@ uniform float uDpr; uniform float uProgress; uniform float uViewport;
 void main(){
  vec4 mv=modelViewMatrix*vec4(position,1.);
  vec3 velocity=mat3(modelViewMatrix)*aVelocity;
- vAngle=atan(velocity.y,velocity.x);vStretch=clamp(length(velocity)*.09,0.,.75);
+ vAngle=atan(velocity.y,velocity.x+1e-6);vStretch=clamp(length(velocity)*.09,0.,.75);
  vHeat=aHeat;vAlpha=smoothstep(.3,2.,-mv.z)*(1.-smoothstep(28.,55.,-mv.z));
- gl_PointSize=clamp(aSize*uDpr*uViewport/max(1.,-mv.z)*(1.+vStretch),.8,5.5*uDpr);
+ gl_PointSize=clamp(aSize*uDpr*uViewport/max(1.,-mv.z)*(1.+vStretch),.6,4.*uDpr);
  gl_Position=projectionMatrix*mv;
 }`;
 const particleFragment = /* glsl */ `
@@ -25,10 +25,14 @@ void main(){
  vec2 p=gl_PointCoord-.5;
  float c=cos(vAngle),s=sin(vAngle);p=mat2(c,-s,s,c)*p;
  p.y*=1.+vStretch*4.;float d=length(p)*2.;
- float core=exp(-d*d*12.);float halo=exp(-d*d*5.)*.025;
- vec3 color=mix(vec3(.48,.55,.78),vec3(.75,.62,.8),vHeat);
- color=mix(color,vec3(.95,.86,.69),step(.94,vHeat));
- gl_FragColor=vec4(color*(1.+vHeat*.6),(core+halo)*vAlpha*.58*(1.-smoothstep(.65,.88,uProgress)*.65));
+ float core=exp(-d*d*14.);
+ // Mostly dust catching violet light; a few hot embers shed by the fireball.
+ vec3 dust=mix(vec3(.34,.33,.42),vec3(.55,.46,.78),vHeat);
+ vec3 ember=vec3(1.6,.9,2.2);
+ float hot=step(.965,vHeat);
+ vec3 color=mix(dust,ember,hot);
+ float a=core*vAlpha*mix(.32,.9,hot)*(1.-smoothstep(.65,.88,uProgress)*.6);
+ gl_FragColor=vec4(color,a);
  #include <tonemapping_fragment>
  #include <colorspace_fragment>
 }`;
@@ -46,7 +50,7 @@ export default function PortalParticles({ sequence, balanced = false }: { sequen
       const angle = random(i) * Math.PI * 2, radius = 2.7 + Math.pow(random(i + 100), 2) * 5.5;
       seeds.set([angle, radius, (random(i + 700) - .35) * 11, .04 + random(i + 1400) * .11], i * 4);
       position.set([Math.cos(angle) * radius, Math.sin(angle) * radius * .78, seeds[i * 4 + 2]], i * 3);
-      sizes[i] = .07 + Math.pow(random(i + 2000), 6) * .35;
+      sizes[i] = .045 + Math.pow(random(i + 2000), 8) * .26;
       heat[i] = random(i + 3000);
     }
     return { position, velocity, seeds, sizes, heat };

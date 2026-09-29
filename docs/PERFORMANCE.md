@@ -1,7 +1,0 @@
-# Performance strategy
-Budgets are provisional gates, not measured achievements: critical media <=1MB; first-load compressed JS <=250KB excluding deferred Three chunk; LCP <=2.5s, CLS <=.1, INP <=200ms on representative midrange hardware. Aim 60fps desktop / stable 30fps low tier during motion, no idle frame loop.
-Tier policy: desktop fine-pointer high (DPR cap 1.75), touch/tablet medium (1.25), reduced-motion/save-data/low-memory low (static). Treat capability hints as hints, not benchmarks. Dynamic-load WebGL after meaningful HTML/media render. One cached texture per asset. Original downloads never served directly.
-Measure production Lighthouse, network payload, performance trace, repeated navigation, context loss, idle draw calls, animation frame intervals. Physical Safari/iOS/Android GPU results must remain pending without hardware. MotionScore only if available; otherwise record source/runtime audit and never fabricate a score.
-
-## V2 measured sample
-Local production Chromium at 1440×900: median rAF 16.7ms, p95 16.8ms across 180 frames; total resource transfer ~1.13MB. Local LCP 124ms and CLS .00194 are loopback lab observations, not field performance. Raw report: review/performance-v2.json. Scene = one image plane + one ember Points draw, max DPR1.5. Hidden/offscreen stops frame loop. Dedicated portrait prevents downloading desktop hero for canvas on narrow viewports. Lighthouse JSON is a separate throttled lab run.

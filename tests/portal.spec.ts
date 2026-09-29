@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { createHash } from "node:crypto";
 
 test.use({ viewport: { width: 1440, height: 900 }, reducedMotion: "no-preference" });
 // These checks isolate the scene; the startup overlay owns a separate 2D canvas.
@@ -22,15 +23,20 @@ test("portal renders, travels in both scroll directions, pauses and exits", asyn
   await expect(page.locator(".portal-canvas")).toHaveCSS("opacity", "1");
   await expect(page.locator(".portal-arrival")).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "Every world starts here." })).toBeVisible();
-  await expect(page.locator(".battle-hero-content")).toHaveAttribute("inert", "");
+  await expect(page.locator(".hero-copy-layer")).toHaveAttribute("inert", "");
   await page.evaluate(() => window.scrollTo(0, 0));
   await expect(hero).toHaveAttribute("data-chapter", "0");
   await page.getByRole("button", { name: "Pause motion" }).click();
   await expect(page.getByRole("button", { name: "Resume motion" })).toHaveAttribute("aria-pressed", "true");
   await page.waitForTimeout(1500);
-  const frame = await page.locator("canvas").screenshot();
+  // Element screenshots include DOM copy and chrome over the canvas; isolate the paused WebGL frame.
+  const overlayStyle = await page.addStyleTag({ content: ".ds-header, .guide, .hero-copy-layer, .portal-arrival-copy, .portal-passage, .portal-controls { visibility: hidden !important; }" });
+  const stillFrame = () => page.locator("canvas").screenshot();
+  const frame = await stillFrame();
   await page.waitForTimeout(350);
-  expect(await page.locator("canvas").screenshot()).toEqual(frame);
+  expect(createHash("sha256").update(await stillFrame()).digest("hex"))
+    .toBe(createHash("sha256").update(frame).digest("hex"));
+  await overlayStyle.evaluate((style) => style.parentNode?.removeChild(style));
   await page.getByRole("button", { name: "Resume motion" }).click();
   await page.getByRole("link", { name: "Skip to explore" }).click();
   await expect(page.locator("#experience")).toBeInViewport();

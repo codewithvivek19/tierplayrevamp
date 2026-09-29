@@ -1,69 +1,97 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Boxes, Gamepad2, Layers, Monitor, Route, Sparkles } from "lucide-react";
 import Reveal from "@/components/site/Reveal";
-import MediaSlot from "@/components/site/MediaSlot";
 import BattleHero from "@/components/site/BattleHero";
-import CabinetArtifact from "@/components/site/CabinetArtifact";
-import GameCard from "@/components/site/GameCard";
-import ChromaGrid from "@/components/ui/ChromaGrid";
-import { KineticHeading, SignalLoop, SpotlightPanel } from "@/components/site/InteractivePrimitives";
-import { cabinets, games, products } from "@/content/site";
+import FloatingAltitude from "@/components/cabinet3d/FloatingAltitude";
+import GameReel from "@/components/site/GameReel";
+import LinkJackpotNetwork from "@/components/site/LinkJackpotNetwork";
+import TiltedCard from "@/components/reactbits/TiltedCard";
+import ScrollReveal from "@/components/reactbits/ScrollReveal";
+import { Button, CheckList, GlassCard, Label, Marquee, Note, SectionHeader } from "@/components/ds/primitives";
+import { Steps, Tabs } from "@/components/ds/interactive";
+import { cabinets, gameplay, games, journey, products } from "@/content/site";
 
-const Arrow = () => <span aria-hidden="true">↗</span>;
+const [altitude, pinnacle] = cabinets;
+
+const pillars = [
+  { title: "Sunscape games", text: "Six boards and fifteen named games, each with its own world.", href: "/games", image: "/media/generated/theme-v3/gaming-floor-editorial-v5.webp", tone: "violet" as const, label: "01 / Games" },
+  { title: "Altitude and Pinnacle", text: "Two cabinet forms with 43-inch touchscreens and 4K displays.", href: "/cabinets", image: "/media/generated/theme-v3/cabinet-lineup-v3.webp", tone: "amber" as const, label: "02 / Cabinets" },
+  { title: "Connected systems", text: "Collection management and linked jackpots behind the floor.", href: "/products", image: "/media/generated/tierplay-floor-network-v1.webp", tone: "violet" as const, label: "03 / Systems" },
+];
 
 export default function Home() {
-  return <main id="main" className="battle-home">
+  return <main id="main" className="battle-home ds-home">
     <BattleHero />
-    <SignalLoop label="Tierplay ecosystem" items={["Games", "Cabinets", "Collection management", "Link Jackpot", "Player journey", "24/7 support"]} />
-    <section className="battle-section battle-container home-about">
-      <Reveal className="home-about-copy"><p className="kicker">About us</p><KineticHeading>Games, cabinets and connected systems.</KineticHeading><p>Tierplay brings together Sunscape game boards, Altitude and Pinnacle cabinets, collection management and linked jackpots. Explore the range by product or follow the player journey.</p><Link className="battle-button" href="/products">Explore the technology <Arrow /></Link></Reveal>
-      <Reveal className="home-about-art"><SpotlightPanel><div className="home-about-image large"><Image src="/media/legacy/Home-about-big-image.webp" alt="Tierplay legacy gaming artwork" fill sizes="(max-width: 760px) 90vw, 44vw" /></div><div className="home-about-image small"><Image src="/media/legacy/Home-About-Small-Image.webp" alt="" fill sizes="180px" /></div><span>Public archive / 2024</span></SpotlightPanel></Reveal>
+
+    <section className="ds-section ds-container ds-home-intro" id="experience">
+      <Label icon={Sparkles}>The Tierplay system</Label>
+      <ScrollReveal as="h2" className="ds-statement">Explore the games players see, the cabinets they play, and the connected systems behind them.</ScrollReveal>
+      <Marquee label="Sunscape games" items={gameplay.map((game) => <Image key={game.title} src={game.logo} alt={game.title} width={220} height={110} />)} />
     </section>
-    <section className="battle-section battle-container experience-overview" id="experience">
-      <Reveal className="battle-heading split">
-        <div><p className="kicker">The Tierplay experience</p><h2>Explore the<br />Tierplay range.</h2></div>
-        <Link className="battle-button" href="/cabinets">Explore our cabinets <Arrow /></Link>
-      </Reveal>
-      <div className="experience-triptych">
-        {[
-          { image: "/media/generated/theme-v3/entrance-editorial-v5.webp", title: "Step inside.", label: "The entrance", href: "/player-journey" },
-          { image: "/media/generated/theme-v3/gaming-floor-editorial-v5.webp", title: "Find your world.", label: "The gaming floor", href: "/games" },
-          { image: "/media/generated/theme-v3/cabinet-lineup-v3.webp", title: "Meet the system.", label: "The cabinets", href: "/cabinets" },
-        ].map((item) => <Reveal className="experience-tile" key={item.title}><Link href={item.href}><Image src={item.image} alt={item.label} fill sizes="(max-width: 650px) calc(100vw - 40px), (max-width: 900px) 31vw, 400px"/><div className="tile-shade"/><div className="tile-caption"><span>{item.label}</span><h3>{item.title}</h3><b aria-hidden="true">↗</b></div></Link></Reveal>)}
+
+    <section className="ds-section ds-container">
+      <SectionHeader icon={Layers} label="What sets Tierplay apart" title="One floor, many worlds." blurb="Games, hardware and connected systems, designed to work together." />
+      <div className="ds-bento">
+        {pillars.map((item, i) => <Reveal key={item.title} className={`ds-bento__cell ds-bento__cell--${i}`}>
+          <GlassCard href={item.href} title={item.title} text={item.text} label={item.label} tone={item.tone} media={<Image src={item.image} alt="" fill sizes="(max-width: 960px) 100vw, 50vw" />} />
+        </Reveal>)}
       </div>
     </section>
-    <section className="battle-section battle-container" id="cabinets">
-      <Reveal className="battle-heading centered"><p className="kicker">Cabinet collection</p><h2>Altitude & Pinnacle.</h2><p>Compare the two cabinets and explore their individual specifications.</p></Reveal>
-      <div className="cabinet-timeline">
-        <div className="cabinet-film"><Image src="/media/generated/theme-v3/gaming-floor-editorial-v5.webp" alt="Tierplay gaming floor concept" fill sizes="(max-width: 900px) 90vw, 45vw"/><MediaSlot kind="VIDEO" label="Inside the gaming floor" detail="Film preview coming soon"/></div>
-        <div className="cabinet-timeline-cards">{cabinets.map((cabinet, index) => <Reveal className="timeline-item" key={cabinet.name}>
-          <span className="timeline-dot" aria-hidden="true"/>
-          <article className="cabinet-reference-card textured-panel">
-            <div className="cabinet-reference-art"><CabinetArtifact name={cabinet.name} image={cabinet.image} stage={`/media/generated/theme-v3/cabinet-stage-${index === 0 ? "altitude" : "pinnacle"}-v5.webp`} sizes="(max-width: 900px) 70vw, 30vw" /></div>
-            <div className="card-ribbon">{cabinet.name} <span>{cabinet.label}</span></div>
-            <div className="reference-card-body"><h3>{index === 0 ? "A new perspective on play." : "A different curve. A distinct presence."}</h3><p>{cabinet.copy}</p><Link className="text-action" href="/cabinets">Discover {cabinet.name} <Arrow /></Link></div>
-          </article>
-        </Reveal>)}</div>
+
+    <section className="ds-section ds-container" id="cabinets">
+      <SectionHeader icon={Monitor} label="The hardware" title="Altitude. Pinnacle." blurb="Turn the Altitude in 3D, then meet the curved-screen Pinnacle." />
+      <div className="ds-home-hardware">
+        <div className="ds-home-hardware__altitude">
+          <FloatingAltitude fallback={altitude.image} />
+          <div className="ds-home-hardware__copy">
+            <span className="ds-card__label">01 / {altitude.label}</span>
+            <h3>{altitude.name}</h3>
+            <p>{altitude.copy}</p>
+            <Button href="/cabinets" variant="ghost">Tour the Altitude</Button>
+          </div>
+        </div>
+        <Reveal className="ds-home-hardware__pinnacle">
+          <TiltedCard>
+            <Image src="/media/generated/theme-v3/cabinet-stage-pinnacle-v5.webp" alt="" fill sizes="(max-width: 960px) 100vw, 36vw" className="v2-pinnacle-stage" />
+            <Image src={pinnacle.image} alt={`${pinnacle.name} cabinet`} fill sizes="(max-width: 960px) 100vw, 36vw" className="v2-pinnacle-product" />
+          </TiltedCard>
+          <div className="ds-home-hardware__copy">
+            <span className="ds-card__label">02 / {pinnacle.label}</span>
+            <h3>{pinnacle.name}</h3>
+            <p>{pinnacle.copy}</p>
+            <Button href="/cabinets#cabinet-compare" variant="ghost">Compare cabinets</Button>
+          </div>
+        </Reveal>
       </div>
     </section>
-    <section className="battle-section battle-container" id="systems">
-      <Reveal className="battle-heading split"><div><p className="kicker">Connected products</p><h2>The technology<br />behind the floor.</h2></div><p>Explore collection management and linked jackpots within the Tierplay ecosystem.</p></Reveal>
-      <ChromaGrid className="battle-system-grid">{products.map((product,index) => <Reveal key={product.code} className="battle-system-card"><div className="system-visual" aria-hidden="true"><Image src={`/media/generated/theme-v3/${index === 0 ? "tcm-system" : "tlj-system"}-v4.webp`} alt="" fill sizes="(max-width: 650px) 180px, 22vw"/></div><div className="system-card-content"><p className="kicker">{product.code}</p><h3>{product.name}</h3><p>{product.copy}</p><Link className="text-action" href="/products">Explore {product.name} <Arrow /></Link></div></Reveal>)}</ChromaGrid>
+
+    <section className="ds-section ds-home-games" id="games">
+      <GameReel games={games}
+        header={<div key="reel-header" className="ds-container"><SectionHeader icon={Gamepad2} label="Selected games" title="The Sunscape lineup." blurb={<>Six boards, fifteen named games. <a className="ds-inline-link" href="/games-collection">View all boards</a></>} /></div>}
+        footer={<div key="reel-footer" className="ds-container"><Note tone="market">not available for Georgia market</Note></div>} />
     </section>
-    <section className="battle-container world-banner"><Image src="/media/generated/theme-v3/dragon-world-v3.webp" alt="Rise of the Dragon world" fill sizes="90vw"/><div className="world-banner-shade"/><Reveal className="world-banner-copy"><p className="kicker">Sunscape games</p><h2>Find your next game.</h2><p>Browse the Sunscape boards<br/>and their game lineups.</p><Link className="battle-button" href="/games">Discover the collection <Arrow /></Link></Reveal></section>
-    <section className="battle-section battle-container" id="games">
-      <Reveal className="battle-heading centered"><p className="kicker">Sunscape collection</p><h2>Six worlds.<br/>One collection.</h2></Reveal>
-      <ChromaGrid>{games.map(game => <Reveal key={game.slug}><GameCard game={game}/></Reveal>)}</ChromaGrid>
-      <div className="section-action"><Link className="battle-button" href="/games">View all games <Arrow /></Link></div>
-      <p className="market-note">not available for Georgia market</p>
+
+    <section className="ds-section ds-container" id="systems">
+      <SectionHeader icon={Boxes} label="Connected products" title="Behind every play." blurb="Collection management and linked jackpots support different parts of the floor." />
+      <Tabs label="Tierplay systems" items={products.map((product, i) => ({
+        id: product.code,
+        label: product.code === "TCM" ? "Collection management" : "Link Jackpot",
+        content: <div className="ds-panel">
+          <div>
+            <span className="ds-card__label">0{i + 1} / {product.code}</span>
+            <h3>{product.name}</h3>
+            <p className="ds-panel__text">{product.copy}</p>
+            <CheckList items={product.features} />
+            <div className="ds-actions" style={{ marginTop: "var(--s-5)" }}><Button href="/products" variant="ghost">Explore products</Button></div>
+          </div>
+          <div className="ds-panel__media">{product.code === "TLJ" ? <div className="ds-panel__svg"><LinkJackpotNetwork /></div> : <Image src={product.image} alt="" fill sizes="(max-width: 960px) 100vw, 50vw" />}</div>
+        </div>,
+      }))} />
     </section>
-    <section className="battle-section battle-container" id="journey">
-      <Reveal className="battle-heading split"><div><p className="kicker">Player journey</p><h2>From first play<br/>to the next return.</h2></div><Link className="battle-button" href="/player-journey">Explore the journey <Arrow /></Link></Reveal>
-      <ChromaGrid className="battle-journey-grid">{[
-        {title:"Link jackpots",copy:"Shared jackpots connect play across the floor.",image:"/media/generated/theme-v3/tlj-system-v4.webp"},
-        {title:"Progressive jackpots",copy:"Progressive rewards build anticipation from game to game.",image:"/media/generated/theme-v3/rich-times-v3.webp"},
-        {title:"Loyalty system",copy:"Offers and rewards give players a reason to return.",image:"/media/generated/theme-v3/entrance-editorial-v5.webp"},
-      ].map((item,index)=><Reveal key={item.title}><Link href="/player-journey" className="battle-journey-card"><div className="journey-card-art"><Image src={item.image} alt="" fill sizes="(max-width: 650px) 90vw, 30vw"/></div><div className="journey-card-copy"><span className="journey-number">0{index+1}</span><h3>{item.title}</h3><p>{item.copy}</p><b>Explore the journey <Arrow /></b></div></Link></Reveal>)}</ChromaGrid>
+
+    <section className="ds-section ds-container" id="journey">
+      <SectionHeader icon={Route} label="Player journey" title="Play. Connect. Return." blurb={<>Three ways the floor keeps players connected. <a className="ds-inline-link" href="/player-journey">Follow the journey</a></>} />
+      <Steps items={journey.map((stage) => ({ title: stage.title, text: stage.copy, media: <Image src={stage.image} alt="" fill sizes="(max-width: 960px) 100vw, 33vw" /> }))} />
     </section>
   </main>;
 }

@@ -1,0 +1,89 @@
+/* Tierplay guide: wizard launcher (2.5D) and chat panel. */
+.guide { --tilt-x: 0deg; --tilt-y: 0deg; --rim-x: 50%; position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 140; display: grid; justify-items: end; gap: 12px; pointer-events: none; }
+.guide > * { pointer-events: auto; }
+
+/* Launcher: glass disc; the wizard stands in it and breaks out above the rim. */
+.guide__launcher { position: relative; width: 76px; height: 76px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; perspective: 500px; -webkit-tap-highlight-color: transparent; }
+.guide__ring { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 50% 30%, #2a1648, #0e0c14 70%); border: 1px solid var(--line-3); box-shadow: 0 16px 40px -10px rgb(0 0 0 / .8), 0 0 0 1px rgb(0 0 0 / .4), 0 0 28px -4px var(--glow-violet); transition: transform var(--d-2) var(--ease), box-shadow var(--d-2); }
+.guide__ring::before { content: ""; position: absolute; inset: -3px; border-radius: 50%; padding: 1.5px; background: conic-gradient(from var(--ring-angle), var(--violet), #e7c8ff, var(--amber), var(--violet)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; animation: ds-ring 6s linear infinite; opacity: .9; }
+.guide__launcher:hover .guide__ring { transform: scale(1.06); box-shadow: 0 20px 50px -10px rgb(0 0 0 / .85), 0 0 40px -2px var(--glow-violet); }
+.guide__launcher[data-pressed] .guide__ring { transform: scale(.94); }
+.guide__launcher:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; }
+.guide[data-open="true"] .guide__ring { box-shadow: 0 0 0 4px rgb(158 5 255 / .25), 0 0 40px -2px var(--glow-violet); }
+
+.wizard { position: absolute; display: block; transform-style: preserve-3d; }
+.wizard--button { left: -14px; right: -14px; bottom: 6px; height: 118px; pointer-events: none;
+  -webkit-mask: radial-gradient(circle at 50% calc(100% - 32px), #000 37px, transparent 38px), radial-gradient(ellipse 50% 58% at 50% 34%, #000 82%, transparent 100%);
+  mask: radial-gradient(circle at 50% calc(100% - 32px), #000 37px, transparent 38px), radial-gradient(ellipse 50% 58% at 50% 34%, #000 82%, transparent 100%); }
+.wizard__body { position: absolute; inset: 0; display: block; transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y)); transform-origin: 50% 90%; transition: transform var(--d-2) var(--ease); }
+.wizard__body > img, .wizard__fx { position: absolute; left: -76px; top: -21px; width: 260px; height: 260px; max-width: none; filter: drop-shadow(0 6px 10px rgb(0 0 0 / .55)); animation: wizard-breathe 4.2s ease-in-out infinite; transform-origin: 50% 60%; }
+.wizard__fx { filter: none; overflow: visible; }
+.wizard__orb { mix-blend-mode: screen; animation: wizard-orb 2.8s ease-in-out infinite; transform-origin: 318px 205px; }
+.wizard__lids ellipse { transform-box: fill-box; transform-origin: 50% 0%; transform: scaleY(0); animation: wizard-blink 5.6s infinite; }
+.wizard__rim { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at var(--rim-x) 20%, rgb(199 155 255 / .28), transparent 70%); mix-blend-mode: screen; pointer-events: none; }
+.guide__launcher:hover .wizard__body { transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateY(-3px); }
+.guide__launcher:hover .wizard__body > img, .guide__launcher:hover .wizard__fx { animation: wizard-wave .9s var(--ease) 1, wizard-breathe 4.2s ease-in-out .9s infinite; }
+.wizard--avatar { position: relative; width: 44px; height: 44px; flex: none; border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 50% 30%, #2a1648, #0e0c14 70%); border: 1px solid var(--line-2); }
+.wizard--avatar .wizard__body > img, .wizard--avatar .wizard__fx { left: -69px; top: -38px; width: 183px; height: 183px; animation: none; filter: none; }
+.wizard--avatar .wizard__rim { display: none; }
+
+@keyframes wizard-breathe { 50% { transform: scaleY(1.02) translateY(-1.5px); } }
+@keyframes wizard-orb { 50% { opacity: .55; transform: scale(.82); } }
+@keyframes wizard-blink { 0%, 92%, 100% { transform: scaleY(0); } 94%, 96% { transform: scaleY(1); } }
+@keyframes wizard-wave { 30% { transform: rotate(-5deg); } 60% { transform: rotate(4deg); } }
+
+/* Teaser bubble */
+.guide__tease { position: relative; display: flex; align-items: stretch; margin-right: 6px; border-radius: 16px 16px 4px 16px; border: 1px solid var(--line-2); background: var(--glass-strong); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: var(--shadow-float); animation: ds-fade var(--d-2) var(--ease); }
+.guide__tease-open { padding: 12px 6px 12px 16px; border: 0; background: none; color: var(--text-soft); font-size: .8125rem; text-align: left; cursor: pointer; line-height: 1.4; }
+.guide__tease-open b { display: block; color: var(--text); font-weight: 500; }
+.guide__tease-x { width: 32px; border: 0; background: none; color: var(--text-dim); font-size: 18px; cursor: pointer; }
+.guide__tease-x:hover { color: var(--text); }
+
+/* Panel */
+.guide__panel { width: min(400px, calc(100vw - 32px)); height: min(600px, calc(100svh - 130px)); display: flex; flex-direction: column; overflow: hidden; border-radius: var(--r-3); border: 1px solid var(--line-2); background: linear-gradient(180deg, rgb(158 5 255 / .1), transparent 30%), rgb(12 10 18 / .94); backdrop-filter: blur(22px) saturate(1.3); -webkit-backdrop-filter: blur(22px) saturate(1.3); box-shadow: 0 30px 80px -20px rgb(0 0 0 / .9), 0 0 0 1px rgb(0 0 0 / .3); transform-origin: 100% 100%; animation: guide-open var(--d-2) var(--ease); }
+.guide__panel[hidden] { display: none; }
+@keyframes guide-open { from { opacity: 0; transform: translateY(12px) scale(.96); } }
+.guide__head { display: flex; align-items: center; gap: 12px; padding: 16px 16px 14px; border-bottom: 1px solid var(--line); }
+.guide__head h2 { font-size: 1rem; font-weight: 600; letter-spacing: -.01em; }
+.guide__head p { display: flex; align-items: center; gap: 6px; color: var(--text-dim); font-size: .75rem; }
+.guide__head p i { width: 6px; height: 6px; border-radius: 50%; background: #3ee08f; box-shadow: 0 0 8px #3ee08f; }
+.guide__close { margin-left: auto; display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--line-2); border-radius: 50%; background: none; color: var(--text-soft); cursor: pointer; }
+.guide__close:hover { color: var(--text); background: rgb(255 255 255 / .06); }
+.guide__log { flex: 1; overflow-y: auto; display: grid; align-content: start; gap: 10px; padding: 16px; scrollbar-width: thin; scrollbar-color: var(--line-3) transparent; overscroll-behavior: contain; }
+.guide__msg { max-width: 88%; padding: 12px 14px; border-radius: 16px; font-size: .875rem; line-height: 1.5; animation: ds-fade var(--d-2) var(--ease); }
+.guide__msg--guide { justify-self: start; border-bottom-left-radius: 4px; background: rgb(255 255 255 / .05); border: 1px solid var(--line); color: var(--text-soft); }
+.guide__msg--you { justify-self: end; border-bottom-right-radius: 4px; background: linear-gradient(135deg, #5b1aa8, #3a1275); color: #fff; }
+.guide__msg ul { display: grid; gap: 6px; margin: 10px 0 0; padding: 0 0 0 16px; list-style: disc; color: var(--text-muted); font-size: .8125rem; }
+.guide__links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.guide__links a { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px; border-radius: var(--r-pill); border: 1px solid var(--line-3); color: var(--text); font-size: .75rem; transition: background var(--d-1), border-color var(--d-1); }
+.guide__links a:hover { background: rgb(255 255 255 / .08); border-color: var(--violet-soft); }
+.guide__typing { display: flex; gap: 4px; padding: 14px; }
+.guide__typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); animation: guide-dot 1s infinite; }
+.guide__typing i:nth-child(2) { animation-delay: .15s; } .guide__typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes guide-dot { 50% { transform: translateY(-4px); opacity: .5; } }
+.guide__chips { display: flex; gap: 6px; padding: 10px 16px; overflow-x: auto; scrollbar-width: none; border-top: 1px solid var(--line); }
+.guide__chips button { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px; border-radius: var(--r-pill); border: 1px solid var(--line-2); background: rgb(255 255 255 / .03); color: var(--text-soft); font-size: .75rem; cursor: pointer; transition: background var(--d-1), color var(--d-1), border-color var(--d-1); }
+.guide__chips button:hover { background: rgb(255 255 255 / .08); color: var(--text); border-color: var(--line-3); }
+.guide__chips svg { color: var(--amber); }
+.guide__form { display: flex; gap: 8px; padding: 12px 12px 14px; }
+.guide__form input { flex: 1; min-width: 0; min-height: 44px; padding: 0 16px; border-radius: var(--r-pill); border: 1px solid var(--line-2); background: rgb(255 255 255 / .04); color: var(--text); font: inherit; font-size: 16px; outline: none; transition: border-color var(--d-1); }
+.guide__form input::placeholder { color: var(--text-dim); }
+.guide__form input:focus { border-color: var(--violet-soft); }
+.guide__form button { display: grid; place-items: center; width: 44px; height: 44px; flex: none; border: 0; border-radius: 50%; background: var(--text); color: var(--ink); cursor: pointer; transition: opacity var(--d-1), transform var(--d-1); }
+.guide__form button:disabled { opacity: .35; cursor: default; }
+.guide__form button:not(:disabled):hover { transform: scale(1.06); }
+
+@media (max-width: 560px) {
+  .guide[data-open="true"] { left: 12px; right: 12px; }
+  .guide__panel { width: 100%; height: min(620px, calc(100svh - 120px)); }
+  .guide__launcher { width: 64px; height: 64px; }
+  .wizard--button .wizard__body > img, .wizard--button .wizard__fx { left: -62px; top: -17px; width: 224px; height: 224px; }
+  .wizard--button { height: 100px; -webkit-mask: radial-gradient(circle at 50% calc(100% - 26px), #000 31px, transparent 32px), radial-gradient(ellipse 50% 58% at 50% 34%, #000 82%, transparent 100%); mask: radial-gradient(circle at 50% calc(100% - 26px), #000 31px, transparent 32px), radial-gradient(ellipse 50% 58% at 50% 34%, #000 82%, transparent 100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wizard__body > img, .wizard__fx, .wizard__orb, .wizard__lids ellipse, .guide__ring::before { animation: none; }
+}
+
+/* Keep the hero's controls clear of the guide. */
+.portal-controls { right: calc(var(--gutter) + 92px); }
+@media (orientation: portrait), (max-aspect-ratio: 1/1) { .portal-controls { right: 92px; } }
