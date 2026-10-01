@@ -3,7 +3,7 @@
 import { Component, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer, MeshReflectorMaterial } from "@react-three/drei";
-import { AgXToneMapping, Color, Group, Vector3, InstancedMesh, MathUtils, MeshBasicMaterial, MeshStandardMaterial, Object3D, Vector2, WebGLRenderTarget, HalfFloatType, Mesh, Points, ShaderMaterial, type Material } from "three";
+import { AgXToneMapping, CatmullRomCurve3, Color, Group, Vector3, InstancedMesh, MathUtils, MeshBasicMaterial, MeshStandardMaterial, Object3D, Vector2, WebGLRenderTarget, HalfFloatType, Mesh, Points, ShaderMaterial, Texture, type Material } from "three";
 import { rockGeometry, type RockKind } from "./rockGeometry";
 import { portalFraming } from "./portalFraming";
 import { createWetSurface } from "./wetSurface";
@@ -48,65 +48,115 @@ const bell = (v: number, a: number, b: number) => Math.sin(MathUtils.clamp((v - 
 // Smooth pseudo-random shake: summed incommensurate sines, cheaper than noise and deterministic.
 const wobble = (t: number, seed: number) => Math.sin(t * 17.3 + seed) * .5 + Math.sin(t * 29.1 + seed * 2.1) * .3 + Math.sin(t * 47.7 + seed * 3.7) * .2;
 
-// The only component allowed to mutate the scene camera. Cinematic layers sit on the approved rail:
-// establishing entry, handheld breath, collapse push + roll, departure punch and shake, a low
-// tracking shot for the flight, then a ground-level hero angle, crane and push through the gateway.
+// Finale timing: beats land at these fractions of the ceremony clock (arrival, ground, crane, through).
+const FINALE_KNOTS = [0, .3, .66, 1];
+const finaleParameter = (f: number) => {
+  // Half-eased so the move starts and settles gently without stopping at each beat.
+  const e = f * .55 + f * f * (3 - 2 * f) * .45;
+  for (let i = 1; i < FINALE_KNOTS.length; i++) if (e <= FINALE_KNOTS[i]) {
+    const a = FINALE_KNOTS[i - 1], b = FINALE_KNOTS[i];
+    return (i - 1 + (e - a) / (b - a)) / (FINALE_KNOTS.length - 1);
+  }
+  return 1;
+};
+
+// The only component allowed to mutate the scene camera.
+// Opening to landing (unchanged): establishing entry, handheld breath, collapse push + roll,
+// departure punch and shake, and a low tracking shot that leads the fireball.
+// After the plasma lands and becomes the gateway's pillar light, the camera follows feature-film
+// grammar rather than a game rig: one continuous, motivated move with a level horizon and no handheld
+// noise. A ground-level hero angle on a longer lens gives the monument its scale (Deakins and
+// Villeneuve: Blade Runner 2049, Dune), the camera then rises with the light climbing the seams and
+// holds the gateway on the right third beside the copy, and finally centres for a one-point push
+// through the arch (Kubrick) while the lens widens in a slow dolly-zoom. A centripetal spline joins
+// the beats so velocity never jumps.
 function CameraDirector({ sequence }: { sequence: PortalState }) {
   const { camera, size, scene } = useThree();
   const pointer = useRef({ x: 0, y: 0 });
-  const state = useRef({ entryStart: -1, trauma: 0, lastProgress: 0, fov: 46 });
+  const state = useRef({ trauma: 0, lastProgress: 0, fov: 46 });
   const target = useMemo(() => new Vector3(), []);
   const fire = useMemo(() => new Vector3(), []);
+  const rig = useMemo(() => {
+    const keys = () => [new Vector3(), new Vector3(), new Vector3(), new Vector3()];
+    const position = keys(), aim = keys(), lens = keys();
+    return {
+      position, aim, lens,
+      path: new CatmullRomCurve3(position, false, "centripetal"),
+      look: new CatmullRomCurve3(aim, false, "centripetal"),
+      fov: new CatmullRomCurve3(lens, false, "catmullrom", .5),
+      sample: new Vector3(),
+    };
+  }, []);
   const core = useRef<Object3D | null>(null);
   useFrame((_, delta) => {
     const p = sequence.progress, t = sequence.time, dt = Math.min(delta, .05);
-    const portrait = 1 - smooth(size.width / size.height, .85, 1.35);
+    const portrait = 1 - smooth(size.width / size.height, .85, 1.35), landscape = 1 - portrait;
     const s = state.current;
     if (!sequence.paused) {
       pointer.current.x = MathUtils.damp(pointer.current.x, sequence.pointerX, 3, dt);
       pointer.current.y = MathUtils.damp(pointer.current.y, sequence.pointerY, 3, dt);
     }
-    if (s.entryStart < 0 && t > 0) s.entryStart = t;
     const raw = sequence.raw ?? 0, collapse = sequence.intro ?? 0, finale = sequence.finale ?? 0;
-    // Establishing shot: the first seconds descend from high and wide into the opening frame.
-    const entry = 1 - MathUtils.smootherstep(t - Math.max(0, s.entryStart), 0, 3.2);
+    // Establishing shot: the first seconds after the reveal descend from high and wide into the opening frame.
+    const entry = sequence.revealTime === undefined ? 1 : 1 - MathUtils.smootherstep(t - sequence.revealTime, 0, 3.2);
     const align = MathUtils.smootherstep(p, .20, .45), dive = MathUtils.smootherstep(p, .25, .85), arrive = MathUtils.smootherstep(p, .48, .82);
     const push = MathUtils.smootherstep(raw, 0, .2) * 1.6 * (1 - portrait * .5);
     const launch = bell(p, .28, .5), flight = bell(p, .42, .86);
-    // Finale: low hero angle → crane up and to the left (gateway sits right of the copy) → push through.
-    const low = bell(finale, 0, .55), crane = MathUtils.smootherstep(finale, .25, .7), through = MathUtils.smootherstep(finale, .62, 1);
-    const sweep = -Math.sin(crane * Math.PI * .5) * (1 - through) * (1 - portrait * .7);
+    // Handheld life fades out as the ceremony begins: the finale is locked-off.
+    const alive = 1 - MathUtils.smootherstep(finale, 0, .22);
 
-    let x = (1 - portrait) * 2.6 * align * (1 - arrive) + sweep * 3.4;
-    let y = MathUtils.lerp(1, -.5, arrive) - flight * 1.1 - low * 2 + crane * 2.2 * (1 - through) + through * 1.6;
-    let z = MathUtils.lerp(15, 20, portrait) - dive * MathUtils.lerp(8, 7, portrait) - push * (1 - dive) - through * 7.5;
+    let x = landscape * 2.6 * align * (1 - arrive);
+    let y = MathUtils.lerp(1, -.5, arrive) - flight * 1.1;
+    let z = MathUtils.lerp(15, 20, portrait) - dive * MathUtils.lerp(8, 7, portrait) - push * (1 - dive);
     x += entry * -2.5; y += entry * 3.6; z += entry * 7;
-    x += pointer.current.x * .16 * (1 - dive * .85);
-    y -= pointer.current.y * .08;
-    // Handheld breath: always a little alive, never still.
-    x += Math.sin(t * .31) * .05; y += Math.sin(t * .47 + 1) * .04;
-    camera.position.set(x, y, z);
+    x += pointer.current.x * .16 * (1 - dive * .85) * alive;
+    y -= pointer.current.y * .08 * alive;
+    // Handheld breath: always a little alive until the finale.
+    x += Math.sin(t * .31) * .05 * alive; y += Math.sin(t * .47 + 1) * .04 * alive;
 
-    target.set(((1 - portrait) * align * 3.4) * (1 - arrive) + sweep * .9, MathUtils.lerp(MathUtils.lerp(.8, 1.8, portrait), 2.2, arrive) + low * 2.6 + through * 3.2, MathUtils.lerp(-3, -16, arrive) - through * 3);
+    target.set(landscape * align * 3.4 * (1 - arrive), MathUtils.lerp(MathUtils.lerp(.8, 1.8, portrait), 2.2, arrive), MathUtils.lerp(-3, -16, arrive));
     target.y += entry * -1.2;
-    // Keep the gateway right of the arrival copy on landscape screens.
-    target.x -= MathUtils.smootherstep(finale, .25, .6) * 2.2 * (1 - portrait) * (1 - through * .6);
     // During launch and flight the lens leads the fireball instead of the rail.
     core.current ??= scene.getObjectByName("fireball-core") ?? null;
     if (core.current) { core.current.getWorldPosition(fire); target.lerp(fire, (launch * .55 + flight * .35) * (1 - finale)); }
+
+    // Rail lens: wide establishing, squeeze through the collapse, punch out on launch.
+    let fov = 46 + entry * 8 - bell(collapse, .2, .95) * 5 + launch * 7 + flight * 2;
+
+    if (finale > 0) {
+      const r = rig;
+      // Beat 0: wherever the rail left the camera when the plasma landed.
+      r.position[0].set(x, y, z); r.aim[0].copy(target); r.lens[0].set(fov, 0, 0);
+      // Beat 1: ground-level hero angle just above the wet floor, longer lens, gateway on the right third.
+      r.position[1].set(-1.6 * landscape, -2.85, MathUtils.lerp(9.5, 14, portrait));
+      r.aim[1].set(-4.5 * landscape, MathUtils.lerp(5.4, 4.2, portrait), -16);
+      r.lens[1].set(MathUtils.lerp(38, 44, portrait), 0, 0);
+      // Beat 2: crane up with the light climbing the seams; level horizon, the copy keeps the left side.
+      r.position[2].set(-2.8 * landscape, MathUtils.lerp(2.4, 1.4, portrait), MathUtils.lerp(5, 10, portrait));
+      r.aim[2].set(-3.7 * landscape, MathUtils.lerp(4, 3, portrait), -16);
+      r.lens[2].set(MathUtils.lerp(33, 40, portrait), 0, 0);
+      // Beat 3: centred one-point push through the arch while the lens widens (dolly-zoom).
+      r.position[3].set(0, 3.1, -8.5);
+      r.aim[3].set(0, 3.3, -30);
+      r.lens[3].set(56, 0, 0);
+      const u = finaleParameter(finale);
+      // Ease out of the rail over the first beat so the hand-off is seamless.
+      r.path.getPoint(u, r.sample); x = r.sample.x; y = r.sample.y; z = r.sample.z;
+      r.look.getPoint(u, target);
+      fov = r.fov.getPoint(u, r.sample).x;
+    }
+    camera.position.set(x, y, z);
     camera.lookAt(target);
 
-    // Trauma: collapse flare, departure kick and ring ignition feed a decaying shake.
+    // Trauma: collapse flare and departure kick feed a decaying shake (none in the finale).
     const speed = Math.abs(p - s.lastProgress) / Math.max(dt, .008); s.lastProgress = p;
-    const drive = bell(collapse, .45, 1) * .75 + launch * Math.min(1, speed * 2.5) * .9 + bell(finale, .1, .45) * .25;
+    const drive = bell(collapse, .45, 1) * .75 + launch * Math.min(1, speed * 2.5) * .9;
     s.trauma = Math.max(s.trauma * Math.exp(-dt * 2.2), drive);
-    const shake = s.trauma * s.trauma * (sequence.paused ? 0 : 1);
-    camera.rotateZ(Math.sin(collapse * Math.PI) * .045 + entry * -.05 + flight * Math.sin(t * .6) * .02 + sweep * .02 + wobble(t, 1) * shake * .02);
+    const shake = s.trauma * s.trauma * (sequence.paused ? 0 : 1) * alive;
+    camera.rotateZ((Math.sin(collapse * Math.PI) * .045 + entry * -.05 + flight * Math.sin(t * .6) * .02 + wobble(t, 1) * shake * .02) * alive);
     camera.rotateX(wobble(t, 4) * shake * .012);
     camera.rotateY(wobble(t, 9) * shake * .012);
 
-    // Lens: wide establishing, squeeze through the collapse, punch out on launch, narrow push at the end.
-    const fov = 46 + entry * 8 - bell(collapse, .2, .95) * 5 + launch * 7 + flight * 2 - through * 11 + low * 3;
     if (Math.abs(fov - s.fov) > .01) { s.fov = fov; (camera as import("three").PerspectiveCamera).fov = fov; camera.updateProjectionMatrix(); }
     camera.updateMatrixWorld();
   }, -.75);
@@ -271,7 +321,7 @@ function Foreground({ sequence, compact, balanced }: { sequence: PortalState; co
   return <>
     <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.8, 0]}>
       <planeGeometry args={[100, 100]}/>
-      {balanced ? <primitive object={floor.surface} attach="material"/> : <MeshReflectorMaterial resolution={compact ? 384 : 1024} blur={compact ? [60, 20] : [260, 80]} mixBlur={.85} mixStrength={4.2} mixContrast={1.2} mirror={.82} map={surfaceMaps.color} normalMap={surfaceMaps.normal} normalScale={new Vector2(.55, .55)} roughnessMap={surfaceMaps.rough} distortionMap={surfaceMaps.rough} distortion={.08} color="#ffffff" metalness={0} roughness={1} depthScale={.6} minDepthThreshold={.35} maxDepthThreshold={1.6} envMapIntensity={.9}/>}
+      {balanced ? <primitive object={floor.surface} attach="material"/> : <MeshReflectorMaterial resolution={compact ? 256 : 384} blur={compact ? [60, 20] : [140, 50]} mixBlur={.85} mixStrength={4.2} mixContrast={1.2} mirror={.82} map={surfaceMaps.color} normalMap={surfaceMaps.normal} normalScale={new Vector2(.55, .55)} roughnessMap={surfaceMaps.rough} distortionMap={surfaceMaps.rough} distortion={.08} color="#ffffff" metalness={0} roughness={1} depthScale={.6} minDepthThreshold={.35} maxDepthThreshold={1.6} envMapIntensity={.9}/>}
     </mesh>
     <instancedMesh castShadow receiveShadow ref={ref} args={[geometry, material, 28]} dispose={null} frustumCulled={false}/>
   </>;
@@ -291,11 +341,22 @@ function LavaRocks({ sequence, lights }: { sequence: PortalState; lights: boolea
   </>;
 }
 
-function Scene({ sequence, onReady, onFailure, onQuality }: Omit<Props, "active"> & { onQuality: (software: boolean) => void }) {
+const nextFrame = () => new Promise<number>(resolve => requestAnimationFrame(resolve));
+const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+// Integrated and older mobile GPUs: start on the balanced tier rather than discovering it mid-scroll.
+const WEAK_GPU = /swiftshader|llvmpipe|software|intel\(r\) (hd|uhd)|intel.*(hd|uhd) graphics|mali-[gt]\d|adreno \(tm\) [3-5]\d\d|powervr|apple a(9|10|11)\b/i;
+
+function Scene({ sequence, onReady, onFailure, onQuality, startBalanced, dprCap }: Omit<Props, "active"> & { onQuality: (software: boolean) => void; startBalanced: boolean; dprCap: number }) {
   const { size, gl, invalidate, scene, camera } = useThree();
-  const [balanced, setBalanced] = useState(false);
+  const setDpr = useThree(state => state.setDpr);
+  const [balanced, setBalanced] = useState(startBalanced);
+  const balancedRef = useRef(startBalanced);
+  balancedRef.current = balanced;
   const [software, setSoftware] = useState(false);
-  const frameSample = useRef({ count: 0, duration: 0 });
+  // Runtime adaptation only changes resolution: anything that alters lights, shadows or materials
+  // would recompile every shader and freeze the scroll.
+  const adapt = useRef({ revealed: false, count: 0, sum: 0, good: 0, dpr: dprCap, frame: 0 });
+  useEffect(() => { adapt.current.dpr = dprCap; adapt.current.good = 0; }, [dprCap]);
   const root = useRef<Group>(null);
   const mist = useRef<ShaderMaterial>(null);
   const uniforms = useMemo(() => ({ uTime: { value: 0 } }), []);
@@ -308,31 +369,119 @@ function Scene({ sequence, onReady, onFailure, onQuality }: Omit<Props, "active"
     const debug = context.getExtension("WEBGL_debug_renderer_info");
     const renderer = debug ? String(context.getParameter(debug.UNMASKED_RENDERER_WEBGL)) : "";
     if (/swiftshader|llvmpipe|software/i.test(renderer)) { setBalanced(true); setSoftware(true); onQuality(true); }
+    else if (WEAK_GPU.test(renderer) && !balancedRef.current) { setBalanced(true); onQuality(false); }
   }, [gl, onQuality]);
   useEffect(() => {
     sequence.invalidate = invalidate;
     const lost = (event: Event) => { event.preventDefault(); onFailure(); };
     gl.domElement.addEventListener("webglcontextlost", lost);
     invalidate();
-    // Reveal only after every program has compiled (parallel where supported) and a frame has drawn;
-    // otherwise the first seconds show an empty canvas while shaders compile on demand.
-    let secondFrame = 0, frame = 0, cancelled = false;
-    const reveal = () => { if (cancelled) return; frame = requestAnimationFrame(() => { secondFrame = requestAnimationFrame(onReady); }); };
-    const settle = window.setTimeout(() => {
-      gl.compileAsync(scene, camera).then(reveal, reveal);
-    }, 120);
-    return () => { cancelled = true; clearTimeout(settle); cancelAnimationFrame(frame); cancelAnimationFrame(secondFrame); sequence.invalidate = undefined; gl.domElement.removeEventListener("webglcontextlost", lost); };
-  }, [gl, scene, camera, invalidate, onFailure, onReady, sequence]);
+    let cancelled = false;
+    // Compile every program up front, including objects that only appear later in the scroll
+    // (gateway, flame, steam); otherwise they compile on first sight and stall the scroll.
+    const precompile = async () => {
+      const hidden: Object3D[] = [];
+      scene.traverse(object => { if (!object.visible) { hidden.push(object); object.visible = true; } });
+      const compiling = gl.compileAsync(scene, camera);
+      for (const object of hidden) object.visible = false;
+      await compiling.catch(() => undefined);
+      // Upload every texture now too: a first upload on first sight (the fireball's noise maps
+      // as it emerges) is the other cause of a mid-scroll stall.
+      const textures = new Set<Texture>();
+      const collect = (value: unknown) => { if (value instanceof Texture) textures.add(value); };
+      scene.traverse(object => {
+        const material = (object as Mesh).material;
+        if (!material) return;
+        for (const item of Array.isArray(material) ? material : [material]) {
+          for (const value of Object.values(item)) collect(value);
+          const uniforms = (item as ShaderMaterial).uniforms;
+          if (uniforms) for (const uniform of Object.values(uniforms)) collect(uniform?.value);
+        }
+      });
+      for (const texture of textures) { try { gl.initTexture(texture); } catch { /* unsupported formats upload on first use */ } }
+      // Draw everything once offscreen, culling off and shadows on, so geometry buffers and shadow
+      // programs for later objects (the gateway, the assembled piers) are on the GPU before the scroll.
+      const culled: Object3D[] = [];
+      scene.traverse(object => {
+        if (!object.visible) { hidden.push(object); object.visible = true; }
+        if (object.frustumCulled) { culled.push(object); object.frustumCulled = false; }
+      });
+      const warm = new WebGLRenderTarget(64, 64, { type: HalfFloatType });
+      const previous = gl.getRenderTarget();
+      try {
+        gl.shadowMap.needsUpdate = true;
+        gl.setRenderTarget(warm);
+        gl.render(scene, camera);
+      } finally {
+        gl.setRenderTarget(previous);
+        for (const object of hidden) object.visible = false;
+        for (const object of culled) object.frustumCulled = true;
+        warm.dispose();
+      }
+    };
+    // A short hidden warm-up measures this device with the real pipeline before anyone scrolls.
+    const measure = async (frames: number) => {
+      for (let i = 0; i < 6; i++) await nextFrame();
+      let last = await nextFrame(), total = 0;
+      for (let i = 0; i < frames; i++) { const now = await nextFrame(); total += now - last; last = now; }
+      return total / frames;
+    };
+    (async () => {
+      await wait(120);
+      // On slow networks the fireball's textures arrive late; wait for it (the still image stays up)
+      // so it never mounts, compiles and uploads in the middle of someone's scroll.
+      for (let i = 0; i < 1200 && !cancelled && !scene.getObjectByName("fireball-core"); i++) await nextFrame();
+      if (cancelled) return;
+      await precompile();
+      if (cancelled) return;
+      // Tune for this device while the still image is showing, so nothing resizes mid-scroll:
+      // a slow device drops to the balanced tier, then resolution steps down, then post relief.
+      let frameMs = await measure(20);
+      if (!balancedRef.current && frameMs > 40) {
+        setBalanced(true); onQuality(false);
+        await wait(60);
+        if (cancelled) return;
+        await precompile();
+        frameMs = await measure(16);
+      }
+      const floor = balancedRef.current ? .6 : .7;
+      while (!cancelled && frameMs > 22 && adapt.current.dpr > floor) {
+        adapt.current.dpr = Math.max(floor, +(adapt.current.dpr - .25).toFixed(2));
+        setDpr(adapt.current.dpr); gl.domElement.dataset.dpr = String(adapt.current.dpr);
+        frameMs = await measure(16);
+      }
+      while (!cancelled && frameMs > 22 && (sequence.relief ?? 0) < 2) {
+        sequence.relief = (sequence.relief ?? 0) + 1; gl.domElement.dataset.relief = String(sequence.relief);
+        frameMs = await measure(16);
+      }
+      await nextFrame(); await nextFrame();
+      if (cancelled) return;
+      sequence.revealTime = sequence.time;
+      adapt.current.revealed = true;
+      onReady();
+    })();
+    return () => { cancelled = true; sequence.invalidate = undefined; gl.domElement.removeEventListener("webglcontextlost", lost); };
+  }, [gl, scene, camera, invalidate, onFailure, onReady, sequence, setDpr]);
   useFrame((_, delta) => {
     if (!sequence.paused) { sequence.time += Math.min(delta, .1); invalidate(); }
-    // Shadows move slowly relative to the frame rate: refresh the sun's map every other frame.
+    const adaptive = adapt.current;
+    // Shadows move slowly relative to the frame rate: refresh the sun's map every third frame.
     gl.shadowMap.autoUpdate = false;
-    if ((frameSample.current.count & 1) === 0 || sequence.paused) gl.shadowMap.needsUpdate = true;
-    if (!balanced && !sequence.paused && delta < .5) {
-      frameSample.current.count++; frameSample.current.duration += delta;
-      if (frameSample.current.count === 90) {
-        if (frameSample.current.duration / 90 > .035) { setBalanced(true); onQuality(false); }
-        frameSample.current.count = 0; frameSample.current.duration = 0;
+    adaptive.frame = (adaptive.frame + 1) % 3;
+    if (adaptive.frame === 0 || sequence.paused) gl.shadowMap.needsUpdate = true;
+    // Adaptive resolution: step down quickly when frames run long, step back up slowly with headroom.
+    if (adaptive.revealed && !sequence.paused && delta < .25) {
+      adaptive.count++; adaptive.sum += delta;
+      if (adaptive.count % 40 === 0) {
+        const average = adaptive.sum / 40; adaptive.sum = 0;
+        const floor = balanced ? .6 : .7;
+        if (average > .024 && adaptive.dpr > floor) { adaptive.dpr = Math.max(floor, +(adaptive.dpr - .25).toFixed(2)); adaptive.good = 0; setDpr(adaptive.dpr); gl.domElement.dataset.dpr = String(adaptive.dpr); }
+        // At the resolution floor, relieve post-processing (pass toggles only, never a recompile).
+        else if (average > .024 && (sequence.relief ?? 0) < 2) { sequence.relief = (sequence.relief ?? 0) + 1; adaptive.good = 0; gl.domElement.dataset.relief = String(sequence.relief); }
+        else if (average < .0135) {
+          adaptive.good++;
+          if (adaptive.good >= 4 && adaptive.dpr < dprCap) { adaptive.dpr = Math.min(dprCap, +(adaptive.dpr + .25).toFixed(2)); adaptive.good = 0; setDpr(adaptive.dpr); gl.domElement.dataset.dpr = String(adaptive.dpr); }
+        } else adaptive.good = 0;
       }
     }
     uniforms.uTime.value = sequence.time;
@@ -352,7 +501,7 @@ function Scene({ sequence, onReady, onFailure, onQuality }: Omit<Props, "active"
     <fogExp2 attach="fog" args={["#09090d", .02]}/>
     <hemisphereLight args={["#8b8f9f", "#0a090c", .1]}/>
     {/* Cold moonlight from behind-left rims every stone; faces stay in shadow for the fireball to light. */}
-    <directionalLight position={[-11, 14, -13]} color="#c7cfe2" intensity={3.1} castShadow={!balanced} shadow-mapSize-width={compact ? 1024 : 2048} shadow-mapSize-height={compact ? 1024 : 2048} shadow-camera-left={-26} shadow-camera-right={26} shadow-camera-top={24} shadow-camera-bottom={-24} shadow-camera-far={80} shadow-normalBias={.04} shadow-bias={-.0003} shadow-radius={4}/>
+    <directionalLight position={[-11, 14, -13]} color="#c7cfe2" intensity={3.1} castShadow={!balanced} shadow-mapSize-width={compact ? 1024 : 1536} shadow-mapSize-height={compact ? 1024 : 1536} shadow-camera-left={-26} shadow-camera-right={26} shadow-camera-top={24} shadow-camera-bottom={-24} shadow-camera-far={80} shadow-normalBias={.04} shadow-bias={-.0003} shadow-radius={4}/>
     <directionalLight position={[7, 5, 14]} color="#5f6070" intensity={.28}/>
     <Environment resolution={256} frames={1}>
       <Lightformer position={[0, 9, -6]} intensity={1.1} scale={[16, 4, 1]} color="#a4abc2" rotation={[Math.PI / 2, 0, 0]}/>
@@ -472,47 +621,62 @@ function AtmosphericFinish({ sequence, compact, disabled }: { sequence: PortalSt
       fragmentShader: "uniform sampler2D tDiffuse; varying vec2 vUv; void main(){ vec4 c=texture2D(tDiffuse,vUv); bvec4 bad=bvec4(any(isnan(c)),any(isinf(c)),false,false); gl_FragColor=(bad.x||bad.y)?vec4(0.,0.,0.,1.):vec4(min(c.rgb,vec3(256.)),c.a); }",
     });
     composer.addPass(render); composer.addPass(sanitize); if (!compact) composer.addPass(bloom); composer.addPass(combine); composer.addPass(output); composer.addPass(grade);
-    return { composer, render, sanitize, bloom, output, fireComposer, fireRender, fireBloom, snapshot, combine, grade, black, background, light: new Vector3(), core: null as Object3D | null };
+    return { composer, render, sanitize, bloom, output, fireComposer, fireRender, fireBloom, snapshot, combine, grade, black, background, light: new Vector3(), core: null as Object3D | null, points: [] as Points[], pointsVisible: new Uint8Array(0), scanned: -1, tick: 0 };
   }, [gl, scene, camera, compact, disabled]);
+  const dpr = useThree(state => state.viewport.dpr);
   useEffect(() => {
     if (!pipeline) return;
     pipeline.composer.setPixelRatio(Math.min(gl.getPixelRatio(), 1.5));
     pipeline.composer.setSize(size.width, size.height);
     pipeline.fireComposer.setPixelRatio(1);
-    const fireScale = Math.min(1, (compact ? 640 : 1100) / Math.max(size.width, size.height));
+    const fireScale = Math.min(1, (compact ? 560 : 820) / Math.max(size.width, size.height));
     pipeline.fireComposer.setSize(size.width * fireScale, size.height * fireScale);
     pipeline.grade.uniforms.uResolution.value.set(size.width, size.height);
-  }, [pipeline, size.width, size.height, compact, gl]);
+  }, [pipeline, size.width, size.height, compact, gl, dpr]);
   useEffect(() => () => { if (pipeline) {
     pipeline.bloom.dispose(); pipeline.output.dispose(); pipeline.render.dispose(); pipeline.composer.dispose();
     pipeline.fireRender.dispose(); pipeline.fireBloom.dispose(); pipeline.fireComposer.dispose(); pipeline.combine.dispose(); pipeline.grade.dispose(); pipeline.sanitize.dispose(); pipeline.snapshot.dispose(); pipeline.black.dispose();
   } }, [pipeline]);
   useFrame((state, delta) => {
     if (!pipeline) { gl.render(scene, camera); return; }
-    const replaced: [Mesh, Material | Material[]][] = [];
-    const hidden: Points[] = [];
+    // Fire-only pass: everything except the plasma draws black through scene.overrideMaterial (the
+    // plasma materials opt out with allowOverride = false). The scene is scanned every two seconds,
+    // never per frame, so this pass allocates nothing while scrolling.
+    // Relief level 2: refresh the fire-only pass on alternate frames (its blur hides the one-frame lag).
+    pipeline.tick = (pipeline.tick + 1) % 2;
+    const refreshFire = (sequence.relief ?? 0) < 2 || pipeline.tick === 0;
+    if (refreshFire && (pipeline.scanned < 0 || state.clock.elapsedTime - pipeline.scanned > 2)) {
+      pipeline.scanned = state.clock.elapsedTime;
+      pipeline.points.length = 0;
+      scene.traverse(object => {
+        if (object instanceof Points) pipeline.points.push(object);
+        else if (object instanceof Mesh && object.userData.fireballBloom) {
+          for (const material of Array.isArray(object.material) ? object.material : [object.material]) material.allowOverride = false;
+        }
+      });
+      if (pipeline.pointsVisible.length < pipeline.points.length) pipeline.pointsVisible = new Uint8Array(pipeline.points.length * 2);
+    }
     const background = scene.background;
     const fog = scene.fog;
     const shadowUpdate = gl.shadowMap.autoUpdate;
     // Restore every borrowed scene property even if the offscreen render fails.
-    try {
+    if (refreshFire) try {
       scene.background = pipeline.background;
       scene.fog = null;
+      scene.overrideMaterial = pipeline.black;
       gl.shadowMap.autoUpdate = false;
-      scene.traverseVisible(object => {
-        if (object instanceof Mesh && !object.userData.fireballBloom) {
-          replaced.push([object, object.material]); object.material = pipeline.black;
-        } else if (object instanceof Points) { hidden.push(object); object.visible = false; }
-      });
+      for (let i = 0; i < pipeline.points.length; i++) { pipeline.pointsVisible[i] = pipeline.points[i].visible ? 1 : 0; pipeline.points[i].visible = false; }
       pipeline.fireComposer.render(delta);
     } finally {
-      for (const [mesh, material] of replaced) mesh.material = material;
-      for (const points of hidden) points.visible = true;
+      for (let i = 0; i < pipeline.points.length; i++) pipeline.points[i].visible = pipeline.pointsVisible[i] === 1;
+      scene.overrideMaterial = null;
       scene.background = background;
       scene.fog = fog;
       gl.shadowMap.autoUpdate = shadowUpdate;
     }
     pipeline.core ??= scene.getObjectByName("fireball-core") ?? null;
+    const relief = sequence.relief ?? 0;
+    pipeline.bloom.enabled = relief < 1;
     let rays = 0;
     if (pipeline.core) {
       pipeline.core.getWorldPosition(pipeline.light).project(camera);
@@ -530,10 +694,21 @@ function AtmosphericFinish({ sequence, compact, disabled }: { sequence: PortalSt
   return null;
 }
 
+function startingQuality() {
+  const nav = navigator as Navigator & { deviceMemory?: number };
+  const cores = nav.hardwareConcurrency ?? 8, memory = nav.deviceMemory ?? 8;
+  const balanced = cores <= 4 || memory <= 4;
+  const compact = innerWidth / innerHeight < 1.05;
+  const cap = balanced ? 1 : Math.min(devicePixelRatio || 1, compact ? 1.5 : 1.75);
+  return { balanced, cap };
+}
+
 export default function PortalCanvas({ sequence, active, onReady, onFailure }: Props) {
-  const [quality, setQuality] = useState<"high" | "balanced" | "software">("high");
+  const start = useMemo(startingQuality, []);
+  const [quality, setQuality] = useState<"high" | "balanced" | "software">(start.balanced ? "balanced" : "high");
   const onQuality = useMemo(() => (software: boolean) => setQuality(software ? "software" : "balanced"), []);
-  return <Boundary onFailure={onFailure}><Canvas shadows="soft" onCreated={({ gl }) => { gl.toneMapping = AgXToneMapping; gl.toneMappingExposure = 1.2; }} frameloop={active ? "demand" : "never"} dpr={quality === "high" ? [1, 1.75] : 1} camera={{ position: [0, 1, 15], fov: 46, near: .1, far: 100 }} gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }} fallback="The original Tierplay artwork is available without WebGL.">
-    <Scene sequence={sequence} onReady={onReady} onFailure={onFailure} onQuality={onQuality}/>
+  const cap = quality === "high" ? start.cap : 1;
+  return <Boundary onFailure={onFailure}><Canvas shadows="soft" onCreated={({ gl }) => { gl.toneMapping = AgXToneMapping; gl.toneMappingExposure = 1.2; }} frameloop={active ? "demand" : "never"} dpr={cap} camera={{ position: [0, 1, 15], fov: 46, near: .1, far: 100 }} gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }} fallback="The original Tierplay artwork is available without WebGL.">
+    <Scene sequence={sequence} onReady={onReady} onFailure={onFailure} onQuality={onQuality} startBalanced={start.balanced} dprCap={cap}/>
   </Canvas></Boundary>;
 }

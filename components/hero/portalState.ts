@@ -13,4 +13,8 @@ export type PortalState = {
   time: number;
   paused: boolean;
   invalidate?: () => void;
+  /** Scene time at which the canvas was revealed; the establishing shot starts here. */
+  revealTime?: number;
+  /** Post-effect relief when resolution alone is not enough: 0 full, 1 no main bloom, 2 also half-rate fire pass. */
+  relief?: number;
 };

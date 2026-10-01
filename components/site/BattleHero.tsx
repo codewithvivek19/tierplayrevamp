@@ -57,10 +57,15 @@ export default function BattleHero() {
 
   useEffect(() => {
     const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    // Slow connections keep the designed still hero: the 3D bundle would arrive long after the
+    // visitor has started reading. If the script arrives after they have already scrolled, the hero
+    // also stays still, because growing it into the long scroll stage would yank the page under them.
+    const scrolledOnArrival = scrollY > 40;
     const update = () => {
-      const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+      const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+      const slow = /(^|-)2g$|^3g$/.test(connection?.effectiveType ?? "");
       setReady(false); setChapter(0);
-      setEnabled(!reduced.matches && !saveData && !new URLSearchParams(location.search).has("no-webgl"));
+      setEnabled(!reduced.matches && !connection?.saveData && !slow && !scrolledOnArrival && !new URLSearchParams(location.search).has("no-webgl"));
     };
     update(); reduced.addEventListener("change", update);
     let visible = true;

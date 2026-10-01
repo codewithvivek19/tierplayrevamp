@@ -11,27 +11,11 @@
 .ds-bento__cell { display: grid; }
 .ds-bento__cell--0 { grid-row: 1 / 3; }
 .ds-bento__cell--0 .ds-card { min-height: 600px; }
-.ds-home-hardware { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, .85fr); gap: var(--s-6); align-items: end; }
-.ds-home-hardware__altitude { position: relative; min-height: min(118svh, 1080px); display: flex; align-items: flex-end; }
-.ds-home-hardware__altitude .floating-altitude { position: absolute; inset: -8% -10% 240px -12%; touch-action: pan-y; cursor: grab; }
-.ds-home-hardware__copy { position: relative; z-index: 2; display: grid; justify-items: start; gap: var(--s-3); max-width: 380px; }
-.ds-home-hardware__copy h3 { font-size: var(--fs-h2); font-weight: 500; letter-spacing: var(--track-display); line-height: 1; }
-.ds-home-hardware__copy p { color: var(--text-muted); margin-bottom: var(--s-2); }
-.ds-home-hardware__pinnacle { display: grid; gap: var(--s-5); }
-.ds-home-hardware__pinnacle .tilted-card { aspect-ratio: 4 / 5; height: auto; }
-.ds-home-hardware__pinnacle .tilted-card-inner { border-radius: var(--r-3); overflow: hidden; border: 1px solid var(--line-2); background: var(--surface); }
-.ds-home-games .game-reel .ds-section-head { margin-bottom: 0; }
-.ds-home-games .ds-note { margin-top: 0; }
-.ds-panel__svg { position: absolute; inset: 0; display: grid; place-items: center; padding: var(--s-5); background: radial-gradient(circle at 50% 50%, rgb(158 5 255 / .18), transparent 65%); }
-.ds-panel__svg .link-network figcaption { text-align: center; }
 
 @media (max-width: 960px) {
   .ds-bento { grid-template-columns: 1fr; grid-template-rows: none; }
   .ds-bento__cell--0 { grid-row: auto; }
   .ds-bento__cell--0 .ds-card { min-height: 420px; }
-  .ds-home-hardware { grid-template-columns: 1fr; }
-  .ds-home-hardware__altitude { min-height: 118svh; }
-  .ds-home-hardware__altitude .floating-altitude { inset: 0 0 30%; }
 }
 
 .ds-statement--long { max-width: 34ch; font-size: var(--fs-h3); }
@@ -100,7 +84,6 @@ a.ds-contact__item:hover .ds-contact__arrow { transform: translate(3px, -3px); c
 .ds-404 p { color: var(--text-muted); }
 
 /* Network SVG frame */
-.ds-network { max-width: 820px; margin-inline: auto; padding: var(--s-6); border-radius: var(--r-3); border: 1px solid var(--line-2); background: radial-gradient(circle at 50% 45%, rgb(158 5 255 / .16), transparent 65%), var(--surface); }
 
 /* Altitude tour on design-system tokens */
 .altitude-tour-cards li { border-radius: var(--r-3); border-color: var(--line-2); background: var(--glass-strong); }

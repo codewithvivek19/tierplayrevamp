@@ -2,23 +2,33 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { anchorOrder, defaultPose, type StagePose } from "./CabinetStage";
+import { defaultPose, type StagePose } from "./CabinetStage";
 import { bindOrbit } from "./useStage";
-import type { AltitudeAnchor } from "./altitudeModel";
+import { anchorKeys, cabinetSpecs, type CabinetId } from "./cabinetModels";
+import CabinetSwitch from "./CabinetSwitch";
 
 const CabinetStage = dynamic(() => import("./CabinetStage"), { ssr: false });
 
 /** The equivalent of `target` closest to `current`, so turns take the short way round. */
 const nearest = (current: number, target: number) => current + Math.atan2(Math.sin(target - current), Math.cos(target - current));
 
-export type ExplorerPart = { anchor: AltitudeAnchor; label: string; title: string };
+export type ExplorerPart = { anchor: string; label: string; title: string };
+
+const presets = [
+  { value: 0, name: "Studio" },
+  { value: 1, name: "Casino floor" },
+  { value: 2, name: "Lights out" },
+] as const;
 
 /**
  * Free 360° viewer, inspired by React Bits ModelViewer: orbit with inertia, wheel/pinch/keyboard
  * zoom, double-click reset, slow auto-rotate until touched, and labelled parts that hide when
- * they face away. Opens in a native dialog so it never competes with page scrolling.
+ * they face away. Visitors can swap cabinets and relight the stage; in "Lights out" the pointer
+ * becomes a torch. Opens in a native dialog so it never competes with page scrolling.
  */
-export default function AltitudeExplorer({ open, onClose, parts }: { open: boolean; onClose: () => void; parts: ExplorerPart[] }) {
+export default function CabinetExplorer({ open, onClose, cabinet, onCabinet, partsFor }: {
+  open: boolean; onClose: () => void; cabinet: CabinetId; onCabinet: (id: CabinetId) => void; partsFor: (id: CabinetId) => ExplorerPart[];
+}) {
   const dialog = useRef<HTMLDialogElement>(null);
   const area = useRef<HTMLDivElement>(null);
   const pins = useRef<(HTMLButtonElement | null)[]>([]);
@@ -26,9 +36,14 @@ export default function AltitudeExplorer({ open, onClose, parts }: { open: boole
   const orbit = useRef<ReturnType<typeof bindOrbit> | null>(null);
   const auto = useRef(true);
   const spinYaw = useRef(-.55);
+  const cabinetRef = useRef(cabinet);
+  cabinetRef.current = cabinet;
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
   const [focus, setFocus] = useState<number | null>(null);
+  const [lights, setLights] = useState(0);
+  const parts = partsFor(cabinet);
+  const spec = cabinetSpecs[cabinet];
 
   useEffect(() => {
     const element = dialog.current;
@@ -43,6 +58,9 @@ export default function AltitudeExplorer({ open, onClose, parts }: { open: boole
     Object.assign(pose.current, { yaw: spinYaw.current, pitch: .12, distance: 6.4, targetY: 1.2, zoom: 1 });
     orbit.current?.reset();
   }, []);
+
+  useEffect(() => { setFocus(null); }, [cabinet]);
+  useEffect(() => { pose.current.lights = lights; }, [lights]);
 
   useEffect(() => {
     const element = area.current;
@@ -65,6 +83,10 @@ export default function AltitudeExplorer({ open, onClose, parts }: { open: boole
       if (touches.size === 2) { const [a, b] = [...touches.values()]; pinch = Math.hypot(a.x - b.x, a.y - b.y); startZoom = pose.current.zoom; }
     };
     const tmove = (event: PointerEvent) => {
+      // The pointer carries the torch light (mouse hover, or a finger while it is down).
+      const box = element.getBoundingClientRect();
+      pose.current.pointerX = Math.max(-1, Math.min(1, (event.clientX - box.left) / box.width * 2 - 1));
+      pose.current.pointerY = Math.max(-1, Math.min(1, (event.clientY - box.top) / box.height * 2 - 1));
       const point = touches.get(event.pointerId);
       if (!point) return;
       point.x = event.clientX; point.y = event.clientY;
@@ -72,6 +94,7 @@ export default function AltitudeExplorer({ open, onClose, parts }: { open: boole
     };
     const tup = (event: PointerEvent) => { touches.delete(event.pointerId); if (touches.size < 2) pinch = 0; };
     const key = (event: KeyboardEvent) => {
+      if ((event.target as Element | null)?.closest("button") && (event.key === "Enter" || event.key === " ")) return;
       if (event.key === "ArrowLeft") { auto.current = false; orbit.current?.nudge(-.05); }
       else if (event.key === "ArrowRight") { auto.current = false; orbit.current?.nudge(.05); }
       else if (event.key === "ArrowUp") { auto.current = false; orbit.current?.nudge(0, -.03); }
@@ -89,8 +112,8 @@ export default function AltitudeExplorer({ open, onClose, parts }: { open: boole
     // Like ModelViewer: auto-rotate yields the moment the visitor reaches for the model.
     const hold = (event: PointerEvent) => { if (event.pointerType === "mouse") auto.current = false; };
     element.addEventListener("pointerenter", hold);
-    dialog.current?.addEventListener("keydown", key);
     const dialogElement = dialog.current;
+    dialogElement?.addEventListener("keydown", key);
     return () => {
       cancelAnimationFrame(frame); orbit.current?.dispose(); orbit.current = null;
       element.removeEventListener("wheel", wheel);
@@ -102,40 +125,55 @@ export default function AltitudeExplorer({ open, onClose, parts }: { open: boole
     };
   }, [open, reset]);
 
-  const place = useCallback((points: Float32Array) => {
-    parts.forEach((part, i) => {
+  const place = useCallback((points: Float32Array, shown: CabinetId) => {
+    const order = anchorKeys(shown);
+    partsFor(cabinetRef.current).forEach((part, i) => {
       const pin = pins.current[i];
       if (!pin) return;
-      const k = anchorOrder.indexOf(part.anchor) * 3;
+      const k = order.indexOf(part.anchor) * 3;
       pin.style.transform = `translate3d(${points[k]}px, ${points[k + 1]}px, 0)`;
-      pin.dataset.visible = points[k + 2] > .05 ? "true" : "false";
+      pin.dataset.visible = shown === cabinetRef.current && k >= 0 && points[k + 2] > .05 ? "true" : "false";
     });
-  }, [parts]);
+  }, [partsFor]);
 
   // Hotspot: turn the part toward the viewer and move in close.
   const visit = (index: number) => {
     const part = parts[index];
+    const [yaw, targetY, zoom] = spec.focus[part.anchor] ?? [0, 1.2, 1];
     auto.current = false; setFocus(index);
-    const anchor = { screen: [-.1, 1.74, .6], ledEdge: [.6, 1.6, .7], billAcceptor: [-.2, 1.1, .45], ticketAcceptor: [.2, 1.1, .45], buttons: [.25, 1.04, .38], sidePanel: [-1.35, .9, .8], logo: [0, .9, .75] }[part.anchor];
     orbit.current?.reset();
-    Object.assign(pose.current, { yaw: nearest(pose.current.yaw + pose.current.drag, anchor[0]), targetY: anchor[1], zoom: anchor[2], pitch: .12 });
+    Object.assign(pose.current, { yaw: nearest(pose.current.yaw + pose.current.drag, yaw), targetY, zoom, pitch: .12 });
   };
 
-  return <dialog ref={dialog} className="altitude-explorer" aria-labelledby="altitude-explorer-title" onClose={onClose} onCancel={onClose}>
+  const swap = (id: CabinetId) => { if (id !== cabinet) { reset(); pose.current.power = 1; onCabinet(id); } };
+  const name = cabinet === "altitude" ? "Altitude" : "Pinnacle";
+
+  return <dialog ref={dialog} className="altitude-explorer" data-lights={lights} aria-labelledby="altitude-explorer-title" onClose={onClose} onCancel={onClose}>
     <div className="altitude-explorer-head">
-      <p className="tp-label">360° / Altitude Console</p>
-      <h2 id="altitude-explorer-title">Explore the Altitude</h2>
-      <p className="altitude-explorer-hint">Drag to orbit · scroll or pinch to zoom · double-click to reset · arrow keys and + / − work too</p>
+      <div>
+        <p className="tp-label">360° / {name} Console</p>
+        <h2 id="altitude-explorer-title">Explore the {name}</h2>
+        <p className="altitude-explorer-hint">Drag to orbit · scroll or pinch to zoom · double-click to reset · arrow keys and + / − work too</p>
+      </div>
+      <div className="altitude-explorer-controls">
+        <CabinetSwitch value={cabinet} onChange={swap} />
+        <div className="light-switch" role="group" aria-label="Stage lighting">
+          {presets.map((preset) => <button key={preset.value} type="button" aria-pressed={lights === preset.value} onClick={() => setLights(preset.value)}>
+            <i data-preset={preset.value} aria-hidden="true" />{preset.name}
+          </button>)}
+        </div>
+      </div>
     </div>
     <div ref={area} className="altitude-explorer-stage" data-ready={ready}>
-      {open && !failed ? <CabinetStage pose={pose} active={open} onProjectAll={place} onReady={() => setReady(true)} onFailure={() => setFailed(true)} /> : null}
+      {open && !failed ? <CabinetStage cabinet={cabinet} pose={pose} active={open} onProjectAll={place} onReady={() => setReady(true)} onFailure={() => setFailed(true)} /> : null}
       {failed ? <p className="altitude-explorer-fallback">3D is unavailable on this device.</p> : null}
-      {parts.map((part, i) => <button key={part.anchor} ref={b => { pins.current[i] = b; }} type="button" className="altitude-explorer-pin" onPointerEnter={() => { auto.current = false; }} onFocus={() => { auto.current = false; }} data-active={focus === i} onClick={() => visit(i)}>
+      {lights === 2 && !failed ? <p className="altitude-explorer-torch" aria-hidden="true">Move to shine a light</p> : null}
+      {parts.map((part, i) => <button key={`${cabinet}-${part.anchor}`} ref={b => { pins.current[i] = b; }} type="button" className="altitude-explorer-pin" data-visible="false" onPointerEnter={() => { auto.current = false; }} onFocus={() => { auto.current = false; }} data-active={focus === i} onClick={() => visit(i)}>
         <i aria-hidden="true" /><span>{part.label}</span>
       </button>)}
     </div>
     <div className="altitude-explorer-foot">
-      <p aria-live="polite">{focus === null ? "Select a highlighted part to inspect it." : parts[focus].title}</p>
+      <p aria-live="polite">{focus === null ? "Select a highlighted part to inspect it." : parts[focus]?.title}</p>
       <div>
         <button type="button" className="tp-link" onClick={reset}>Reset view</button>
         <button type="button" className="tp-button" onClick={onClose}>Close <span aria-hidden="true">×</span></button>

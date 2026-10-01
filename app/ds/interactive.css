@@ -68,14 +68,6 @@ a:hover .glare-hover img { transform: scale(1.04); }
 .altitude-tour:is([data-mode="still"], [data-mode="image"]) .altitude-tour-head { position: static; grid-column: 1; }
 .altitude-tour:is([data-mode="still"], [data-mode="image"]) .altitude-tour-cards { position: static; width: auto; grid-column: 1; gap: 10px; }
 .altitude-tour:is([data-mode="still"], [data-mode="image"]) .altitude-tour-cards li { grid-area: auto; opacity: 1; transform: none; visibility: visible; padding: 20px 22px; }
-.floating-altitude { position: absolute; inset: -10% -12% 250px -14%; touch-action: pan-y; cursor: grab; }
-.floating-altitude[data-dragging] { cursor: grabbing; }
-.floating-altitude-canvas { position: absolute; inset: 0; }
-.floating-altitude-light { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 36% 9% at 58% 93%, #7a2cff4d, transparent 70%), radial-gradient(circle at 58% 55%, #6d2bff1c, transparent 42%); }
-.floating-altitude-fallback { position: absolute; left: 58%; bottom: 3%; height: 80%; transform: translateX(-50%); object-fit: contain; filter: drop-shadow(0 30px 40px #000c); transition: opacity .5s; }
-.floating-altitude[data-ready="true"] .floating-altitude-fallback { opacity: 0; }
-.floating-altitude-hint { position: absolute; right: 16%; top: 22%; color: var(--v-dim); font: 500 10px/1 ui-monospace, Menlo, monospace; letter-spacing: .16em; text-transform: uppercase; }
-.floating-altitude-hint::before { content: "⟷"; display: block; margin-bottom: 8px; font-size: 16px; color: var(--v-soft); letter-spacing: 0; }
 .v2-pinnacle-stage { object-fit: cover; filter: brightness(.6) saturate(.9); }
 .v2-pinnacle-product { object-fit: contain; padding: 8% 18% 4%; transform: translateZ(50px); filter: drop-shadow(0 30px 34px #000d) drop-shadow(0 0 30px #9e05ff40); }
 .tilted-card-inner { overflow: hidden; border: 1px solid var(--v-line); background: #0f0d15; }
@@ -93,20 +85,6 @@ a:hover .glare-hover img { transform: scale(1.04); }
 .sticky-swap-step[data-active="true"] h3 { color: var(--violet-soft); }
 .sticky-swap-inline { display: none; position: relative; aspect-ratio: 4 / 3; margin-bottom: 26px; overflow: hidden; }
 .sticky-swap-inline img { object-fit: cover; }
-.game-reel { position: relative; }
-.game-reel-sticky { display: flex; flex-direction: column; justify-content: center; gap: clamp(24px, 3vw, 44px); }
-.game-reel[data-travel] .game-reel-sticky { position: sticky; top: 0; height: 100svh; padding-top: var(--header); overflow: hidden; }
-.game-reel-window { overflow: hidden; }
-.game-reel:not([data-travel]) .game-reel-window { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; padding-bottom: 6px; }
-.game-reel:not([data-travel]) .game-reel-track li { scroll-snap-align: start; }
-.game-reel-track { display: flex; gap: clamp(14px, 1.6vw, 24px); width: max-content; margin: 0; padding: 0 var(--gutter); list-style: none; }
-.game-reel-track li { width: min(40vw, 660px); }
-.game-reel-card { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; background: #15121b; }
-.game-reel-card img { object-fit: cover; }
-.game-reel-card::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, #08070cf0, transparent 50%); }
-.game-reel-meta { position: absolute; z-index: 3; left: clamp(20px, 2.4vw, 34px); right: clamp(20px, 2.4vw, 34px); bottom: clamp(20px, 2.4vw, 30px); display: grid; gap: 12px; }
-.game-reel-meta b { font-size: clamp(32px, 3.4vw, 58px); font-weight: 500; letter-spacing: -.055em; line-height: .98; }
-.game-reel-meta i { font-style: normal; font-size: 13px; color: var(--v-soft); }
 /* ---------- Games ---------- */
 .logo-grid { --grid-rx: 0deg; --grid-ry: 0deg; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; perspective: 1200px; transform: rotateX(var(--grid-rx)) rotateY(var(--grid-ry)); transform-style: preserve-3d; transition: transform .6s var(--v-ease); }
 .logo-grid-tile { --lift: 0; transform: translateZ(calc(var(--lift) * 60px)) translateY(calc(var(--lift) * -8px)); transition: transform .5s var(--v-ease); }
@@ -174,22 +152,8 @@ a:hover .glare-hover img { transform: scale(1.04); }
 .gameplay-dialog-controls button { min-width: 48px; min-height: 44px; padding: 0 16px; border: 1px solid var(--v-line-strong); background: none; color: var(--v-text); cursor: pointer; }
 .gameplay-dialog-controls button:hover { background: #ffffff10; }
 .gameplay-dialog-close { margin-left: auto; }
-.link-network { margin: 0; }
-.link-network svg { width: 100%; height: auto; overflow: visible; }
-.link-network-orbit { fill: none; stroke: #ffffff14; stroke-dasharray: 2 6; }
-.link-network-path { stroke: #ffffff1c; stroke-width: 1; }
-.link-network-pulse { stroke: #c79bff; stroke-width: 2; stroke-linecap: round; stroke-dasharray: 18 400; stroke-dashoffset: 0; filter: drop-shadow(0 0 4px #9e05ff); animation: link-flow 2.8s linear infinite; }
-.link-network-machine { fill: #1a1624; stroke: #ffffff40; }
-.link-network-screen { fill: #2a55ff; opacity: .75; animation: link-blink 2.8s ease-in-out infinite; }
-.link-network-core { fill: #f4eff8; }
-.link-network-halo { animation: link-breathe 2.8s ease-in-out infinite; transform-origin: 300px 210px; }
-.link-network-ring { fill: none; stroke: #c79bff; stroke-width: 1.5; transform-origin: 300px 210px; animation: link-ring 2.8s ease-out infinite; }
-.link-network-ring-2 { animation-delay: 1.4s; }
-.link-network figcaption { margin-top: 16px; color: var(--v-dim); font-size: 13px; }
-@keyframes link-flow { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -418; } }
 @keyframes link-ring { from { transform: scale(.7); opacity: .9; } to { transform: scale(2.2); opacity: 0; } }
 @keyframes link-breathe { 50% { transform: scale(1.12); } }
-@keyframes link-blink { 50% { opacity: 1; fill: #05e6ff; } }
 /* ---------- Journey, CTA, contact { text-align: left; border-top: 1px solid var(--v-line); }
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px) {
@@ -201,17 +165,11 @@ a:hover .glare-hover img { transform: scale(1.04); }
 }
 @media (max-width: 860px) {
   .sticky-swap, .mechanic-switcher-body { grid-template-columns: 1fr; }
-  .floating-altitude { inset: 0 -6% 26% -6%; }
-  .floating-altitude-fallback { left: 50%; height: 88%; }
-  .floating-altitude-hint { right: 8%; top: 8%; }
   .sticky-swap-media { display: none; }
   .sticky-swap-inline { display: block; }
   .sticky-swap-step { min-height: 0; opacity: 1; padding-block: 30px; }
   .logo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .gameplay-gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .game-reel-window { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
-  .game-reel-window::-webkit-scrollbar { display: none; }
-  .game-reel-track li { width: 82vw; scroll-snap-align: center; }
   .altitude-tour-cards { left: 16px; right: 16px; width: auto; bottom: 74px; }
   .altitude-tour-cards li { padding: 20px 22px; }
   .altitude-tour-cards h3 { font-size: 26px; margin: 12px 0 8px; }
@@ -236,8 +194,6 @@ a:hover .glare-hover img { transform: scale(1.04); }
   .gameplay-gallery-games { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .link-network-pulse, .link-network-ring, .link-network-halo, .link-network-screen { animation: none; }
-  .link-network-ring { opacity: 0; }
   .logo-grid, .logo-grid-tile, .sticky-swap-frame, .mechanic-switcher-shot, .gameplay-gallery-grid li { transition: none; animation: none; transform: none; }
 }
 /* DepthText (React Bits, adapted): extruded type that inherits each heading's own typography. */
@@ -262,7 +218,7 @@ h1.depth-text, h2.depth-text { display: block; }
 .grid-scan, .grid-scan canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; display: block; }
 /* Cabinet 3D refinements (ModelViewer-inspired): fade-in, part pins, chapter progress, 360° viewer. */
 .cabinet-stage-canvas { transition: opacity .9s var(--v-ease); }
-.altitude-tour[data-ready="false"] .cabinet-stage-canvas, .altitude-explorer-stage[data-ready="false"] .cabinet-stage-canvas, .floating-altitude[data-ready="false"] .cabinet-stage-canvas { opacity: 0; }
+.altitude-tour[data-ready="false"] .cabinet-stage-canvas, .altitude-explorer-stage[data-ready="false"] .cabinet-stage-canvas { opacity: 0; }
 .altitude-tour-pins { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
 .altitude-tour-pin, .altitude-explorer-pin { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 10px; margin: -11px 0 0 -11px; padding: 0; border: 0; background: none; color: var(--v-text); cursor: pointer; pointer-events: auto; transition: opacity .35s; }
 .altitude-tour-pin[data-visible="false"], .altitude-explorer-pin[data-visible="false"] { opacity: 0; pointer-events: none; }
@@ -296,4 +252,42 @@ h1.depth-text, h2.depth-text { display: block; }
   .altitude-tour-pin span { display: none; }
   .altitude-explorer-foot { flex-direction: column; align-items: flex-start; }
   .altitude-explorer-pin span { font-size: 9px; padding: 4px 6px; }
+}
+
+/* Cabinet switcher (tour + 360° viewer) */
+.cabinet-switch { position: relative; pointer-events: auto; display: inline-grid; grid-template-columns: 1fr 1fr; margin-top: 16px; padding: 4px; border: 1px solid var(--v-line-strong); border-radius: 999px; background: #0d0b14c4; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.cabinet-switch__thumb { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); border-radius: 999px; background: linear-gradient(135deg, #9e05ff38, #2a55ff2e); border: 1px solid #b58cff70; box-shadow: 0 0 22px -6px var(--led-violet), inset 0 1px 0 #ffffff24; transition: transform .45s var(--v-ease); pointer-events: none; }
+.cabinet-switch[data-value="pinnacle"] .cabinet-switch__thumb { transform: translateX(100%); }
+.cabinet-switch button { position: relative; display: grid; justify-items: center; gap: 2px; min-width: 104px; min-height: 44px; padding: 6px 16px; border: 0; border-radius: 999px; background: none; color: var(--v-dim); cursor: pointer; transition: color .25s; }
+.cabinet-switch button b { font-size: 13px; font-weight: 500; }
+.cabinet-switch button small { font: 500 9px/1 ui-monospace, Menlo, monospace; letter-spacing: .14em; text-transform: uppercase; opacity: .7; }
+.cabinet-switch button[aria-pressed="true"], .cabinet-switch button:hover { color: var(--v-text); }
+.cabinet-switch button:focus-visible { outline: 2px solid var(--led-cyan); outline-offset: 2px; }
+.altitude-tour-head .cabinet-switch { display: grid; width: max-content; }
+.altitude-tour:is([data-mode="still"], [data-mode="image"]) .altitude-tour-head { pointer-events: auto; }
+
+/* 360° viewer controls */
+.altitude-explorer-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px 32px; }
+.altitude-explorer-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.altitude-explorer-controls .cabinet-switch { margin-top: 0; }
+.light-switch { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--v-line-strong); border-radius: 999px; background: #0d0b14c4; }
+.light-switch button { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border: 1px solid transparent; border-radius: 999px; background: none; color: var(--v-dim); font-size: 12px; cursor: pointer; transition: color .25s, background .25s, border-color .25s; }
+.light-switch button:hover { color: var(--v-text); }
+.light-switch button[aria-pressed="true"] { color: var(--v-text); background: #ffffff10; border-color: var(--v-line-strong); }
+.light-switch button:focus-visible { outline: 2px solid var(--led-cyan); outline-offset: 2px; }
+.light-switch i { width: 10px; height: 10px; border-radius: 50%; background: #fff3ea; box-shadow: 0 0 10px #fff3ea; }
+.light-switch i[data-preset="1"] { background: var(--led-violet); box-shadow: 0 0 10px var(--led-violet), 6px 0 10px -2px var(--led-cyan); }
+.light-switch i[data-preset="2"] { background: #1a1428; box-shadow: inset 0 0 0 1px #ffffff40; }
+.altitude-explorer { transition: background-color .6s; }
+.altitude-explorer[data-lights="2"] { background: radial-gradient(ellipse 60% 55% at 50% 58%, #0c0816 0%, #030206 72%); }
+.altitude-explorer-torch { position: absolute; left: 50%; top: 18px; transform: translateX(-50%); padding: 8px 14px; border-radius: 999px; border: 1px solid var(--v-line-strong); background: #0d0b14b0; color: var(--v-soft); font: 500 10px/1 ui-monospace, Menlo, monospace; letter-spacing: .14em; text-transform: uppercase; pointer-events: none; animation: v2-fade .5s var(--v-ease); }
+@media (max-width: 820px) {
+  .altitude-tour-head .cabinet-switch { margin-top: 8px; }
+  .cabinet-switch button { min-width: 88px; padding: 4px 12px; }
+  .altitude-explorer-head { padding-top: 18px; }
+  .altitude-explorer-hint { display: none; }
+  .light-switch button { padding: 0 10px; font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cabinet-switch__thumb { transition: none; }
 }

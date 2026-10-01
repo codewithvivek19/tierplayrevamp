@@ -11,7 +11,7 @@ const fragment = /* glsl */ `
 precision highp float;
 uniform vec2 uResolution; uniform float uTime; uniform vec2 uSkew; uniform float uYaw; uniform float uTilt;
 uniform vec3 uLines; uniform vec3 uScan; uniform float uGridScale; uniform float uThickness;
-uniform float uScanOpacity; uniform float uBloom; uniform float uChroma; uniform float uNoise;
+uniform float uScanOpacity; uniform float uBloom; uniform float uChroma; uniform float uNoise; uniform float uPortrait;
 
 float smoother01(float a,float b,float x){float t=clamp((x-a)/max(1e-5,b-a),0.,1.);return t*t*t*(t*(t*6.-15.)+10.);}
 float gridLine(vec2 g,float halfPx){
@@ -21,6 +21,9 @@ float gridLine(vec2 g,float halfPx){
 }
 vec3 shade(vec2 fragCoord,out float alpha){
   vec2 p=(2.*fragCoord-uResolution)/uResolution.y;
+  // Portrait screens: frame the tunnel by width as a landscape view would, so its walls stay in frame
+  // and the floor and ceiling grids fill the tall space instead of collapsing into a thin band.
+  p=mix(p,(2.*fragCoord-uResolution)/uResolution.x*1.5,uPortrait);
   vec3 rd=normalize(vec3(p,2.));
   float cR=cos(uTilt),sR=sin(uTilt); rd.xy=mat2(cR,-sR,sR,cR)*rd.xy;
   float cY=cos(uYaw),sY=sin(uYaw); rd.xz=mat2(cY,-sY,sY,cY)*rd.xz;
@@ -36,15 +39,15 @@ vec3 shade(vec2 fragCoord,out float alpha){
     uv=use?mix(h.zy,h.xz,isY)/uGridScale:uv; minT=use?t:minT; isYHit=use?isY:isYHit;
   }
   vec3 hit=rd*minT; float dist=length(hit);
-  float lines=gridLine(uv,uThickness*.5);
+  float lines=gridLine(uv,uThickness*(.5+uPortrait*.35));
   float fade=exp(-dist*2.);
   float dur=2.4,del=1.8; float cyc=mod(uTime,dur+del);
   float phase=clamp((cyc-del)/dur,0.,1.);
   float dz=abs(hit.z-phase*2.); float sigma=.09;
   float window=smoother01(0.,.2,phase)*(1.-smoother01(.8,1.,phase));
-  float pulse=exp(-.5*dz*dz/(sigma*sigma))*window*uScanOpacity;
+  float pulse=exp(-.5*dz*dz/(sigma*sigma))*window*uScanOpacity*(1.+uPortrait*.5);
   float aura=exp(-.5*dz*dz/(sigma*sigma*4.))*.25*window*uScanOpacity;
-  vec3 col=uLines*lines*fade+uScan*(pulse+aura)+uScan*lines*pulse*1.4;
+  vec3 col=uLines*(1.+uPortrait*1.6)*lines*fade+uScan*(pulse+aura)+uScan*lines*pulse*1.4;
   float glow=gridLine(uv,uThickness*1.6)*fade;
   alpha=clamp(max(max(lines*fade,pulse),glow*uBloom),0.,1.);
   return col;
@@ -93,7 +96,7 @@ export default function GridScan({ linesColor = "#2F293A", scanColor = "#FF9FFC"
       uniforms: {
         uResolution: { value: new Vector2(1, 1) }, uTime: { value: 0 }, uSkew: { value: new Vector2() }, uYaw: { value: 0 }, uTilt: { value: 0 },
         uLines: { value: toVec(linesColor) }, uScan: { value: toVec(scanColor) }, uGridScale: { value: gridScale }, uThickness: { value: lineThickness },
-        uScanOpacity: { value: scanOpacity }, uBloom: { value: bloomIntensity }, uChroma: { value: chromaticAberration }, uNoise: { value: noiseIntensity },
+        uScanOpacity: { value: scanOpacity }, uBloom: { value: bloomIntensity }, uChroma: { value: chromaticAberration }, uNoise: { value: noiseIntensity }, uPortrait: { value: 0 },
       },
     });
     const geometry = new PlaneGeometry(2, 2);
@@ -103,20 +106,25 @@ export default function GridScan({ linesColor = "#2F293A", scanColor = "#FF9FFC"
       const { width, height } = element.getBoundingClientRect();
       renderer.setSize(width, height, false);
       material.uniforms.uResolution.value.set(width * renderer.getPixelRatio(), height * renderer.getPixelRatio());
+      material.uniforms.uPortrait.value = height > width * 1.15 ? 1 : 0;
     };
     resize();
     const sizeObserver = new ResizeObserver(resize); sizeObserver.observe(element);
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const goal = new Vector2(), skew = new Vector2();
+    let lastMouse = -1e9;
     const move = (event: PointerEvent) => {
       if (event.pointerType !== "mouse") return;
+      lastMouse = performance.now();
       const box = element.getBoundingClientRect();
       goal.set(((event.clientX - box.left) / box.width - .5) * sensitivity * .9, -((event.clientY - box.top) / box.height - .5) * sensitivity * .5);
     };
     let frame = 0, visible = false, last = performance.now(), time = 0;
     const draw = (now: number) => {
       const dt = Math.min((now - last) / 1000, .05); last = now; time += dt;
-      skew.lerp(goal, 1 - Math.exp(-dt * 4));
+      // Touch screens (or an idle mouse) get a slow autonomous drift so the grid keeps moving.
+      if (now - lastMouse > 2500) goal.set(Math.sin(time * .32) * sensitivity * .3, Math.cos(time * .23) * sensitivity * .06);
+      skew.lerp(goal, 1 - Math.exp(-dt * (now - lastMouse > 2500 ? 1.2 : 4)));
       material.uniforms.uTime.value = time;
       material.uniforms.uSkew.value.copy(skew);
       material.uniforms.uYaw.value = skew.x * .35;

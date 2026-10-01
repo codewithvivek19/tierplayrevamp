@@ -18,9 +18,13 @@ test("fireball remains luminous through both directions of the pillar handoff",a
     for(let i=0;i<data.length;i+=info.channels){const r=data[i],g=data[i+1],b=data[i+2];if(b>110&&b>g*1.35&&r>45)energy++;}
     expect(energy,`energy field at progress ${progress}`).toBeGreaterThan(200);
     if(progress >= .88){
-      const column=await sharp(frame).extract({left:690,top:210,width:60,height:310}).removeAlpha().raw().toBuffer();
+      // The finale frames the gateway on the right third beside the copy, so find the pillar's column
+      // across the gateway area instead of assuming the old centred framing.
+      const {data:region,info:meta}=await sharp(frame).extract({left:500,top:210,width:800,height:310}).removeAlpha().raw().toBuffer({resolveWithObject:true});
+      const lit=new Uint32Array(meta.width);
+      for(let y=0;y<meta.height;y++) for(let x=0;x<meta.width;x++){const i=(y*meta.width+x)*3;if(region[i]>120&&region[i+2]>155&&region[i+2]>region[i+1]*1.12)lit[x]++;}
       let filament=0;
-      for(let i=0;i<column.length;i+=3) if(column[i]>120 && column[i+2]>155 && column[i+2]>column[i+1]*1.12)filament++;
+      for(let x=0;x+60<=meta.width;x+=4){let sum=0;for(let k=0;k<60;k++)sum+=lit[x+k];filament=Math.max(filament,sum);}
       expect(filament,'the upper pillar light remains visible, not just its source sphere').toBeGreaterThan(100);
     }
     await expect(page.locator('canvas')).toHaveCount(1);

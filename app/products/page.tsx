@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Boxes, Layers, Link2, Sparkles } from "lucide-react";
+import { Boxes, Layers, Sparkles } from "lucide-react";
 import PageHero from "@/components/ds/PageHero";
 import Reveal from "@/components/site/Reveal";
-import LinkJackpotNetwork from "@/components/site/LinkJackpotNetwork";
+import SystemsSwitcher from "@/components/site/SystemsSwitcher";
 import ScrollReveal from "@/components/reactbits/ScrollReveal";
-import { Button, CheckList, GlassCard, Label, Note, SectionHeader } from "@/components/ds/primitives";
-import { Tabs } from "@/components/ds/interactive";
-import { legacyNotice, productPillars, products } from "@/content/site";
+import { Button, GlassCard, Label, Note, SectionHeader } from "@/components/ds/primitives";
+import { legacyNotice, productPillars } from "@/content/site";
 
 export const metadata: Metadata = { title: "Products", description: "Collection management for operators. Linked jackpots for the game floor." };
 
@@ -26,24 +25,8 @@ export default function ProductsPage() {
     </section>
 
     <section className="ds-section ds-container" id="systems">
-      <SectionHeader icon={Boxes} label="The systems" title="What connects the floor." blurb="Two systems, each with a clear role." />
-      <Tabs label="Tierplay systems" items={products.map((product, i) => ({
-        id: product.code, label: product.name,
-        content: <div className="ds-panel">
-          <div>
-            <span className="ds-card__label">0{i + 1} / {product.code}</span>
-            <h3>{product.name}</h3>
-            <p className="ds-panel__text">{product.copy}</p>
-            <CheckList items={product.features} />
-          </div>
-          <div className="ds-panel__media"><Image src={product.image} alt="" fill sizes="(max-width: 960px) 100vw, 50vw" /></div>
-        </div>,
-      }))} />
-    </section>
-
-    <section className="ds-section ds-container">
-      <SectionHeader icon={Link2} label="Tierplay Link Jackpot" title="One location. One shared jackpot." blurb={products[1].copy} />
-      <Reveal className="ds-network"><LinkJackpotNetwork /></Reveal>
+      <SectionHeader icon={Boxes} label="The systems" title="What connects the floor." blurb="Two systems, each with a clear role. Switch between them to see how each one connects the floor." />
+      <SystemsSwitcher action={false} />
     </section>
 
     <section className="ds-section ds-container">

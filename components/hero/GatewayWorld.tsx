@@ -143,8 +143,10 @@ export function GatewayArchitecture({ sequence }: { sequence: PortalState }) {
     ringGlow.current.forEach((m, i) => { if (m) m.color.copy(light).multiplyScalar(.3 + smooth(finale, .06 + i * .13, .26 + i * .13) * 4.2); });
     const climb = smooth(finale, .2, .68);
     seams.current.forEach(g => { if (g) g.scale.y = .04 + climb * .96; });
-    if (lowLight.current) lowLight.current.intensity = 32 * (1 + finale * 1.6);
-    if (highLight.current) highLight.current.intensity = 52 * (1 + finale * 1.2);
+    // Lights live outside the hidden group and fade with the reveal: toggling a light's visibility
+    // changes the scene's light count, which recompiles every lit shader mid-scroll.
+    if (lowLight.current) lowLight.current.intensity = 32 * (1 + finale * 1.6) * a;
+    if (highLight.current) highLight.current.intensity = 52 * (1 + finale * 1.2) * a;
     uniforms.uTime.value = sequence.time; uniforms.uReveal.value = smooth(sequence.progress, .64, .87);
     // Update the actual material uniforms: each mounted shader owns its uniform map.
     for (const shader of shaders.current) {
@@ -152,7 +154,10 @@ export function GatewayArchitecture({ sequence }: { sequence: PortalState }) {
       if (shader.uniforms.uReveal) shader.uniforms.uReveal.value = uniforms.uReveal.value;
     }
   });
-  return <group ref={root} position={[0, -3.8, 0]}>
+  return <>
+  <pointLight ref={lowLight} position={[0, -1.3, -15]} intensity={0} color="#b7a0d3" distance={22}/>
+  <pointLight ref={highLight} position={[0, 5.2, -14]} intensity={0} color="#e3ddf6" distance={20}/>
+  <group ref={root} position={[0, -3.8, 0]}>
     {/* An environmental gateway, never a representation of a Tierplay cabinet. */}
     <mesh castShadow receiveShadow position={[0, 12.6, -16]} material={material} geometry={lintel} dispose={null}/>
     <group ref={rings} position={[0, 9.5, -16]}>
@@ -168,13 +173,12 @@ export function GatewayArchitecture({ sequence }: { sequence: PortalState }) {
       {[0, 1, 2, 3, 4].map(i => <mesh key={i} castShadow receiveShadow geometry={stones} material={cliffMaterial} dispose={null} position={[side * (3.4 + random(i + side) * .8), .05, 7 - i * 5]} rotation={[random(i) * 2, i * 1.9, random(i + 4)]} scale={[.45 + random(i + 7) * .4, .22 + random(i + 2) * .2, .4 + random(i + 3) * .3]}/>)}
     </group>)}
     {[0, 1, 2, 3, 4, 5].map(i => <mesh castShadow receiveShadow key={i} material={material} position={[0, i * .09, -12 - i * .55]}><boxGeometry args={[8.5, .14, .6]}/></mesh>)}
-    <pointLight ref={lowLight} position={[0, 2.5, -15]} intensity={32} color="#b7a0d3" distance={22}/>
-    <pointLight ref={highLight} position={[0, 9, -14]} intensity={52} color="#e3ddf6" distance={20}/>
     {[-10, -22, -32].map((z, i) => <mesh key={z} position={[0, .8 + i * .4, z]} scale={[35, 4, 1]}><planeGeometry/><shaderMaterial vertexShader={vertex} fragmentShader={mistFragment} uniforms={uniforms} transparent depthWrite={false}/></mesh>)}
     {[-1, 1].map(side => <group key={`cliffs-${side}`}>
       {Array.from({ length: 9 }, (_, i) => <group key={i} position={[side * (11 + random(i + 81) * 11), 0, -23 - i * 4]}>
         <mesh castShadow receiveShadow geometry={cliff} material={cliffMaterial} dispose={null} position={[0, 3, 0]} rotation={[0, i * 1.7, 0]} scale={[2.4 + random(i) * 2.2, 8 + random(i + 7) * 7, 3.2]}/>
       </group>)}
     </group>)}
-  </group>;
+  </group>
+  </>;
 }

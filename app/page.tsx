@@ -1,17 +1,15 @@
 import Image from "next/image";
-import { Boxes, Gamepad2, Layers, Monitor, Route, Sparkles } from "lucide-react";
+import { Boxes, Gamepad2, Layers, Route, Sparkles } from "lucide-react";
 import Reveal from "@/components/site/Reveal";
 import BattleHero from "@/components/site/BattleHero";
-import FloatingAltitude from "@/components/cabinet3d/FloatingAltitude";
+import CabinetShowroom from "@/components/cabinet3d/CabinetShowroom";
 import GameReel from "@/components/site/GameReel";
-import LinkJackpotNetwork from "@/components/site/LinkJackpotNetwork";
-import TiltedCard from "@/components/reactbits/TiltedCard";
+import SystemsSwitcher from "@/components/site/SystemsSwitcher";
 import ScrollReveal from "@/components/reactbits/ScrollReveal";
-import { Button, CheckList, GlassCard, Label, Marquee, Note, SectionHeader } from "@/components/ds/primitives";
-import { Steps, Tabs } from "@/components/ds/interactive";
-import { cabinets, gameplay, games, journey, products } from "@/content/site";
+import { Button, GlassCard, Label, Marquee, Note, SectionHeader } from "@/components/ds/primitives";
+import { Steps } from "@/components/ds/interactive";
+import { gameplay, games, journey } from "@/content/site";
 
-const [altitude, pinnacle] = cabinets;
 
 const pillars = [
   { title: "Sunscape games", text: "Six boards and fifteen named games, each with its own world.", href: "/games", image: "/media/generated/theme-v3/gaming-floor-editorial-v5.webp", tone: "violet" as const, label: "01 / Games" },
@@ -38,55 +36,22 @@ export default function Home() {
       </div>
     </section>
 
-    <section className="ds-section ds-container" id="cabinets">
-      <SectionHeader icon={Monitor} label="The hardware" title="Altitude. Pinnacle." blurb="Turn the Altitude in 3D, then meet the curved-screen Pinnacle." />
-      <div className="ds-home-hardware">
-        <div className="ds-home-hardware__altitude">
-          <FloatingAltitude fallback={altitude.image} />
-          <div className="ds-home-hardware__copy">
-            <span className="ds-card__label">01 / {altitude.label}</span>
-            <h3>{altitude.name}</h3>
-            <p>{altitude.copy}</p>
-            <Button href="/cabinets" variant="ghost">Tour the Altitude</Button>
-          </div>
-        </div>
-        <Reveal className="ds-home-hardware__pinnacle">
-          <TiltedCard>
-            <Image src="/media/generated/theme-v3/cabinet-stage-pinnacle-v5.webp" alt="" fill sizes="(max-width: 960px) 100vw, 36vw" className="v2-pinnacle-stage" />
-            <Image src={pinnacle.image} alt={`${pinnacle.name} cabinet`} fill sizes="(max-width: 960px) 100vw, 36vw" className="v2-pinnacle-product" />
-          </TiltedCard>
-          <div className="ds-home-hardware__copy">
-            <span className="ds-card__label">02 / {pinnacle.label}</span>
-            <h3>{pinnacle.name}</h3>
-            <p>{pinnacle.copy}</p>
-            <Button href="/cabinets#cabinet-compare" variant="ghost">Compare cabinets</Button>
-          </div>
-        </Reveal>
-      </div>
-    </section>
+    <CabinetShowroom />
 
-    <section className="ds-section ds-home-games" id="games">
+    <section className="ds-home-games" id="games">
       <GameReel games={games}
-        header={<div key="reel-header" className="ds-container"><SectionHeader icon={Gamepad2} label="Selected games" title="The Sunscape lineup." blurb={<>Six boards, fifteen named games. <a className="ds-inline-link" href="/games-collection">View all boards</a></>} /></div>}
-        footer={<div key="reel-footer" className="ds-container"><Note tone="market">not available for Georgia market</Note></div>} />
+        aside={<>
+          <Label icon={Gamepad2}>Selected games</Label>
+          <h2 className="lineup__title">The Sunscape lineup.</h2>
+          <p className="lineup__blurb">Six boards, fifteen named games. Each game features free spins, nudges, bonus rounds and jackpots.</p>
+          <Button href="/games-collection" variant="ghost">View all boards</Button>
+        </>}
+        footer={<div className="lineup__note"><Note tone="market">not available for Georgia market</Note></div>} />
     </section>
 
     <section className="ds-section ds-container" id="systems">
       <SectionHeader icon={Boxes} label="Connected products" title="Behind every play." blurb="Collection management and linked jackpots support different parts of the floor." />
-      <Tabs label="Tierplay systems" items={products.map((product, i) => ({
-        id: product.code,
-        label: product.code === "TCM" ? "Collection management" : "Link Jackpot",
-        content: <div className="ds-panel">
-          <div>
-            <span className="ds-card__label">0{i + 1} / {product.code}</span>
-            <h3>{product.name}</h3>
-            <p className="ds-panel__text">{product.copy}</p>
-            <CheckList items={product.features} />
-            <div className="ds-actions" style={{ marginTop: "var(--s-5)" }}><Button href="/products" variant="ghost">Explore products</Button></div>
-          </div>
-          <div className="ds-panel__media">{product.code === "TLJ" ? <div className="ds-panel__svg"><LinkJackpotNetwork /></div> : <Image src={product.image} alt="" fill sizes="(max-width: 960px) 100vw, 50vw" />}</div>
-        </div>,
-      }))} />
+      <SystemsSwitcher />
     </section>
 
     <section className="ds-section ds-container" id="journey">

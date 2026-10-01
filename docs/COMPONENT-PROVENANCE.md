@@ -18,8 +18,8 @@ Imported UI primitives, where they came from, and how they were changed for Tier
 | FlowingMenu | `components/reactbits/FlowingMenu.tsx` | `/games-collection` | Rows are real Next links with visible detail text and thumbnails. The marquee runs only while a row is hovered or focused; the source animated every row forever. Tweens are killed on unmount. |
 
 | DepthText | `components/reactbits/DepthText.tsx` | Homepage h1 and gateway h2, every interior h1, board rows, game reel titles, footer "Tierplay." | Inherits each heading's font, size and colour instead of fixed props. Supports line breaks and an accent phrase, and wraps on narrow screens. Layers draw through CSS `attr(data-text)`, so textContent, search and copy see the text once. The loop runs only while on screen. Reduced motion shows a static angle. The prop names match the React Bits API. |
-| GridScan | `components/reactbits/GridScan.tsx` | Footer background | Webcam face tracking (`face-api.js`) removed in favour of pointer skew. The `postprocessing` bloom, chromatic aberration and noise are folded into the shader, so neither dependency is added. Plain three.js with no React Three Fiber. The WebGL context is created only when the footer comes near and pauses off screen. Reduced motion draws one still frame. |
-| ModelViewer (reference) | `components/cabinet3d/useStage.ts` `bindOrbit`, `AltitudeExplorer.tsx` | Cabinets tour, homepage Altitude, 360° viewer | Interaction model only; no code copied wholesale. It borrows inertia orbit (0.925 decay), the 8px touch decision between rotate and scroll, hover tilt, wheel and pinch zoom, fade-in, and auto-rotate that stops on interaction. Custom additions: a spring back to the scroll-tour pose, clickable part hotspots with shortest-turn focus, keyboard orbit and zoom, and double-click reset. |
+| GridScan | `components/reactbits/GridScan.tsx` | Footer background | Portrait screens frame the tunnel by width with brighter lines; idle/touch drift replaces pointer skew when no mouse moves. Webcam face tracking (`face-api.js`) removed in favour of pointer skew. The `postprocessing` bloom, chromatic aberration and noise are folded into the shader, so neither dependency is added. Plain three.js with no React Three Fiber. The WebGL context is created only when the footer comes near and pauses off screen. Reduced motion draws one still frame. |
+| ModelViewer (reference) | `components/cabinet3d/useStage.ts` `bindOrbit`, `CabinetExplorer.tsx` | Cabinets hero and tour, homepage showroom, 360° viewer | Interaction model only; no code copied wholesale. It borrows inertia orbit (0.925 decay), the 8px touch decision between rotate and scroll, hover tilt, wheel and pinch zoom, fade-in, and auto-rotate that stops on interaction. Custom additions: a spring back to the scroll-tour pose, clickable part hotspots with shortest-turn focus, keyboard orbit and zoom, and double-click reset. |
 
 Masonry was retrieved for evaluation but not used.
 
@@ -48,12 +48,17 @@ Two local components solve related problems. Both are Tierplay code written for 
 
 The Smooth Scroll Slider takes over wheel input inside its rail. Review that behaviour before adopting it for page-level content.
 
-## Three.js cabinet
+## Three.js cabinets
 
-- **Model:** `public/media/models/cabinet-altitude.glb`, a compressed copy of the Tierplay-supplied Altitude cabinet. The former 5 MB copy was removed after checking the tour, 360° viewer and homepage rendering.
-- **Embedded screen artwork:** `titan-link-6-flat-screen`.
-- `components/cabinet3d/altitudeModel.ts` merges the 882 source meshes into one mesh per material, 13 in total.
-- **Lighting:** drei `Environment` with `Lightformer`s, rendered locally with no CDN HDRI; a key spotlight; rim lights; contact shadows; additive LED glow sprites.
+- **Models:**
+  - `public/media/models/cabinet-altitude.glb`, a compressed copy of the Tierplay-supplied Altitude cabinet ("CABINET 1.glb"; embedded screen artwork `titan-link-6-flat-screen`).
+  - `public/media/models/cabinet-pinnacle.glb`, a compressed copy of the Tierplay-supplied curved Pinnacle cabinet ("CABINET 2.glb", 28 named materials).
+  - Both were compressed with `@gltf-transform/cli` 4.3 using meshopt and WebP, with materials kept separate (`--palette false`).
+- `components/cabinet3d/cabinetModels.ts` merges each model's meshes into one mesh per material. It adds a screen power-on shader patch and a mirrored, fading floor reflection that shares the merged geometry.
+- **Lighting:**
+  - drei `Environment` with `Lightformer` strip softboxes, rendered locally with no CDN HDRI.
+  - A key spotlight, violet/cyan rims, a pointer-following torch, a periodic sweep spotlight and a screen-spill `RectAreaLight`.
+  - Contact shadows, and three's `UnrealBloomPass` + `OutputPass` for LED and screen bloom.
 
 ## Design reference and icons
 

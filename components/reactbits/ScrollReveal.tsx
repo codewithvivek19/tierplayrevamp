@@ -18,7 +18,7 @@ export default function ScrollReveal({ children, as = "p", className = "" }: { c
   useGSAP(() => {
     const element = ref.current;
     if (!element || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    gsap.fromTo(element.querySelectorAll(".scroll-reveal-word"), { opacity: 0.14 }, {
+    gsap.fromTo(element.querySelectorAll(".scroll-reveal-word"), { opacity: 0.42 }, {
       opacity: 1, ease: "none", stagger: 0.05,
       scrollTrigger: { trigger: element, start: "top 85%", end: "bottom 45%", scrub: true },
     });

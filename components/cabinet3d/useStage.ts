@@ -34,8 +34,10 @@ export function useStageMode(): [StageMode, () => void] {
 export function useStageVisibility(ref: RefObject<HTMLElement | null>) {
   const [near, setNear] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [element, setElement] = useState<HTMLElement | null>(null);
+  // Re-observe when the referenced element changes (e.g. a component swaps its static and live markup).
+  useEffect(() => { if (ref.current !== element) setElement(ref.current); });
   useEffect(() => {
-    const element = ref.current;
     if (!element) return;
     const nearObserver = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) setNear(true); }, { rootMargin: "600px 0px" });
     let onScreen = false;
@@ -45,7 +47,7 @@ export function useStageVisibility(ref: RefObject<HTMLElement | null>) {
     visibleObserver.observe(element);
     document.addEventListener("visibilitychange", sync);
     return () => { nearObserver.disconnect(); visibleObserver.disconnect(); document.removeEventListener("visibilitychange", sync); };
-  }, [ref]);
+  }, [element]);
   return { near, visible };
 }
 
