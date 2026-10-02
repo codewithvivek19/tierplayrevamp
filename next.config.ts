@@ -17,10 +17,11 @@ const csp = [
 
 const config: NextConfig = {
   reactStrictMode: true,
+  output: "export",
   // The Tierplay guide lives bottom-left; keep Next's development badge out of its way.
   devIndicators: { position: "bottom-right" },
   poweredByHeader: false,
-  images: { formats: ["image/avif", "image/webp"] },
+  images: { formats: ["image/avif", "image/webp"], unoptimized: true },
   async headers() {
     return [
       {
