@@ -12,6 +12,7 @@ import CabinetExplorer, { type ExplorerPart } from "./CabinetExplorer";
 import { anchorKeys, type CabinetId } from "./cabinetModels";
 import CabinetSwitch from "./CabinetSwitch";
 import { cabinets } from "@/content/site";
+import { smoothScrollTo } from "@/components/motion/scrollControl";
 
 const CabinetStage = dynamic(() => import("./CabinetStage"), { ssr: false });
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -154,7 +155,7 @@ export default function CabinetTour() {
       const match = location.hash.match(/^#(altitude|pinnacle)-3d$/);
       if (!match) return;
       choose(match[1] as CabinetId);
-      root.current?.scrollIntoView({ block: "start" });
+      if (root.current) smoothScrollTo(root.current);
     };
     // next/link updates the hash with pushState (no hashchange), so same-page links are caught on click.
     const click = (event: MouseEvent) => {
@@ -237,7 +238,7 @@ export default function CabinetTour() {
     const section = root.current;
     if (!section) return;
     const distance = section.offsetHeight - innerHeight;
-    scrollTo({ top: section.offsetTop + distance * (index / (chapters.length - 1)) + 2 });
+    smoothScrollTo(section.offsetTop + distance * (index / (chapters.length - 1)) + 2, { duration: 1.2 });
   };
 
   const showStage = mode === "live" || mode === "still";

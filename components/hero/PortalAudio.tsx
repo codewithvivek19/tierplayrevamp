@@ -3,39 +3,47 @@
 import { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 import type { PortalState } from "./portalState";
+import type { Score } from "./score";
 
-/** Optional synthesized atmosphere. Audio starts only after a deliberate click. */
+/**
+ * The hero's score (see score.ts). It starts only on a deliberate click, follows the story clocks
+ * every frame, and fades out when paused, hidden, or once the visitor has scrolled past the hero.
+ */
 export default function PortalAudio({ sequence, active, paused }: { sequence: PortalState; active: boolean; paused: boolean }) {
   const [enabled, setEnabled] = useState(false);
-  const engine = useRef<{ context: AudioContext; gain: GainNode; tone: OscillatorNode } | null>(null);
-  const toggle = () => {
-    if (!engine.current) {
-      try {
-        const context = new AudioContext();
-        const gain = context.createGain(); gain.gain.value = 0; gain.connect(context.destination);
-        const tone = context.createOscillator(); tone.type = "sine"; tone.frequency.value = 65;
-        const harmonic = context.createOscillator(); harmonic.type = "sine"; harmonic.frequency.value = 97.5;
-        const harmonicGain = context.createGain(); harmonicGain.gain.value = .18;
-        tone.connect(gain); harmonic.connect(harmonicGain); harmonicGain.connect(gain);
-        tone.start(); harmonic.start(); engine.current = { context, gain, tone };
-      } catch { return; }
+  const score = useRef<Score | null>(null);
+
+  const toggle = async () => {
+    if (!score.current) {
+      try { const { Score } = await import("./score"); score.current = new Score(); } catch { return; }
+      if (new URLSearchParams(location.search).has("debug-audio")) (window as unknown as { __tierplayScore: Score }).__tierplayScore = score.current;
     }
-    void engine.current.context.resume().catch(() => setEnabled(false));
-    setEnabled(value => !value);
+    const next = !enabled;
+    if (next) await score.current.start().catch(() => undefined);
+    setEnabled(next);
   };
+
   useEffect(() => {
+    const engine = score.current;
+    if (!engine) return;
+    let frame = 0;
+    const audible = () => enabled && active && !paused && !document.hidden;
     const tick = () => {
-      if (!engine.current) return;
-      const { context, gain, tone } = engine.current;
-      const p = sequence.progress;
-      const crossing = Math.exp(-Math.pow((p - .53) * 9, 2));
-      gain.gain.setTargetAtTime(enabled && active && !paused ? .025 + crossing * .025 : 0, context.currentTime, .25);
-      tone.frequency.setTargetAtTime(65 + crossing * 32 + p * 8, context.currentTime, .2);
+      engine.update({ raw: sequence.raw ?? 0, progress: sequence.progress, intro: sequence.intro ?? 0, finale: sequence.finale ?? 0 });
+      frame = requestAnimationFrame(tick);
     };
-    tick(); const timer = window.setInterval(tick, 120);
-    return () => clearInterval(timer);
+    const level = () => engine.setLevel(audible() ? 1 : 0);
+    level();
+    if (enabled) frame = requestAnimationFrame(tick);
+    document.addEventListener("visibilitychange", level);
+    return () => { cancelAnimationFrame(frame); document.removeEventListener("visibilitychange", level); };
   }, [enabled, active, paused, sequence]);
-  useEffect(() => () => { void engine.current?.context.close(); engine.current = null; }, []);
+  useEffect(() => () => { score.current?.close(); score.current = null; }, []);
+
   const label = enabled ? "Mute sound" : "Enable sound";
-  return <button type="button" className="portal-icon-button" aria-pressed={enabled} aria-label={label} title={label} onClick={toggle}>{enabled ? <Volume2 aria-hidden="true" size={15} strokeWidth={1.75}/> : <VolumeX aria-hidden="true" size={15} strokeWidth={1.75}/>}</button>;
+  return <button type="button" className="portal-icon-button portal-sound" data-on={enabled} aria-pressed={enabled} aria-label={label} title={label} onClick={toggle}>
+    {enabled ? <Volume2 aria-hidden="true" size={15} strokeWidth={1.75}/> : <VolumeX aria-hidden="true" size={15} strokeWidth={1.75}/>}
+    <span className="portal-sound__text" aria-hidden="true">{enabled ? "Sound on" : "Sound"}</span>
+    {enabled ? <span className="portal-sound__eq" aria-hidden="true"><i /><i /><i /></span> : null}
+  </button>;
 }

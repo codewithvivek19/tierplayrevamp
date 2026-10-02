@@ -1,5 +1,36 @@
 /* Page compositions built from DS components. */
 
+/* Campaign artwork contains typography: preserve the complete frame at every width. */
+.ds-page-hero.ds-page-hero--poster { min-height: 0; padding-block: calc(var(--header) + var(--s-9)) var(--s-8); }
+.ds-page-hero__editorial { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(28px, 4vw, 72px); align-items: center; }
+.ds-page-hero--poster .ds-page-hero__title h1 { font-size: clamp(2.75rem, 4.7vw, 5rem); }
+.ds-page-hero__poster { min-width: 0; overflow: hidden; border: 1px solid var(--line-2); border-radius: var(--r-3); background: var(--ink); }
+.ds-page-hero__poster img, .ds-cta-card__poster img { display: block; width: 100%; height: auto; }
+.ds-card.ds-card--poster { min-height: 0; justify-content: flex-start; }
+.ds-card--poster .ds-card__media { position: relative; inset: auto; z-index: auto; width: 100%; aspect-ratio: 4 / 3; border-bottom: 1px solid var(--line); }
+.ds-card--poster .ds-card__media img, .ds-steps__media img.campaign-poster { object-fit: contain; }
+.ds-card--poster .ds-card__media::after, .ds-card--poster .ds-card__glow { display: none; }
+.ds-card--poster:hover .ds-card__media img { transform: none; }
+.ds-card--poster .ds-card__body { padding-right: 64px; }
+.ds-card--poster .ds-card__arrow { top: auto; bottom: 22px; }
+.ds-bento.ds-bento--posters { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: auto; }
+.ds-bento--posters .ds-bento__cell--0 { grid-row: auto; }
+.ds-bento.ds-bento--posters .ds-card--poster { min-height: 0; }
+.ds-journey--posters .sticky-swap-media { height: auto; max-height: none; aspect-ratio: 4 / 3; }
+.ds-journey--posters .sticky-swap-frame { transform: none; transition-property: opacity; }
+.ds-journey--posters .sticky-swap-frame img, .ds-journey--posters .sticky-swap-inline img { object-fit: contain; }
+.ds-journey--posters .sticky-swap-progress { right: 0; top: 0; bottom: 0; }
+.ds-cta-card.ds-cta-card--poster { display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; min-height: 0; padding: 0; background: var(--surface); }
+.ds-cta-card--poster::before { display: none; }
+.ds-cta-card--poster > .ds-cta-card__poster { display: block; max-width: none; }
+.ds-cta-card--poster > .ds-cta-card__copy { padding: clamp(24px, 3vw, 48px); }
+@media (max-width: 960px) {
+  .ds-page-hero__editorial, .ds-cta-card.ds-cta-card--poster { grid-template-columns: 1fr; }
+  .ds-page-hero.ds-page-hero--poster { padding-top: calc(var(--header) + var(--s-7)); }
+  .ds-page-hero__poster { width: 100%; }
+  .ds-bento.ds-bento--posters { grid-template-columns: 1fr; }
+}
+
 .ds-inline-link { color: var(--text); border-bottom: 1px solid var(--line-3); transition: color var(--d-1), border-color var(--d-1); }
 .ds-inline-link:hover { color: var(--violet-soft); border-color: var(--violet-soft); }
 .ds-statement { max-width: 24ch; margin: var(--s-5) 0 var(--s-8); font-size: var(--fs-h2); font-weight: 400; letter-spacing: var(--track-heading); line-height: 1.15; }

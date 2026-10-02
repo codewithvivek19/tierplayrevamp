@@ -44,7 +44,7 @@ export default function GameReel({ games, aside, footer }: { games: typeof gameL
       const tween = gsap.to(rail, {
         x: () => -distance(), ease: "none",
         scrollTrigger: {
-          trigger: element, start: "top top", end: "bottom bottom", scrub: 0.6, invalidateOnRefresh: true, onRefreshInit: size,
+          trigger: element, start: "top top", end: "bottom bottom", scrub: 0.3, invalidateOnRefresh: true, onRefreshInit: size,
           onUpdate: (self) => {
             bar.current?.style.setProperty("transform", `scaleX(${self.progress.toFixed(3)})`);
             mark(Math.min(cards.length - 1, Math.round(self.progress * (cards.length - 1))));
@@ -69,7 +69,7 @@ export default function GameReel({ games, aside, footer }: { games: typeof gameL
           <span className="lineup__bar"><span ref={bar} /></span>
         </div>
       </div>
-      <div ref={windowRef} className="lineup__window">
+      <div ref={windowRef} className="lineup__window" data-lenis-prevent-horizontal>
         <ol ref={track} className="lineup__track">
           {games.map((game) => {
             const logo = logoFor(game.title);

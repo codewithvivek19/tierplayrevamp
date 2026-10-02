@@ -19,7 +19,7 @@ export function Tabs({ items, label, initial = 0 }: { items: readonly TabItem[];
     event.preventDefault(); setActive(next); refs.current[next]?.focus();
   };
   return <div className="ds-tabs">
-    <div className="ds-tabs__list" role="tablist" aria-label={label}>
+    <div className="ds-tabs__list" data-lenis-prevent-horizontal role="tablist" aria-label={label}>
       {items.map((item, i) => <button key={item.id} ref={(b) => { refs.current[i] = b; }} id={`${id}-t-${i}`} role="tab" type="button" aria-selected={i === active} aria-controls={`${id}-p-${i}`} tabIndex={i === active ? 0 : -1} onKeyDown={key} onClick={() => setActive(i)}>
         {item.icon}{item.label}
       </button>)}

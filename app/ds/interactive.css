@@ -213,7 +213,6 @@ h1.depth-text, h2.depth-text { display: block; }
 }
 /* GridScan (React Bits, adapted) behind the whole footer. */
 .site-footer { position: relative; isolation: isolate; overflow: hidden; }
-.site-footer > :not(.footer-gridscan) { position: relative; z-index: 1; }
 .footer-gridscan { position: absolute; inset: 0; z-index: 0; pointer-events: none; -webkit-mask-image: linear-gradient(transparent, #000 18%, #000 88%, transparent); mask-image: linear-gradient(transparent, #000 18%, #000 88%, transparent); }
 .grid-scan, .grid-scan canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; display: block; }
 /* Cabinet 3D refinements (ModelViewer-inspired): fade-in, part pins, chapter progress, 360° viewer. */

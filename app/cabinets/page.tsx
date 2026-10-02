@@ -71,7 +71,7 @@ export default function CabinetsPage() {
         </div>
       </Reveal>
       <Reveal>
-        <div className="ds-table-wrap" role="region" aria-label="Cabinet specifications table" tabIndex={0}>
+        <div className="ds-table-wrap" data-lenis-prevent-horizontal role="region" aria-label="Cabinet specifications table" tabIndex={0}>
           <table className="ds-table">
             <caption className="sr-only">Altitude and Pinnacle published specifications</caption>
             <thead><tr><th scope="col"><span className="sr-only">Specification</span></th><th scope="col">{altitude.name}<small>{altitude.label}</small></th><th scope="col">{pinnacle.name}<small>{pinnacle.label}</small></th></tr></thead>

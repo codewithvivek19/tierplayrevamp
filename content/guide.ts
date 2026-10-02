@@ -1,14 +1,29 @@
-import { boards, cabinetCapabilities, cabinets, company, gameMechanics, journey, products } from "./site";
+import { boards, cabinetCapabilities, cabinets, company, gameMechanics, gameplay, journey, products } from "./site";
 
 // The guide answers only from facts already published in content/site.ts. No pricing, no invented specs.
 export type GuideLink = { label: string; href: string };
-export type GuideAnswer = { text: string; bullets?: string[]; links?: GuideLink[]; chips?: string[] };
+export type GuideMedia = { image: string; label: string; href?: string; kind: "logo" | "cabinet" };
+export type GuideAnswer = { text: string; bullets?: string[]; links?: GuideLink[]; chips?: string[]; media?: GuideMedia[] };
 type Intent = { id: string; chip?: string; keywords: string[]; answer: () => GuideAnswer };
 
 const [altitude, pinnacle] = cabinets;
 const tcm = products.find((p) => p.code === "TCM")!;
 const tlj = products.find((p) => p.code === "TLJ")!;
 const allGames = boards.flatMap((b) => b.games.map((g) => ({ game: g, board: b })));
+const logo = (title: string): GuideMedia | null => {
+  const entry = gameplay.find((g) => g.title === title);
+  return entry ? { image: entry.logo, label: entry.title, href: `/our_games/${entry.board}`, kind: "logo" } : null;
+};
+const cabinetCard = (cabinet: (typeof cabinets)[number]): GuideMedia => ({ image: cabinet.image, label: cabinet.name, href: `/cabinets#${cabinet.name.toLowerCase()}-3d`, kind: "cabinet" });
+
+/** Home-screen topics. Each one asks the matching chip. */
+export const guideTopics = [
+  { chip: "Games", title: "Sunscape games", text: "Six boards, fifteen named games", icon: "games" },
+  { chip: "Cabinets", title: "Cabinets", text: "Altitude and Pinnacle", icon: "cabinets" },
+  { chip: "Systems", title: "Connected systems", text: "Collection management and Link Jackpot", icon: "systems" },
+  { chip: "Support", title: "Support", text: "24/7/365 U.S.-based team", icon: "support" },
+] as const;
+export const guidePrompts = ["Which board has Tiki Twist?", "Compare Altitude and Pinnacle", "How does the link jackpot work?", "Where is Tierplay available?"];
 
 export const starterChips = ["Games", "Cabinets", "Systems", "Support", "Availability"];
 
@@ -21,6 +36,7 @@ const intents: Intent[] = [
     text: "Six Sunscape boards with fifteen named games across the first five releases.",
     bullets: boards.filter((b) => b.games.length).map((b) => `${b.shortTitle}: ${b.games.join(", ")}`),
     links: [{ label: "Browse the games", href: "/games" }, { label: "Full collection", href: "/games-collection" }],
+    media: gameplay.slice(0, 6).map((g) => logo(g.title)).filter((m): m is GuideMedia => m !== null),
     chips: ["Game mechanics", "Cabinets", "Availability"],
   }) },
   { id: "mechanics", chip: "Game mechanics", keywords: ["mechanic", "mechanics", "free spin", "spins", "nudge", "bonus", "feature", "features", "play"], answer: () => ({
@@ -38,16 +54,24 @@ const intents: Intent[] = [
   { id: "cabinets", chip: "Cabinets", keywords: ["cabinet", "cabinets", "hardware", "machine", "console", "screen", "display", "touchscreen", "4k", "specs", "specification"], answer: () => ({
     text: "Two cabinet forms:",
     bullets: [`${altitude.name} (${altitude.label}): ${altitude.specifications.join(", ")}`, `${pinnacle.name} (${pinnacle.label}): ${pinnacle.specifications.join(", ")}`],
-    links: [{ label: "Tour the Altitude in 3D", href: "/cabinets" }, { label: "Compare cabinets", href: "/cabinets#cabinet-compare" }],
+    links: [{ label: "Tour both in 3D", href: "/cabinets" }, { label: "Compare cabinets", href: "/cabinets#cabinet-compare" }],
+    media: cabinets.map(cabinetCard),
     chips: ["Altitude", "Pinnacle", "Capabilities"],
   }) },
+  { id: "compare", keywords: ["compare", "comparison", "difference", "differences", "versus", "vs", "which cabinet"], answer: () => ({
+    text: "Both consoles are listed with a 4K resolution display and a modular, interchangeable build, published as made in the USA. The screen sets them apart:",
+    bullets: [`${altitude.name}: ${altitude.specifications[0]}`, `${pinnacle.name}: ${pinnacle.specifications[0]}`],
+    links: [{ label: "Compare cabinets", href: "/cabinets#cabinet-compare" }],
+    media: cabinets.map(cabinetCard),
+    chips: ["Capabilities", "Contact sales"],
+  }) },
   { id: "altitude", chip: "Altitude", keywords: ["altitude", "vertical", "upright"], answer: () => ({
-    text: `${altitude.name}: ${altitude.copy}`, bullets: [...altitude.specifications],
-    links: [{ label: "Tour the Altitude in 3D", href: "/cabinets" }], chips: ["Pinnacle", "Capabilities"],
+    text: `${altitude.name}: ${altitude.copy}`, bullets: [...altitude.specifications], media: [cabinetCard(altitude)],
+    links: [{ label: "Tour the Altitude in 3D", href: "/cabinets#altitude-3d" }], chips: ["Pinnacle", "Capabilities"],
   }) },
   { id: "pinnacle", chip: "Pinnacle", keywords: ["pinnacle", "curved"], answer: () => ({
-    text: `${pinnacle.name}: ${pinnacle.copy}`, bullets: [...pinnacle.specifications],
-    links: [{ label: "Compare cabinets", href: "/cabinets#cabinet-compare" }], chips: ["Altitude", "Capabilities"],
+    text: `${pinnacle.name}: ${pinnacle.copy}`, bullets: [...pinnacle.specifications], media: [cabinetCard(pinnacle)],
+    links: [{ label: "Tour the Pinnacle in 3D", href: "/cabinets#pinnacle-3d" }, { label: "Compare cabinets", href: "/cabinets#cabinet-compare" }], chips: ["Altitude", "Capabilities"],
   }) },
   { id: "capabilities", chip: "Capabilities", keywords: ["capability", "capabilities", "validator", "jcm", "ticket", "ticketing", "charging", "bash", "button", "audio", "statistics", "reporting", "payment"], answer: () => ({
     text: "Capabilities listed for the cabinet range (confirm model-specific details with Tierplay):",
@@ -99,6 +123,7 @@ export function answer(question: string): GuideAnswer {
     text: `${game.game} is on ${game.board.shortTitle}, alongside ${game.board.games.filter((g) => g !== game.game).join(" and ")}.`,
     bullets: [game.board.grid, game.board.jackpot],
     links: [{ label: `Open ${game.board.shortTitle}`, href: `/our_games/${game.board.slug}` }],
+    media: game.board.games.map((title) => logo(title)).filter((m): m is GuideMedia => m !== null),
     chips: ["Game mechanics", "Availability"],
   };
   const board = boards.find((b) => q.includes(normalize(b.shortTitle)));

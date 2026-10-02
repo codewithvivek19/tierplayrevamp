@@ -11,6 +11,7 @@ import DepthText from "@/components/reactbits/DepthText";
 import { Badge, Button } from "@/components/ds/primitives";
 import { ArrowDown, Pause, Play } from "lucide-react";
 import "@/components/hero/portal.css";
+import { smoothScrollTo } from "@/components/motion/scrollControl";
 const PortalCanvas = dynamic(() => import("@/components/hero/PortalCanvas"), { ssr: false });
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 const smooth = (p: number, a: number, b: number) => { const t = Math.max(0, Math.min(1, (p - a) / (b - a))); return t * t * (3 - 2 * t); };
@@ -52,6 +53,8 @@ export default function BattleHero() {
     style.setProperty("--arrival-scale", String(1.22 - arrival * .22));
     style.setProperty("--arrival-title", String(title));
     style.setProperty("--arrival-y", `${(1 - title) * 45}px`);
+    // Stepping into the light: the gateway's glow floods the frame over the last stretch of the walk.
+    style.setProperty("--flood", (smooth(raw, .86, 1) * .82).toFixed(3));
     style.setProperty("--scene-opacity", "1");
   }, []);
 
@@ -80,17 +83,18 @@ export default function BattleHero() {
     if (!live) return;
     travel.current.progress = 0;
     sync();
-    gsap.to(travel.current, { progress: 1, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: () => `+=${Math.max(1, (root.current?.offsetHeight ?? innerHeight) - (stage.current?.offsetHeight ?? innerHeight))}`, scrub: .55, invalidateOnRefresh: true }, onUpdate: sync });
+    gsap.to(travel.current, { progress: 1, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: () => `+=${Math.max(1, (root.current?.offsetHeight ?? innerHeight) - (stage.current?.offsetHeight ?? innerHeight))}`, scrub: .4, invalidateOnRefresh: true }, onUpdate: sync });
     // Reveal owns the overview's children; this timeline owns only its wrapper.
     const overview = document.getElementById("experience");
-    if (overview) gsap.fromTo(overview, { y: 70, opacity: .35 }, { y: 0, opacity: 1, ease: "none", scrollTrigger: { trigger: overview, start: "top bottom", end: "top 55%", scrub: .7 } });
+    if (overview) gsap.fromTo(overview, { y: 70, opacity: .35 }, { y: 0, opacity: 1, ease: "none", scrollTrigger: { trigger: overview, start: "top bottom", end: "top 55%", scrub: .4 } });
     return () => { sequence.current.progress = 0; travel.current.progress = 0; stage.current?.removeAttribute("style"); };
   }, { scope: root, dependencies: [live, sync], revertOnUpdate: true });
 
   const enter = () => {
-    if (!live || paused) { document.getElementById("experience")?.scrollIntoView({ behavior: "auto" }); return; }
+    if (!live || paused) { const target = document.getElementById("experience"); if (target) smoothScrollTo(target); return; }
     const element = root.current;
-    if (element) window.scrollTo({ top: element.getBoundingClientRect().top + scrollY + (element.offsetHeight - (stage.current?.offsetHeight ?? innerHeight)) * .96, behavior: "smooth" });
+    // A long, even glide: the visitor watches the whole journey play rather than jumping past it.
+    if (element) smoothScrollTo(element.getBoundingClientRect().top + scrollY + (element.offsetHeight - (stage.current?.offsetHeight ?? innerHeight)) * .96, { duration: 4.2 });
   };
 
   return <section ref={root} className={`battle-hero portal-hero ${live ? "portal-live" : "portal-static"} ${live && ready ? "portal-ready" : ""}`} aria-labelledby="hero-title" data-scene={live && ready ? "webgl" : "still"} data-chapter={live ? chapter : 0}>
@@ -103,6 +107,7 @@ export default function BattleHero() {
     }} onPointerLeave={() => { sequence.current.pointerX = 0; sequence.current.pointerY = 0; sequence.current.pointerActive = false; }}>
       <div className="battle-hero-image" aria-hidden="true"><Image src="/media/generated/theme-v3/hero-portal-still-v1.webp" alt="" fill priority sizes="100vw"/></div>
       {live && <div className="portal-canvas" aria-hidden="true"><PortalCanvas sequence={sequence.current} active={active} onReady={onReady} onFailure={onFailure}/></div>}
+      <div className="portal-flood" aria-hidden="true"/>
       <div className="battle-hero-shade"/>
       <div className="hero-copy-layer" inert={live && chapter !== 0}>
         <div className="hero-copy">

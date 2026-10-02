@@ -7,13 +7,14 @@ import MechanicSwitcher from "@/components/site/MechanicSwitcher";
 import GameLogoGrid from "@/components/site/GameLogoGrid";
 import { Button, GlassCard, Note, SectionHeader } from "@/components/ds/primitives";
 import { boards, gameplay, legacyNotice } from "@/content/site";
+import { campaignMedia } from "@/content/media";
 
 export const metadata: Metadata = { title: "Games", description: "Six Sunscape boards with fifteen named games across the first five releases." };
 
 export default function GamesPage() {
   return <main id="main" className="ds-page">
     <PageHero badge="Sunscape series" title="Find your next game." intro="Six Sunscape boards with fifteen named games across the first five releases."
-      image="/media/generated/theme-v3/dragon-world-v3.webp"
+      poster image={campaignMedia.sunscape.src} imageAlt={campaignMedia.sunscape.alt}
       actions={<><Button href="#boards">Browse the boards</Button><Button href="/games-collection" variant="ghost">Full collection</Button></>} />
 
     <section className="ds-section ds-container">

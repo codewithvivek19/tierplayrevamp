@@ -5,12 +5,13 @@ import Reveal from "@/components/site/Reveal";
 import FlowingMenu from "@/components/reactbits/FlowingMenu";
 import { Note, SectionHeader } from "@/components/ds/primitives";
 import { boards } from "@/content/site";
+import { campaignMedia } from "@/content/media";
 
 export const metadata: Metadata = { title: "Games Collection", description: "Browse every Sunscape board and its game lineup." };
 
 export default function CollectionPage() {
   return <main id="main" className="ds-page">
-    <PageHero compact badge="Games collection" title="The Sunscape boards." intro="Browse every board and its game lineup." image="/media/generated/theme-v3/dragon-world-v3.webp" />
+    <PageHero poster badge="Games collection" title="The Sunscape boards." intro="Browse every board and its game lineup." image={campaignMedia.sunscape.src} imageAlt={campaignMedia.sunscape.alt} />
     <section className="ds-section ds-container">
       <SectionHeader icon={Library} label="Complete catalogue" title="All six boards." blurb="Fifteen named games across the first five boards. The sixth lineup has yet to be published." />
       <Reveal>

@@ -21,7 +21,18 @@ Imported UI primitives, where they came from, and how they were changed for Tier
 | GridScan | `components/reactbits/GridScan.tsx` | Footer background | Portrait screens frame the tunnel by width with brighter lines; idle/touch drift replaces pointer skew when no mouse moves. Webcam face tracking (`face-api.js`) removed in favour of pointer skew. The `postprocessing` bloom, chromatic aberration and noise are folded into the shader, so neither dependency is added. Plain three.js with no React Three Fiber. The WebGL context is created only when the footer comes near and pauses off screen. Reduced motion draws one still frame. |
 | ModelViewer (reference) | `components/cabinet3d/useStage.ts` `bindOrbit`, `CabinetExplorer.tsx` | Cabinets hero and tour, homepage showroom, 360° viewer | Interaction model only; no code copied wholesale. It borrows inertia orbit (0.925 decay), the 8px touch decision between rotate and scroll, hover tilt, wheel and pinch zoom, fade-in, and auto-rotate that stops on interaction. Custom additions: a spring back to the scroll-tour pose, clickable part hotspots with shortest-turn focus, keyboard orbit and zoom, and double-click reset. |
 
+| ClickSpark | `components/reactbits/SparkBurst.tsx` | Guide: cast sparks from the wizard's staff | An imperative `burst(x, y)` replaces click-only triggering. Violet/amber palette with varied reach. The canvas exists only while sparks fly and its frame loop stops with them. Nothing under reduced motion. |
+| ShinyText | `components/reactbits/ShinyText.tsx` | Guide typing status | A pure CSS sweep instead of a per-frame Motion value. Token colours. Still under reduced motion. |
+
 Masonry was retrieved for evaluation but not used.
+
+## Planes
+
+- **Cinematic Text** (`https://useplanes.com/r/cinematic-text.json`, retrieved 2026-10-02) → `components/motion/CinematicText.tsx`. The same timing (1.4 s, cubic-bezier(.16, 1, .3, 1), 0.11 s stagger, 28 px blur), rebuilt with CSS transitions instead of Motion per word. Words are kept as real text rather than an sr-only duplicate, and there's a no-JS-safe fallback. Not installed via the shadcn CLI: the project has no shadcn/Tailwind setup.
+
+## Audio
+
+- The hero score is original and synthesized in the browser (`components/hero/score.ts`). It uses no third-party recordings or samples.
 
 ## Originkit
 
@@ -60,8 +71,13 @@ The Smooth Scroll Slider takes over wheel input inside its rail. Review that beh
   - A key spotlight, violet/cyan rims, a pointer-following torch, a periodic sweep spotlight and a screen-spill `RectAreaLight`.
   - Contact shadows, and three's `UnrealBloomPass` + `OutputPass` for LED and screen bloom.
 
+## Motion libraries
+
+- **Lenis** 1.3 (MIT, darkroom.engineering) provides smooth wheel scrolling. It is configured in `components/motion/SmoothScroll.tsx` and driven by the GSAP ticker.
+- **React `ViewTransition`** (bundled with Next 16's React) provides route transitions, following `node_modules/next/dist/docs/01-app/02-guides/view-transitions.md`.
+
 ## Design reference and icons
 
 - **cosmoq.framer.website** was used as a pattern reference only: the section-header rhythm, glass cards, pill nav, glow-ring buttons, steps, FAQ layout and the closing wordmark. No code, copy or assets were copied.
 - **lucide-react** (ISC license) supplies the icons in labels, chips, controls and the guide.
-- **Mascot:** `public/media/mascot/wizard.svg` is Tierplay-supplied artwork. Its blues were remapped to violet and its yellows to amber, and the metadata was stripped. The 2.5D effects (tilt, rim light, blink, orb, breath) are layered in `TierplayGuide.tsx` and `app/ds/guide.css`.
+- **Mascot:** `public/media/mascot/wizard.svg` is Tierplay-supplied artwork. Its blues were remapped to violet and its yellows to amber, and the metadata was stripped. `wizard-800.webp` is a raster of it for the stacked 3D layers. The 3D effects (extrusion, eye tracking via irises redrawn inside traced eye openings, blink, orbiting sparks, pedestal, rim light) are layered in `components/guide/Wizard3D.tsx` and `app/ds/guide.css`.

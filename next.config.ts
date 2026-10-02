@@ -17,6 +17,8 @@ const csp = [
 
 const config: NextConfig = {
   reactStrictMode: true,
+  // The Tierplay guide lives bottom-left; keep Next's development badge out of its way.
+  devIndicators: { position: "bottom-right" },
   poweredByHeader: false,
   images: { formats: ["image/avif", "image/webp"] },
   async headers() {

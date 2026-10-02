@@ -7,6 +7,7 @@ import { defaultPose, type StagePose } from "./CabinetStage";
 import { bindOrbit, useStageMode, useStageVisibility } from "./useStage";
 import { Badge } from "@/components/ds/primitives";
 import { cabinets } from "@/content/site";
+import CinematicText from "@/components/motion/CinematicText";
 
 const CabinetStage = dynamic(() => import("./CabinetStage"), { ssr: false });
 const [altitude, pinnacle] = cabinets;
@@ -67,7 +68,7 @@ export default function CabinetsHero() {
 
     <header className="cab-hero__head ds-container">
       <Badge>Tierplay cabinets · 2 consoles</Badge>
-      <h1 id="cab-hero-title" className="cab-hero__title">Two consoles.<br />Built for the floor.</h1>
+      <CinematicText as="h1" id="cab-hero-title" className="cab-hero__title">Two consoles. Built for the floor.</CinematicText>
       <p className="cab-hero__intro">The upright Altitude and the curved-screen Pinnacle. Both are listed with a 43-inch touchscreen and a 4K display. Tour each one in 3D.</p>
     </header>
 

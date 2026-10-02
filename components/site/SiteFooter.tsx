@@ -15,8 +15,9 @@ const company_links = [
 export default function SiteFooter() {
   return (
     <footer className="site-footer">
-      <div className="footer-gridscan"><GridScan linesColor="#2F293A" scanColor="#E39BFF" sensitivity={.55} lineThickness={1} gridScale={.1} scanOpacity={.55} bloomIntensity={.6} chromaticAberration={.002} noiseIntensity={.01} /></div>
+      <div className="footer-gridscan"><GridScan linesColor="#4A3570" scanColor="#F0B8FF" sensitivity={.55} lineThickness={1.1} gridScale={.1} scanOpacity={.5} bloomIntensity={.7} chromaticAberration={.0028} noiseIntensity={.012} /></div>
 
+      <div className="footer-aurora" aria-hidden="true"><i /><i /><i /></div>
       <section className="ds-closing" aria-labelledby="closing-title">
         <div className="ds-closing__copy ds-container">
           <Badge>Your next installation</Badge>
@@ -31,16 +32,28 @@ export default function SiteFooter() {
           <span className="ds-wordmark__horizon" />
           <svg viewBox="0 0 1200 220" preserveAspectRatio="xMidYMax meet">
             <defs>
-              <linearGradient id="wordmark-fill" x1="0" x2="1" y1="0" y2="0">
-                <stop offset="0" stopColor="#9e05ff" /><stop offset=".45" stopColor="#e7c8ff" /><stop offset=".62" stopColor="#ffcd7d" /><stop offset="1" stopColor="#ffac0a" />
+              {/* The fill flows: a wide violet → light → amber gradient slides through the letters. */}
+              <linearGradient id="wordmark-fill" x1="0" x2="1" y1="0" y2="0" spreadMethod="reflect" gradientTransform="translate(0 0)">
+                <stop offset="0" stopColor="#9e05ff" /><stop offset=".3" stopColor="#c79bff" /><stop offset=".5" stopColor="#ffe8c2" /><stop offset=".7" stopColor="#ffac0a" /><stop offset="1" stopColor="#ff5fb0" />
+                <animateTransform attributeName="gradientTransform" type="translate" values="-1 0;1 0" dur="14s" repeatCount="indefinite" />
               </linearGradient>
               <linearGradient id="wordmark-fade" x1="0" x2="0" y1="0" y2="1">
                 <stop offset=".35" stopColor="#fff" /><stop offset="1" stopColor="#fff" stopOpacity="0" />
               </linearGradient>
+              {/* A narrow band of light that sweeps across the wordmark. */}
+              <linearGradient id="wordmark-glint" x1="0" x2="1" y1="0" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="translate(-700 0) skewX(-18)">
+                <stop offset="0" stopColor="#fff" stopOpacity="0" /><stop offset=".46" stopColor="#fff" stopOpacity="0" /><stop offset=".5" stopColor="#fff" stopOpacity=".95" /><stop offset=".54" stopColor="#fff" stopOpacity="0" /><stop offset="1" stopColor="#fff" stopOpacity="0" />
+                <animateTransform attributeName="gradientTransform" type="translate" values="-900 0;1400 0;1400 0" keyTimes="0;.45;1" dur="6.5s" repeatCount="indefinite" />
+              </linearGradient>
               <mask id="wordmark-mask"><rect width="1200" height="220" fill="url(#wordmark-fade)" /></mask>
             </defs>
-            <text x="600" y="206" textAnchor="middle" fill="url(#wordmark-fill)" mask="url(#wordmark-mask)">TIERPLAY</text>
+            <g mask="url(#wordmark-mask)">
+              <text className="ds-wordmark__fill" x="600" y="206" textAnchor="middle" fill="url(#wordmark-fill)">TIERPLAY</text>
+              <text className="ds-wordmark__glint" x="600" y="206" textAnchor="middle" fill="url(#wordmark-glint)">TIERPLAY</text>
+              <text className="ds-wordmark__line" x="600" y="206" textAnchor="middle" fill="none" stroke="url(#wordmark-fill)" strokeWidth="1.5">TIERPLAY</text>
+            </g>
           </svg>
+          <span className="ds-wordmark__sparks" />
         </div>
       </section>
 
@@ -52,6 +65,7 @@ export default function SiteFooter() {
         <nav aria-label="Explore" className="ds-footer__col"><h2>Explore</h2>{navigation.map((item) => <Link key={item.href} href={item.href}>{item.label}</Link>)}</nav>
         <nav aria-label="Company" className="ds-footer__col"><h2>Company</h2>{company_links.map((item) => <Link key={item.href} href={item.href}>{item.label}</Link>)}</nav>
         <div className="ds-footer__col"><h2>Contact</h2>
+          <span className="ds-footer__live"><i aria-hidden="true" />Support live 24/7/365</span>
           <a href={company.phoneHref}><Phone aria-hidden="true" size={14} strokeWidth={1.5} />{company.phone}</a>
           <a href={company.emailHref}><Mail aria-hidden="true" size={14} strokeWidth={1.5} />{company.email}</a>
           <span><MapPin aria-hidden="true" size={14} strokeWidth={1.5} />{company.address}</span>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ComponentType, ReactNode } from "react";
 import { ArrowUpRight, Check, type LucideProps } from "lucide-react";
-import SplitText from "@/components/reactbits/SplitText";
+import CinematicText from "@/components/motion/CinematicText";
 
 type Icon = ComponentType<LucideProps>;
 
@@ -17,7 +17,7 @@ export function SectionHeader({ icon, label, title, blurb, as = "h2", id, align 
   return <header className={`ds-section-head ds-section-head--${align}`}>
     <div className="ds-section-head__rule"><Label icon={icon}>{label}</Label></div>
     <div className="ds-section-head__body">
-      <SplitText as={as} id={id} text={title} className="ds-section-head__title" />
+      <CinematicText as={as} id={id} className="ds-section-head__title">{title}</CinematicText>
       {blurb ? <p className="ds-section-head__blurb">{blurb}</p> : null}
       {children}
     </div>

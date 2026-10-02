@@ -23,7 +23,7 @@ export default function MechanicSwitcher() {
   };
 
   return <div className="mechanic-switcher">
-    <div className="mechanic-switcher-tabs" role="tablist" aria-label="Game mechanics">
+    <div className="mechanic-switcher-tabs" data-lenis-prevent-horizontal role="tablist" aria-label="Game mechanics">
       {mechanics.map((title, index) => <button key={title} id={`${id}-tab-${index}`} role="tab" type="button" aria-selected={index === mechanic} aria-controls={`${id}-panel`} tabIndex={index === mechanic ? 0 : -1} onKeyDown={onKey} onClick={() => setMechanic(index)}>
         <span>0{index + 1}</span>{title}
       </button>)}

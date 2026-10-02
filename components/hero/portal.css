@@ -79,3 +79,21 @@
 }
 @media (max-width: 650px) { .portal-hero.portal-live { height: 480svh; } }
 @media (prefers-reduced-motion: reduce) { .portal-stage { position: relative; } .battle-hero-image, .portal-canvas { transition: none; } }
+
+/* The light flood at the end of the walk: centred on the gateway's column, it blooms outward. */
+.portal-flood { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: var(--flood, 0);
+  background: radial-gradient(ellipse 34% 60% at 50% 46%, rgb(255 250 255 / .95), rgb(214 180 255 / .75) 28%, rgb(124 60 220 / .45) 55%, rgb(20 10 40 / 0) 82%);
+  mix-blend-mode: screen; }
+.portal-static .portal-flood { display: none; }
+
+/* Sound toggle: labelled on larger screens, a soft invitation until first used, an equalizer while playing. */
+.portal-sound { position: relative; display: inline-flex; align-items: center; gap: 7px; width: auto; padding: 0 12px 0 11px; border-radius: 999px; }
+.portal-sound__text { font-size: .75rem; letter-spacing: .01em; }
+.portal-sound[data-on="false"]::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: 0 0 0 0 rgb(199 155 255 / .45); animation: portal-sound-invite 2.8s ease-out 3; pointer-events: none; }
+@keyframes portal-sound-invite { 70% { box-shadow: 0 0 0 9px rgb(199 155 255 / 0); } 100% { box-shadow: 0 0 0 0 rgb(199 155 255 / 0); } }
+.portal-sound__eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 11px; }
+.portal-sound__eq i { width: 2px; height: 100%; border-radius: 1px; background: var(--violet-soft); transform-origin: bottom; animation: portal-eq .9s ease-in-out infinite; }
+.portal-sound__eq i:nth-child(2) { animation-delay: -.3s; } .portal-sound__eq i:nth-child(3) { animation-delay: -.6s; }
+@keyframes portal-eq { 0%, 100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
+@media (max-width: 639px) { .portal-sound { width: 40px; padding: 0; justify-content: center; } .portal-sound__text, .portal-sound__eq { display: none; } }
+@media (prefers-reduced-motion: reduce) { .portal-sound::after, .portal-sound__eq i { animation: none; } }

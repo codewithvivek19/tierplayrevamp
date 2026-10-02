@@ -1,3 +1,5 @@
+import { campaignMedia } from "./media";
+
 export const navigation = [
   { label: "Games", href: "/games" },
   { label: "Cabinets", href: "/cabinets" },
@@ -132,12 +134,12 @@ export const cabinetCapabilities = [
 
 export const products = [
   {
-    code: "TCM", name: "Tierplay Collection Management", image: "/media/generated/tierplay-floor-network-v1.webp",
+    code: "TCM", name: "Tierplay Collection Management", image: campaignMedia.management.src,
     copy: "Remote machine control and route monitoring help operators manage locations and resolve payment-collection disputes.",
     features: ["Remote control for machines at specific locations", "Route monitoring and remote management", "Operational support for dispute resolution"],
   },
   {
-    code: "TLJ", name: "Tierplay Link Jackpot", image: "/media/generated/tierplay-link-energy-v1.webp",
+    code: "TLJ", name: "Tierplay Link Jackpot", image: campaignMedia.link.src,
     copy: "Connect machines at one location for a shared progressive jackpot experience.",
     features: ["Connects machines at one location", "Shared progressive jackpot presentation", "Designed to increase excitement and repeat play"],
   },
@@ -151,9 +153,9 @@ export const productPillars = [
 ] as const;
 
 export const journey = [
-  { number: "01", title: "Link jackpots", image: "/media/generated/tierplay-link-energy-v1.webp", copy: "Machines at one location connect into a shared progressive jackpot." },
-  { number: "02", title: "Standard progressive jackpots", image: "/media/generated/tierplay-floor-network-v1.webp", copy: "A three-game lobby gives players multiple jackpot paths within one board." },
-  { number: "03", title: "Loyalty system", image: "/media/generated/theme-v3/entrance-editorial-v5.webp", copy: "A loyalty concept connects registration and offers with a return visit. Ask Tierplay about current availability and consent settings." },
+  { number: "01", title: "Link jackpots", image: campaignMedia.link.src, imageAlt: campaignMedia.link.alt, copy: "Machines at one location connect into a shared progressive jackpot." },
+  { number: "02", title: "Standard progressive jackpots", image: campaignMedia.progressive.src, imageAlt: campaignMedia.progressive.alt, copy: "A three-game lobby gives players multiple jackpot paths within one board." },
+  { number: "03", title: "Loyalty system", image: campaignMedia.loyalty.src, imageAlt: campaignMedia.loyalty.alt, copy: "A loyalty concept connects registration and offers with a return visit. Ask Tierplay about current availability and consent settings." },
 ] as const;
 
 export const supportCopy = "At Tierplay, exceptional customer service is our priority. The legacy public site describes a 24/7 U.S.-based support team focused on resolving technical concerns and general enquiries so operations can continue smoothly.";
@@ -168,4 +170,46 @@ export const siteFaq = [
   { q: "How do I reach support?", a: "The published support model is a 24/7/365 U.S.-based team. Call 706-575-8838 or email info@tierplay.com." },
   { q: "Which payment and ticketing hardware is listed?", a: "The cabinet range lists JCM UBA validators and Epic Edge and Mothagoose ticketing systems." },
   { q: "Are these specifications current?", a: "Product details are based on Tierplay’s earlier public catalogue. Confirm current specifications and availability with the team." },
+] as const;
+
+// The connected-systems showcase. Copy follows Tierplay's published product text; the jackpot
+// figures are Tierplay's own published comparison and stay attributed as such.
+export const systems = [
+  {
+    id: "tcm", code: "TCM", tab: "Collection management", name: "Tierplay Collection Management", poster: campaignMedia.management,
+    copy: "Remote machine control and route monitoring help operators manage locations and resolve payment-collection disputes.",
+    features: ["Remote control for machines at specific locations", "Route monitoring and remote management", "Operational support for dispute resolution"],
+    href: "/products",
+  },
+  {
+    id: "link", code: "TLJ", tab: "Link Jackpot", name: "Tierplay Link Jackpot", poster: campaignMedia.link,
+    copy: "Link Jackpot connects every machine at a location into one progressive jackpot. The larger shared pool offers life-changing sums, driving more play and engagement.",
+    features: ["Connects all machines at one location", "One shared progressive jackpot pool", "A bigger pool for more play and engagement"],
+    href: "/products",
+  },
+  {
+    id: "progressive", code: "SPJ", tab: "Progressive jackpots", name: "Standard progressive jackpots", poster: campaignMedia.progressive,
+    copy: "Each lobby offers three to eight combined jackpots across three games, so wins come often and players stay engaged.",
+    features: ["Three to eight combined jackpots per lobby", "Jackpots across three games in every board", "Frequent wins that keep players playing"],
+    stats: [
+      { value: "Up to 3×", label: "more jackpots per machine" },
+      { value: "25%", label: "faster jackpot growth" },
+      { value: "40%", label: "higher player engagement" },
+    ],
+    statsNote: "Compared with the industry average, as published by Tierplay. Confirm current figures with the team.",
+    proof: [
+      { src: "/media/legacy/Bison_Showdown-Jackpot-copy.webp", label: "Bison Showdown" },
+      { src: "/media/legacy/Raise-of-Dragon-Jackpot.webp", label: "Rise of the Dragon" },
+      { src: "/media/legacy/Sinister_Show-Jackpot-copy.webp", label: "Sinister Show" },
+      { src: "/media/legacy/Gang_of_Evil-Jackpot.webp", label: "Gang of Evils" },
+    ],
+    href: "/player-journey",
+  },
+  {
+    id: "loyalty", code: "LOY", tab: "Loyalty", name: "Loyalty system", poster: campaignMedia.loyalty,
+    copy: "Players enter a phone number and email to receive free plays, then get exclusive free-play offers that bring them back.",
+    features: ["Free plays at registration", "Exclusive free-play offers by SMS and email", "Built for retention and repeat visits"],
+    note: "Ask Tierplay about current availability and consent settings.",
+    href: "/player-journey",
+  },
 ] as const;

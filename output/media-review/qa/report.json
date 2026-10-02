@@ -1,0 +1,770 @@
+[
+  {
+    "width": 1440,
+    "route": "/games",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Six boards. Fifteen games. The Sunscape collection.",
+        "loaded": true,
+        "width": 700.890625,
+        "height": 525.65625,
+        "fit": "fill",
+        "ratio": 1.3333630580821592
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "route": "/products",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Connected control. Tierplay Collection Management.",
+        "loaded": true,
+        "width": 700.890625,
+        "height": 525.65625,
+        "fit": "fill",
+        "ratio": 1.3333630580821592
+      },
+      {
+        "alt": "Six boards. Fifteen games. The Sunscape collection.",
+        "loaded": true,
+        "width": 631,
+        "height": 472.25,
+        "fit": "contain",
+        "ratio": 1.336156696664902
+      },
+      {
+        "alt": "Built for the floor. Explore Tierplay cabinets. A cabinet concept with textured black metal and chrome controls.",
+        "loaded": true,
+        "width": 631,
+        "height": 472.25,
+        "fit": "contain",
+        "ratio": 1.336156696664902
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "route": "/player-journey",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Play. Connect. Return. Explore Tierplay loyalty.",
+        "loaded": true,
+        "width": 700.890625,
+        "height": 525.65625,
+        "fit": "fill",
+        "ratio": 1.3333630580821592
+      },
+      {
+        "alt": "",
+        "loaded": true,
+        "width": 632.1875,
+        "height": 473.640625,
+        "fit": "contain",
+        "ratio": 1.3347408702536865
+      },
+      {
+        "alt": "",
+        "loaded": true,
+        "width": 632.1875,
+        "height": 473.640625,
+        "fit": "contain",
+        "ratio": 1.3347408702536865
+      },
+      {
+        "alt": "",
+        "loaded": true,
+        "width": 632.1875,
+        "height": 473.640625,
+        "fit": "contain",
+        "ratio": 1.3347408702536865
+      },
+      {
+        "alt": "Tierplay Link Jackpot. One location. Shared excitement.",
+        "loaded": false,
+        "width": 0,
+        "height": 0,
+        "fit": "contain",
+        "ratio": 0
+      },
+      {
+        "alt": "Standard progressive jackpots. Three games. More ways to play.",
+        "loaded": false,
+        "width": 0,
+        "height": 0,
+        "fit": "contain",
+        "ratio": 0
+      },
+      {
+        "alt": "Play. Connect. Return. Explore Tierplay loyalty.",
+        "loaded": false,
+        "width": 0,
+        "height": 0,
+        "fit": "contain",
+        "ratio": 0
+      },
+      {
+        "alt": "Make room for Tierplay. Games, cabinets and connected systems, pictured in a casino-floor concept.",
+        "loaded": true,
+        "width": 669.421875,
+        "height": 501.609375,
+        "fit": "fill",
+        "ratio": 1.3345481730679376
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "route": "/contact-sales",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Make room for Tierplay. Games, cabinets and connected systems, pictured in a casino-floor concept.",
+        "loaded": true,
+        "width": 700.890625,
+        "height": 525.65625,
+        "fit": "fill",
+        "ratio": 1.3333630580821592
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "route": "/",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Six boards. Fifteen games. The Sunscape collection.",
+        "loaded": true,
+        "width": 415.328125,
+        "height": 310.484375,
+        "fit": "contain",
+        "ratio": 1.3376780232499623
+      },
+      {
+        "alt": "Built for the floor. Explore Tierplay cabinets. A cabinet concept with textured black metal and chrome controls.",
+        "loaded": true,
+        "width": 415.328125,
+        "height": 310.484375,
+        "fit": "contain",
+        "ratio": 1.3376780232499623
+      },
+      {
+        "alt": "Connected control. Tierplay Collection Management.",
+        "loaded": true,
+        "width": 415.34375,
+        "height": 310.5,
+        "fit": "contain",
+        "ratio": 1.3376610305958132
+      },
+      {
+        "alt": "Tierplay Link Jackpot. One location. Shared excitement.",
+        "loaded": true,
+        "width": 403.328125,
+        "height": 301.984375,
+        "fit": "contain",
+        "ratio": 1.3355926941584313
+      },
+      {
+        "alt": "Standard progressive jackpots. Three games. More ways to play.",
+        "loaded": true,
+        "width": 403.328125,
+        "height": 301.984375,
+        "fit": "contain",
+        "ratio": 1.3355926941584313
+      },
+      {
+        "alt": "Play. Connect. Return. Explore Tierplay loyalty.",
+        "loaded": true,
+        "width": 403.34375,
+        "height": 302,
+        "fit": "contain",
+        "ratio": 1.3355753311258278
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 768,
+    "route": "/games",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Six boards. Fifteen games. The Sunscape collection.",
+        "loaded": true,
+        "width": 697.640625,
+        "height": 523.21875,
+        "fit": "fill",
+        "ratio": 1.3333631965597563
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 768,
+    "route": "/products",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Connected control. Tierplay Collection Management.",
+        "loaded": true,
+        "width": 697.640625,
+        "height": 523.21875,
+        "fit": "fill",
+        "ratio": 1.3333631965597563
+      },
+      {
+        "alt": "Six boards. Fifteen games. The Sunscape collection.",
+        "loaded": true,
+        "width": 340.8125,
+        "height": 254.609375,
+        "fit": "contain",
+        "ratio": 1.3385701135317583
+      },
+      {
+        "alt": "Built for the floor. Explore Tierplay cabinets. A cabinet concept with textured black metal and chrome controls.",
+        "loaded": true,
+        "width": 340.828125,
+        "height": 254.609375,
+        "fit": "contain",
+        "ratio": 1.3386314820497085
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 768,
+    "route": "/player-journey",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Play. Connect. Return. Explore Tierplay loyalty.",
+        "loaded": true,
+        "width": 697.640625,
+        "height": 523.21875,
+        "fit": "fill",
+        "ratio": 1.3333631965597563
+      },
+      {
+        "alt": "",
+        "loaded": false,
+        "width": 0,
+        "height": 0,
+        "fit": "contain",
+        "ratio": 0
+      },
+      {
+        "alt": "",
+        "loaded": false,
+        "width": 0,
+        "height": 0,
+        "fit": "contain",
+        "ratio": 0
+      },
+      {
+        "alt": "",
+        "loaded": false,
+        "width": 0,
+        "height": 0,
+        "fit": "contain",
+        "ratio": 0
+      },
+      {
+        "alt": "Tierplay Link Jackpot. One location. Shared excitement.",
+        "loaded": true,
+        "width": 699.640625,
+        "height": 524.71875,
+        "fit": "contain",
+        "ratio": 1.3333631111905186
+      },
+      {
+        "alt": "Standard progressive jackpots. Three games. More ways to play.",
+        "loaded": true,
+        "width": 699.640625,
+        "height": 524.71875,
+        "fit": "contain",
+        "ratio": 1.3333631111905186
+      },
+      {
+        "alt": "Play. Connect. Return. Explore Tierplay loyalty.",
+        "loaded": true,
+        "width": 699.640625,
+        "height": 524.71875,
+        "fit": "contain",
+        "ratio": 1.3333631111905186
+      },
+      {
+        "alt": "Make room for Tierplay. Games, cabinets and connected systems, pictured in a casino-floor concept.",
+        "loaded": true,
+        "width": 697.640625,
+        "height": 523.21875,
+        "fit": "fill",
+        "ratio": 1.3333631965597563
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 768,
+    "route": "/contact-sales",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Make room for Tierplay. Games, cabinets and connected systems, pictured in a casino-floor concept.",
+        "loaded": true,
+        "width": 697.640625,
+        "height": 523.21875,
+        "fit": "fill",
+        "ratio": 1.3333631965597563
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 768,
+    "route": "/",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Six boards. Fifteen games. The Sunscape collection.",
+        "loaded": true,
+        "width": 697.640625,
+        "height": 522.21875,
+        "fit": "contain",
+        "ratio": 1.33591646221052
+      },
+      {
+        "alt": "Built for the floor. Explore Tierplay cabinets. A cabinet concept with textured black metal and chrome controls.",
+        "loaded": true,
+        "width": 697.640625,
+        "height": 522.21875,
+        "fit": "contain",
+        "ratio": 1.33591646221052
+      },
+      {
+        "alt": "Connected control. Tierplay Collection Management.",
+        "loaded": true,
+        "width": 697.640625,
+        "height": 522.21875,
+        "fit": "contain",
+        "ratio": 1.33591646221052
+      },
+      {
+        "alt": "Tierplay Link Jackpot. One location. Shared excitement.",
+        "loaded": true,
+        "width": 331.8125,
+        "height": 248.359375,
+        "fit": "contain",
+        "ratio": 1.3360176156023906
+      },
+      {
+        "alt": "Standard progressive jackpots. Three games. More ways to play.",
+        "loaded": true,
+        "width": 331.828125,
+        "height": 248.359375,
+        "fit": "contain",
+        "ratio": 1.3360805284680717
+      },
+      {
+        "alt": "Play. Connect. Return. Explore Tierplay loyalty.",
+        "loaded": true,
+        "width": 331.8125,
+        "height": 248.359375,
+        "fit": "contain",
+        "ratio": 1.3360176156023906
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "/games",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Six boards. Fifteen games. The Sunscape collection.",
+        "loaded": true,
+        "width": 343.828125,
+        "height": 257.859375,
+        "fit": "fill",
+        "ratio": 1.3333939283766587
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "/products",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Connected control. Tierplay Collection Management.",
+        "loaded": true,
+        "width": 343.828125,
+        "height": 257.859375,
+        "fit": "fill",
+        "ratio": 1.3333939283766587
+      },
+      {
+        "alt": "Six boards. Fifteen games. The Sunscape collection.",
+        "loaded": true,
+        "width": 343.828125,
+        "height": 256.859375,
+        "fit": "contain",
+        "ratio": 1.3385850720846766
+      },
+      {
+        "alt": "Built for the floor. Explore Tierplay cabinets. A cabinet concept with textured black metal and chrome controls.",
+        "loaded": true,
+        "width": 343.828125,
+        "height": 256.859375,
+        "fit": "contain",
+        "ratio": 1.3385850720846766
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "/player-journey",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Play. Connect. Return. Explore Tierplay loyalty.",
+        "loaded": true,
+        "width": 343.828125,
+        "height": 257.859375,
+        "fit": "fill",
+        "ratio": 1.3333939283766587
+      },
+      {
+        "alt": "",
+        "loaded": false,
+        "width": 0,
+        "height": 0,
+        "fit": "contain",
+        "ratio": 0
+      },
+      {
+        "alt": "",
+        "loaded": false,
+        "width": 0,
+        "height": 0,
+        "fit": "contain",
+        "ratio": 0
+      },
+      {
+        "alt": "",
+        "loaded": false,
+        "width": 0,
+        "height": 0,
+        "fit": "contain",
+        "ratio": 0
+      },
+      {
+        "alt": "Tierplay Link Jackpot. One location. Shared excitement.",
+        "loaded": true,
+        "width": 345.828125,
+        "height": 259.359375,
+        "fit": "contain",
+        "ratio": 1.333393577926381
+      },
+      {
+        "alt": "Standard progressive jackpots. Three games. More ways to play.",
+        "loaded": true,
+        "width": 345.828125,
+        "height": 259.359375,
+        "fit": "contain",
+        "ratio": 1.333393577926381
+      },
+      {
+        "alt": "Play. Connect. Return. Explore Tierplay loyalty.",
+        "loaded": true,
+        "width": 345.828125,
+        "height": 259.359375,
+        "fit": "contain",
+        "ratio": 1.333393577926381
+      },
+      {
+        "alt": "Make room for Tierplay. Games, cabinets and connected systems, pictured in a casino-floor concept.",
+        "loaded": true,
+        "width": 343.828125,
+        "height": 257.859375,
+        "fit": "fill",
+        "ratio": 1.3333939283766587
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "/contact-sales",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Make room for Tierplay. Games, cabinets and connected systems, pictured in a casino-floor concept.",
+        "loaded": true,
+        "width": 343.828125,
+        "height": 257.859375,
+        "fit": "fill",
+        "ratio": 1.3333939283766587
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "/",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Six boards. Fifteen games. The Sunscape collection.",
+        "loaded": true,
+        "width": 343.828125,
+        "height": 256.859375,
+        "fit": "contain",
+        "ratio": 1.3385850720846766
+      },
+      {
+        "alt": "Built for the floor. Explore Tierplay cabinets. A cabinet concept with textured black metal and chrome controls.",
+        "loaded": true,
+        "width": 343.828125,
+        "height": 256.859375,
+        "fit": "contain",
+        "ratio": 1.3385850720846766
+      },
+      {
+        "alt": "Connected control. Tierplay Collection Management.",
+        "loaded": true,
+        "width": 343.828125,
+        "height": 256.859375,
+        "fit": "contain",
+        "ratio": 1.3385850720846766
+      },
+      {
+        "alt": "Tierplay Link Jackpot. One location. Shared excitement.",
+        "loaded": true,
+        "width": 343.828125,
+        "height": 257.359375,
+        "fit": "contain",
+        "ratio": 1.3359844575314188
+      },
+      {
+        "alt": "Standard progressive jackpots. Three games. More ways to play.",
+        "loaded": true,
+        "width": 343.828125,
+        "height": 257.359375,
+        "fit": "contain",
+        "ratio": 1.3359844575314188
+      },
+      {
+        "alt": "Play. Connect. Return. Explore Tierplay loyalty.",
+        "loaded": true,
+        "width": 343.828125,
+        "height": 257.359375,
+        "fit": "contain",
+        "ratio": 1.3359844575314188
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 320,
+    "route": "/games",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Six boards. Fifteen games. The Sunscape collection.",
+        "loaded": true,
+        "width": 278,
+        "height": 208.5,
+        "fit": "fill",
+        "ratio": 1.3333333333333333
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 320,
+    "route": "/products",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Connected control. Tierplay Collection Management.",
+        "loaded": true,
+        "width": 278,
+        "height": 208.5,
+        "fit": "fill",
+        "ratio": 1.3333333333333333
+      },
+      {
+        "alt": "Six boards. Fifteen games. The Sunscape collection.",
+        "loaded": true,
+        "width": 278,
+        "height": 207.5,
+        "fit": "contain",
+        "ratio": 1.3397590361445784
+      },
+      {
+        "alt": "Built for the floor. Explore Tierplay cabinets. A cabinet concept with textured black metal and chrome controls.",
+        "loaded": true,
+        "width": 278,
+        "height": 207.5,
+        "fit": "contain",
+        "ratio": 1.3397590361445784
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 320,
+    "route": "/player-journey",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Play. Connect. Return. Explore Tierplay loyalty.",
+        "loaded": true,
+        "width": 278,
+        "height": 208.5,
+        "fit": "fill",
+        "ratio": 1.3333333333333333
+      },
+      {
+        "alt": "",
+        "loaded": false,
+        "width": 0,
+        "height": 0,
+        "fit": "contain",
+        "ratio": 0
+      },
+      {
+        "alt": "",
+        "loaded": false,
+        "width": 0,
+        "height": 0,
+        "fit": "contain",
+        "ratio": 0
+      },
+      {
+        "alt": "",
+        "loaded": false,
+        "width": 0,
+        "height": 0,
+        "fit": "contain",
+        "ratio": 0
+      },
+      {
+        "alt": "Tierplay Link Jackpot. One location. Shared excitement.",
+        "loaded": true,
+        "width": 280,
+        "height": 210,
+        "fit": "contain",
+        "ratio": 1.3333333333333333
+      },
+      {
+        "alt": "Standard progressive jackpots. Three games. More ways to play.",
+        "loaded": true,
+        "width": 280,
+        "height": 210,
+        "fit": "contain",
+        "ratio": 1.3333333333333333
+      },
+      {
+        "alt": "Play. Connect. Return. Explore Tierplay loyalty.",
+        "loaded": true,
+        "width": 280,
+        "height": 210,
+        "fit": "contain",
+        "ratio": 1.3333333333333333
+      },
+      {
+        "alt": "Make room for Tierplay. Games, cabinets and connected systems, pictured in a casino-floor concept.",
+        "loaded": true,
+        "width": 278,
+        "height": 208.5,
+        "fit": "fill",
+        "ratio": 1.3333333333333333
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 320,
+    "route": "/contact-sales",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Make room for Tierplay. Games, cabinets and connected systems, pictured in a casino-floor concept.",
+        "loaded": true,
+        "width": 278,
+        "height": 208.5,
+        "fit": "fill",
+        "ratio": 1.3333333333333333
+      }
+    ],
+    "errors": []
+  },
+  {
+    "width": 320,
+    "route": "/",
+    "overflow": false,
+    "images": [
+      {
+        "alt": "Six boards. Fifteen games. The Sunscape collection.",
+        "loaded": true,
+        "width": 278,
+        "height": 207.5,
+        "fit": "contain",
+        "ratio": 1.3397590361445784
+      },
+      {
+        "alt": "Built for the floor. Explore Tierplay cabinets. A cabinet concept with textured black metal and chrome controls.",
+        "loaded": true,
+        "width": 278,
+        "height": 207.5,
+        "fit": "contain",
+        "ratio": 1.3397590361445784
+      },
+      {
+        "alt": "Connected control. Tierplay Collection Management.",
+        "loaded": true,
+        "width": 278,
+        "height": 207.5,
+        "fit": "contain",
+        "ratio": 1.3397590361445784
+      },
+      {
+        "alt": "Tierplay Link Jackpot. One location. Shared excitement.",
+        "loaded": true,
+        "width": 278,
+        "height": 208,
+        "fit": "contain",
+        "ratio": 1.3365384615384615
+      },
+      {
+        "alt": "Standard progressive jackpots. Three games. More ways to play.",
+        "loaded": true,
+        "width": 278,
+        "height": 208,
+        "fit": "contain",
+        "ratio": 1.3365384615384615
+      },
+      {
+        "alt": "Play. Connect. Return. Explore Tierplay loyalty.",
+        "loaded": true,
+        "width": 278,
+        "height": 208,
+        "fit": "contain",
+        "ratio": 1.3365384615384615
+      }
+    ],
+    "errors": []
+  }
+]

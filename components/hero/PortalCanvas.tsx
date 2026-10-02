@@ -19,9 +19,11 @@ import { CopyShader } from "three/addons/shaders/CopyShader.js";
 import PortalParticles from "./PortalParticles";
 import { AssemblingMonoliths, GatewayArchitecture } from "./GatewayWorld";
 import PortalEnergy from "./PortalEnergy";
+import DustMotes from "./DustMotes";
 import CosmicBackdrop from "./CosmicBackdrop";
 import { mistFragment, noise, vertex } from "./portalShaders";
 import type { PortalState } from "./portalState";
+import { WALK_END, WALK_START, WALK_STRIDES, walkEase } from "./walk";
 
 type Props = { sequence: PortalState; active: boolean; onReady: () => void; onFailure: () => void };
 const rand = (i: number) => MathUtils.euclideanModulo(Math.sin(i * 127.1 + 311.7) * 43758.5453, 1);
@@ -48,28 +50,37 @@ const bell = (v: number, a: number, b: number) => Math.sin(MathUtils.clamp((v - 
 // Smooth pseudo-random shake: summed incommensurate sines, cheaper than noise and deterministic.
 const wobble = (t: number, seed: number) => Math.sin(t * 17.3 + seed) * .5 + Math.sin(t * 29.1 + seed * 2.1) * .3 + Math.sin(t * 47.7 + seed * 3.7) * .2;
 
-// Finale timing: beats land at these fractions of the ceremony clock (arrival, ground, crane, through).
-const FINALE_KNOTS = [0, .3, .66, 1];
-const finaleParameter = (f: number) => {
-  // Half-eased so the move starts and settles gently without stopping at each beat.
-  const e = f * .55 + f * f * (3 - 2 * f) * .45;
-  for (let i = 1; i < FINALE_KNOTS.length; i++) if (e <= FINALE_KNOTS[i]) {
-    const a = FINALE_KNOTS[i - 1], b = FINALE_KNOTS[i];
-    return (i - 1 + (e - a) / (b - a)) / (FINALE_KNOTS.length - 1);
-  }
-  return 1;
-};
+// The walk: after the plasma lands, the viewer walks the processional path at eye height, climbs
+// the steps, passes beneath the rings and through the arch into the light. Positions are authored in
+// world space (floor y -3.8, gateway at z -16); the camera always aims a little ahead along its own
+// route, the way a Steadicam operator walks a shot, so the move never reverses.
+// The walk opens on the flight's own heading (the rail leaves the camera centred near (0, -1.1, 7),
+// looking straight ahead and slightly up) so the hand-off continues the shot rather than turning it.
+// The sightline stays on the gateway, so the camera tilts up only as fast as the approach demands.
+const WALK_PATH: [number, number, number][] = [
+  [-.2, -1.45, 3.6],    // ease down to eye height, continuing forward
+  [-.7, -1.85, -2],     // the stone path between the boulders, drifting left: the gateway moves to the right third
+  [-.6, -1.8, -7.5],    // the foot of the steps
+  [-.25, -1.5, -11.6],  // climbing
+  [0, -1.2, -14.2],     // the threshold
+];
+const WALK_AIM: [number, number, number][] = [
+  [.15, 1.9, -16],      // the gateway, where the flight was already looking
+  [.5, 2.6, -16],
+  [.55, 3.4, -16],      // it grows over you
+  [.15, 3.6, -22],      // up at the rings as you pass beneath
+  [0, 2, -30],          // and ahead, into the column of light
+];
+// From the flight's lens down to a tighter push-in on the light.
+const WALK_LENS = [44, 40, 38, 40, 33];
 
 // The only component allowed to mutate the scene camera.
 // Opening to landing (unchanged): establishing entry, handheld breath, collapse push + roll,
 // departure punch and shake, and a low tracking shot that leads the fireball.
-// After the plasma lands and becomes the gateway's pillar light, the camera follows feature-film
-// grammar rather than a game rig: one continuous, motivated move with a level horizon and no handheld
-// noise. A ground-level hero angle on a longer lens gives the monument its scale (Deakins and
-// Villeneuve: Blade Runner 2049, Dune), the camera then rises with the light climbing the seams and
-// holds the gateway on the right third beside the copy, and finally centres for a one-point push
-// through the arch (Kubrick) while the lens widens in a slow dolly-zoom. A centripetal spline joins
-// the beats so velocity never jumps.
+// From the landing on, the viewer is in the scene: one continuous Steadicam walk at eye height (see
+// WALK_PATH) that never reverses — down the processional path, up the steps, beneath the rings and
+// through the arch into the light — with the sightline leading the route, a footfall bob tied to
+// distance walked, and the head turning gently toward the pointer.
 function CameraDirector({ sequence }: { sequence: PortalState }) {
   const { camera, size, scene } = useThree();
   const pointer = useRef({ x: 0, y: 0 });
@@ -77,17 +88,19 @@ function CameraDirector({ sequence }: { sequence: PortalState }) {
   const target = useMemo(() => new Vector3(), []);
   const fire = useMemo(() => new Vector3(), []);
   const rig = useMemo(() => {
-    const keys = () => [new Vector3(), new Vector3(), new Vector3(), new Vector3()];
-    const position = keys(), aim = keys(), lens = keys();
+    const position = [new Vector3(), ...WALK_PATH.map(([x, y, z]) => new Vector3(x, y, z))];
+    const aim = [new Vector3(), ...WALK_AIM.map(([x, y, z]) => new Vector3(x, y, z))];
     return {
-      position, aim, lens,
+      position, aim,
       path: new CatmullRomCurve3(position, false, "centripetal"),
       look: new CatmullRomCurve3(aim, false, "centripetal"),
-      fov: new CatmullRomCurve3(lens, false, "catmullrom", .5),
-      sample: new Vector3(),
+      sample: new Vector3(), ahead: new Vector3(),
     };
   }, []);
   const core = useRef<Object3D | null>(null);
+  // Steadicam inertia for the walk: the rig's position, aim and lens follow their targets through a
+  // critically damped spring, which absorbs uneven scroll input the way a real rig's mass does.
+  const rigMass = useMemo(() => ({ position: new Vector3(), aim: new Vector3(), fov: 46, primed: false }), []);
   useFrame((_, delta) => {
     const p = sequence.progress, t = sequence.time, dt = Math.min(delta, .05);
     const portrait = 1 - smooth(size.width / size.height, .85, 1.35), landscape = 1 - portrait;
@@ -103,7 +116,11 @@ function CameraDirector({ sequence }: { sequence: PortalState }) {
     const push = MathUtils.smootherstep(raw, 0, .2) * 1.6 * (1 - portrait * .5);
     const launch = bell(p, .28, .5), flight = bell(p, .42, .86);
     // Handheld life fades out as the ceremony begins: the finale is locked-off.
-    const alive = 1 - MathUtils.smootherstep(finale, 0, .22);
+    // One hand-off weight for every layer that changes owner between the flight rail and the walk, so
+    // nothing switches on (or off) in a single frame: the rail's handheld life fades out exactly as the
+    // walk's Steadicam life fades in.
+    const handoff = MathUtils.smootherstep(MathUtils.clamp((raw - WALK_START) / (WALK_END - WALK_START), 0, 1), 0, .3);
+    const alive = 1 - handoff;
 
     let x = landscape * 2.6 * align * (1 - arrive);
     let y = MathUtils.lerp(1, -.5, arrive) - flight * 1.1;
@@ -123,30 +140,46 @@ function CameraDirector({ sequence }: { sequence: PortalState }) {
     // Rail lens: wide establishing, squeeze through the collapse, punch out on launch.
     let fov = 46 + entry * 8 - bell(collapse, .2, .95) * 5 + launch * 7 + flight * 2;
 
-    if (finale > 0) {
-      const r = rig;
-      // Beat 0: wherever the rail left the camera when the plasma landed.
-      r.position[0].set(x, y, z); r.aim[0].copy(target); r.lens[0].set(fov, 0, 0);
-      // Beat 1: ground-level hero angle just above the wet floor, longer lens, gateway on the right third.
-      r.position[1].set(-1.6 * landscape, -2.85, MathUtils.lerp(9.5, 14, portrait));
-      r.aim[1].set(-4.5 * landscape, MathUtils.lerp(5.4, 4.2, portrait), -16);
-      r.lens[1].set(MathUtils.lerp(38, 44, portrait), 0, 0);
-      // Beat 2: crane up with the light climbing the seams; level horizon, the copy keeps the left side.
-      r.position[2].set(-2.8 * landscape, MathUtils.lerp(2.4, 1.4, portrait), MathUtils.lerp(5, 10, portrait));
-      r.aim[2].set(-3.7 * landscape, MathUtils.lerp(4, 3, portrait), -16);
-      r.lens[2].set(MathUtils.lerp(33, 40, portrait), 0, 0);
-      // Beat 3: centred one-point push through the arch while the lens widens (dolly-zoom).
-      r.position[3].set(0, 3.1, -8.5);
-      r.aim[3].set(0, 3.3, -30);
-      r.lens[3].set(56, 0, 0);
-      const u = finaleParameter(finale);
-      // Ease out of the rail over the first beat so the hand-off is seamless.
-      r.path.getPoint(u, r.sample); x = r.sample.x; y = r.sample.y; z = r.sample.z;
+    const walk = MathUtils.clamp((raw - WALK_START) / (WALK_END - WALK_START), 0, 1);
+    if (walk > 0) {
+      const r = rig, u = Math.min(1, Math.max(0, walkEase(walk)));
+      // The first knot is wherever the rail has the camera, so the hand-off is seamless.
+      r.position[0].set(x, y, z); r.aim[0].copy(target);
+      // Portrait screens keep the drift small so the gateway stays in frame.
+      for (let i = 1; i < r.position.length; i++) r.position[i].x = WALK_PATH[i - 1][0] * MathUtils.lerp(1, .35, portrait);
+      // Path and sightline are sampled by knot, not arc length, so each waypoint and its aim arrive together.
+      r.path.getPoint(u, r.sample);
+      x = r.sample.x; y = r.sample.y; z = r.sample.z;
+      // Aim: the authored sightline, nudged toward where the path goes next.
       r.look.getPoint(u, target);
-      fov = r.fov.getPoint(u, r.sample).x;
+      r.path.getPoint(Math.min(1, u + .06), r.ahead);
+      target.lerp(r.ahead.setY(r.ahead.y + 1.4), .18 * handoff);
+      // Lens follows the walk.
+      const lensAt = u * (WALK_LENS.length - 1), li = Math.min(WALK_LENS.length - 2, Math.floor(lensAt));
+      const walkFov = MathUtils.lerp(WALK_LENS[li], WALK_LENS[li + 1], MathUtils.smoothstep(lensAt - li, 0, 1)) + portrait * 6;
+      fov = MathUtils.lerp(fov, walkFov, handoff);
+      // Living in the shot: a slow Steadicam float, a footfall bob tied to distance walked (so
+      // steps follow the scroll), and the head turning gently toward the pointer.
+      const strideAt = u * WALK_STRIDES;
+      const step = Math.sin(strideAt * Math.PI * 2);
+      x += (Math.sin(t * .37) * .05 + Math.sin(strideAt * Math.PI) * .03) * handoff;
+      y += (Math.sin(t * .53 + 1) * .035 + Math.abs(step) * .028) * handoff;
+      target.x += (pointer.current.x * 1.6 + Math.sin(t * .29) * .08) * handoff;
+      target.y -= pointer.current.y * .9 * handoff;
     }
-    camera.position.set(x, y, z);
-    camera.lookAt(target);
+    // Before the walk the rail is already scrub-smoothed, so the spring is effectively stiff; it
+    // softens as the walk takes over.
+    const stiffness = MathUtils.lerp(80, 5.5, handoff);
+    const m = rigMass;
+    if (!m.primed || sequence.paused) { m.position.set(x, y, z); m.aim.copy(target); m.fov = fov; m.primed = true; }
+    else {
+      m.position.x = MathUtils.damp(m.position.x, x, stiffness, dt); m.position.y = MathUtils.damp(m.position.y, y, stiffness, dt); m.position.z = MathUtils.damp(m.position.z, z, stiffness, dt);
+      m.aim.x = MathUtils.damp(m.aim.x, target.x, stiffness * .8, dt); m.aim.y = MathUtils.damp(m.aim.y, target.y, stiffness * .8, dt); m.aim.z = MathUtils.damp(m.aim.z, target.z, stiffness * .8, dt);
+      m.fov = MathUtils.damp(m.fov, fov, stiffness * .7, dt);
+    }
+    fov = m.fov;
+    camera.position.copy(m.position);
+    camera.lookAt(m.aim);
 
     // Trauma: collapse flare and departure kick feed a decaying shake (none in the finale).
     const speed = Math.abs(p - s.lastProgress) / Math.max(dt, .008); s.lastProgress = p;
@@ -159,6 +192,9 @@ function CameraDirector({ sequence }: { sequence: PortalState }) {
 
     if (Math.abs(fov - s.fov) > .01) { s.fov = fov; (camera as import("three").PerspectiveCamera).fov = fov; camera.updateProjectionMatrix(); }
     camera.updateMatrixWorld();
+    // ?debug-camera: record the final camera each frame so motion can be checked for discontinuities.
+    const log = (window as unknown as { __tpCamLog?: number[][] }).__tpCamLog;
+    if (log) log.push([raw, camera.position.x, camera.position.y, camera.position.z, camera.quaternion.x, camera.quaternion.y, camera.quaternion.z, camera.quaternion.w, (camera as import("three").PerspectiveCamera).fov]);
   }, -.75);
   return null;
 }
@@ -525,6 +561,7 @@ function Scene({ sequence, onReady, onFailure, onQuality, startBalanced, dprCap 
     <LavaRocks sequence={sequence} lights={!balanced}/>
     <PortalEnergy sequence={sequence} software={software} shadows={!balanced && !compact}/>
     <AssemblingMonoliths sequence={sequence}/>
+    <DustMotes sequence={sequence} count={software ? 0 : balanced || compact ? 160 : 420}/>
     <GatewayArchitecture sequence={sequence}/>
     <Foreground sequence={sequence} compact={compact} balanced={balanced}/>
     <mesh position={[0, -2.6, -5]} scale={[55, 5, 1]}><planeGeometry/><shaderMaterial ref={mist} vertexShader={vertex} fragmentShader={mistFragment} uniforms={uniforms} transparent depthWrite={false}/></mesh>

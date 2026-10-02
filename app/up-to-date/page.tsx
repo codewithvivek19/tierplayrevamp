@@ -4,12 +4,13 @@ import { Newspaper } from "lucide-react";
 import PageHero from "@/components/ds/PageHero";
 import { Button, SectionHeader } from "@/components/ds/primitives";
 import { games } from "@/content/site";
+import { campaignMedia } from "@/content/media";
 
 export const metadata: Metadata = { title: "Up to Date", description: "Product and game stories will appear here as they are released." };
 
 export default function UpdatePage() {
   return <main id="main" className="ds-page">
-    <PageHero compact badge="Up to date" title="Tierplay updates." intro="Product and game stories will appear here as they are released." image="/media/generated/theme-v3/dragon-world-v3.webp" />
+    <PageHero poster badge="Up to date" title="Tierplay updates." intro="Product and game stories will appear here as they are released." image={campaignMedia.sunscape.src} imageAlt={campaignMedia.sunscape.alt} />
     <section className="ds-section ds-container">
       <SectionHeader icon={Newspaper} label="Updates" title="More to come." blurb="There are no published stories here yet." />
       <div className="ds-empty">

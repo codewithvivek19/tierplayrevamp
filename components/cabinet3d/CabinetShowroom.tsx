@@ -10,7 +10,9 @@ import { defaultPose, type StagePose } from "./CabinetStage";
 import { bindOrbit, useStageMode, useStageVisibility } from "./useStage";
 import type { CabinetId } from "./cabinetModels";
 import { Button, Label } from "@/components/ds/primitives";
+import { smoothScrollTo } from "@/components/motion/scrollControl";
 import { cabinets } from "@/content/site";
+import CinematicText from "@/components/motion/CinematicText";
 
 const CabinetStage = dynamic(() => import("./CabinetStage"), { ssr: false });
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -88,7 +90,7 @@ export default function CabinetShowroom() {
     const section = root.current;
     if (!section) return;
     const distance = section.offsetHeight - innerHeight;
-    scrollTo({ top: section.offsetTop + distance * (index === 0 ? 0.18 : 0.72), behavior: "smooth" });
+    smoothScrollTo(section.offsetTop + distance * (index === 0 ? 0.18 : 0.72), { duration: 1.4 });
   };
 
   // Reduced motion, Save-Data and no WebGL: both consoles side by side at the same size.
@@ -135,7 +137,7 @@ export default function CabinetShowroom() {
 
       <div className="showroom__copy">
         <Label icon={Monitor}>The hardware</Label>
-        <h2 id="showroom-title" className="showroom__title">Two consoles.{" "}<br />One floor.</h2>
+        <CinematicText id="showroom-title" className="showroom__title">Two consoles. One floor.</CinematicText>
         <div className="showroom__index" role="group" aria-label="Consoles">
           {consoles.map(({ id, info }, index) => <button key={id} type="button" aria-pressed={active === id} onClick={() => go(index)}>
             <i className="showroom__fill" ref={(f) => { fills.current[index] = f; }} aria-hidden="true" />

@@ -6,9 +6,10 @@ import "./ds/interactive.css";
 import "./ds/showroom.css";
 import "./ds/cabinets.css";
 import "./ds/lineup.css";
-import "./ds/systems.css";
+import "./ds/showcase.css";
 import "./ds/pages.css";
 import "./ds/guide.css";
+import "./ds/motion.css";
 import "./tierplay-preloader.css";
 import localFont from "next/font/local";
 import SiteChrome from "@/components/site/SiteChrome";
@@ -25,7 +26,9 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      {/* Marks that JavaScript runs, so reveal effects may start hidden without risking invisible text. */}
+      <head><script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} /></head>
       <body>
         <SiteChrome>{children}</SiteChrome>
       </body>
